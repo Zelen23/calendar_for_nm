@@ -12,15 +12,7 @@ public class MainActivity extends AppCompatActivity {
 
     GridView grView_cld;
 
-    public static int[] image_item={
-            R.mipmap.maxday,
-            R.mipmap.empty,
-            R.mipmap.nowday,
-            R.mipmap.maxday,
-            R.mipmap.empty,
-            R.mipmap.nowday
 
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
