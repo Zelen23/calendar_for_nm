@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,32 +25,41 @@ public class MainActivity extends AppCompatActivity {
 
     GridView grView_cld;
 
+    int today;
+    int mns;
+    int year;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         grView_cld=(GridView)findViewById(R.id.gridView);
+        final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
+
         String [] day=day();
+        today=Integer.parseInt(day[0]);
+        mns=Integer.parseInt(day[1]);
+        year=Integer.parseInt(day[3]);
 
         bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
         grView_cld.setAdapter(
                 //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
-                new custom_grid_adapter(this,creat_mass.grv(
-                        Integer.parseInt(day[1]),
-                        Integer.parseInt(day[3])),
-                        creat_mass.convert_mass_for_render(
-                                creat_mass.grv(
-                                        Integer.parseInt(day[1]),
-                                        Integer.parseInt(day[3])
-
-                                )
-                        )
-                )
-        );
+                new custom_grid_adapter(this,
+                        creat_mass.grv(mns,year),
+                        creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
 
 
+grView_cld.setOnTouchListener(new View.OnTouchListener() {
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
 
+        gestureDetector.onTouchEvent(event);
+        return true;
     }
+});
+    }
+
+
 
     // Разбор текущей даты для проверок
     String[] day() {
@@ -76,5 +88,54 @@ public class MainActivity extends AppCompatActivity {
     private void adjustGridView(){
         grView_cld.setNumColumns(7);
         //grView_cld.setColumnWidth(50);
+    }
+
+
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener{
+
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+            if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >
+                    SWIPE_THRESHOLD_VELOCITY) {
+                if(mns<11) {
+                    mns = mns + 1;
+                    bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
+                    grView_cld.setAdapter(
+                            //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
+                            new custom_grid_adapter(MainActivity.this,
+                                    creat_mass.grv(mns,year),
+                                    creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
+
+                }
+
+                Toast.makeText(MainActivity.this,
+                        "<---^ "+mns,Toast.LENGTH_SHORT).show();
+                return false; // справа налево
+
+            }  else if (e2.getX() - e1.getX() >
+                    SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                if(mns>0){
+                    mns=mns-1;
+                    bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
+                    grView_cld.setAdapter(
+                            //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
+                            new custom_grid_adapter(MainActivity.this,
+                                    creat_mass.grv(mns,year),
+                                    creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
+                }
+
+                Toast.makeText(MainActivity.this,
+                        "^---> "+mns,Toast.LENGTH_SHORT).show();
+
+                return false; // слева направо
+            }
+
+            return false;
+        }
     }
 }
