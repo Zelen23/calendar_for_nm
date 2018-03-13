@@ -73,9 +73,13 @@ public class custom_grid_adapter extends BaseAdapter {
 
         holder.imageView.setImageResource(Image_id[i]);
         holder.textView.setText(string.get(i));
+
+
         holder.textView.setTextColor(Color.parseColor("White"));
 
         grid.setTag(holder);
         return grid;
     }
+
+
 }
