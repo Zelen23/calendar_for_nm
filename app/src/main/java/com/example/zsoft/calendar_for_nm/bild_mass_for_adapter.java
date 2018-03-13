@@ -49,6 +49,9 @@ public class bild_mass_for_adapter {
                 case "":
                     mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.empty;
                     break;
+                case "-1":
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.empty;
+                    break;
 
             }
 

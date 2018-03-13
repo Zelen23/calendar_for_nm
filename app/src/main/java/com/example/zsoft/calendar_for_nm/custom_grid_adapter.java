@@ -27,6 +27,16 @@ public class custom_grid_adapter extends BaseAdapter {
         Image_id = image_id;
     }
 
+    private class ViewHolder{
+        public TextView textView;
+        public ImageView imageView;
+
+        public ViewHolder(View item ){
+            textView=(TextView)item.findViewById(R.id.textDay);
+            imageView=(ImageView) item.findViewById(R.id.im_day_View);
+        }
+    }
+
     @Override
     public int getCount() {
         return string.size();
@@ -44,27 +54,28 @@ public class custom_grid_adapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View grid;
+        final ViewHolder holder;
+        View grid=view;
+
         LayoutInflater inflater=(LayoutInflater)mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if(view==null){
+
+        if(grid==null){
             grid=new View(mContext);
             grid=inflater.inflate(R.layout.layout_item,null);
 
-            ImageView image=(ImageView)grid.findViewById(R.id.im_day_View);
-            image.setImageResource(Image_id[i]);
-
-            TextView text=(TextView)grid.findViewById(R.id.textDay);
-            text.setText(string.get(i));
-            text.setTextColor(Color.parseColor("White"));
-
-
-
+            holder=new ViewHolder(grid);
+            grid.setTag(holder);
 
         }else{
-                grid=(View)view;
+            holder = (ViewHolder)view.getTag();
         }
 
+        holder.imageView.setImageResource(Image_id[i]);
+        holder.textView.setText(string.get(i));
+        holder.textView.setTextColor(Color.parseColor("White"));
+
+        grid.setTag(holder);
         return grid;
     }
 }
