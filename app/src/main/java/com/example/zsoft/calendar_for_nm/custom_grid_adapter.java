@@ -2,7 +2,6 @@ package com.example.zsoft.calendar_for_nm;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -54,6 +55,8 @@ public class custom_grid_adapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        GregorianCalendar cld=new GregorianCalendar();
+        MainActivity main= new MainActivity();
         final ViewHolder holder;
         View grid=view;
 
@@ -74,7 +77,12 @@ public class custom_grid_adapter extends BaseAdapter {
         holder.imageView.setImageResource(Image_id[i]);
         holder.textView.setText(string.get(i));
 
-
+        if(holder.textView.getText().toString().equals(main.day()[0])&&
+                MainActivity.mns==Integer.parseInt(main.day()[1])&&
+                MainActivity.year==Integer.parseInt(main.day()[03])){
+            holder.textView.setTextColor(Color.parseColor("Gray"));
+        }
+        else
         holder.textView.setTextColor(Color.parseColor("White"));
 
         grid.setTag(holder);
