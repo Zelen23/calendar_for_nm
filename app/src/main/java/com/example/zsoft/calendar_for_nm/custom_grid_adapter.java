@@ -10,16 +10,18 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 /**
  * Created by adolf on 10.03.2018.
  */
 
 public class custom_grid_adapter extends BaseAdapter {
     private Context mContext;
-    private final String [] string;
+    private final List<String> string;
     private final int[] Image_id;
 
-    public custom_grid_adapter(Context mContext, String[] string, int[] image_id) {
+    public custom_grid_adapter(Context mContext, List<String> string, int[] image_id) {
         this.mContext = mContext;
         this.string = string;
         Image_id = image_id;
@@ -27,7 +29,7 @@ public class custom_grid_adapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return string.length;
+        return string.size();
     }
 
     @Override
@@ -50,15 +52,10 @@ public class custom_grid_adapter extends BaseAdapter {
             grid=inflater.inflate(R.layout.layout_item,null);
 
             ImageView image=(ImageView)grid.findViewById(R.id.im_day_View);
+            image.setImageResource(Image_id[i]);
+
             TextView text=(TextView)grid.findViewById(R.id.textDay);
-            text.setText(string[i]);
-
-            if(string[i].contains("12")){
-                image.setImageResource(R.drawable.nowday);
-            }else{
-                image.setImageResource(R.drawable.maxday);
-            }
-
+            text.setText(string.get(i));
             text.setTextColor(Color.parseColor("White"));
 
 
