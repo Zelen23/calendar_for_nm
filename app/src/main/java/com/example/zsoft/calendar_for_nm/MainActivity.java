@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         grView_cld=(GridView)findViewById(R.id.gridView);
+        final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
+
         String [] day=day();
 
         bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
@@ -46,8 +51,17 @@ public class MainActivity extends AppCompatActivity {
         );
 
 
+grView_cld.setOnTouchListener(new View.OnTouchListener() {
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
 
+        gestureDetector.onTouchEvent(event);
+        return true;
     }
+});
+    }
+
+
 
     // Разбор текущей даты для проверок
     String[] day() {
@@ -76,5 +90,36 @@ public class MainActivity extends AppCompatActivity {
     private void adjustGridView(){
         grView_cld.setNumColumns(7);
         //grView_cld.setColumnWidth(50);
+    }
+
+
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener{
+
+
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+            if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >
+                    SWIPE_THRESHOLD_VELOCITY) {
+
+                Toast.makeText(MainActivity.this,"--->",Toast.LENGTH_SHORT).show();
+
+
+                return false; // справа налево
+
+            }  else if (e2.getX() - e1.getX() >
+                    SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+
+                Toast.makeText(MainActivity.this,"<---",Toast.LENGTH_SHORT).show();
+
+                return false; // слева направо
+            }
+
+            return false;
+        }
     }
 }
