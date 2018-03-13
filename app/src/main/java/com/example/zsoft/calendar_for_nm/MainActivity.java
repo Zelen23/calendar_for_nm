@@ -25,6 +25,10 @@ public class MainActivity extends AppCompatActivity {
 
     GridView grView_cld;
 
+    int today;
+    int mns;
+    int year;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,22 +37,16 @@ public class MainActivity extends AppCompatActivity {
         final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
 
         String [] day=day();
+        today=Integer.parseInt(day[0]);
+        mns=Integer.parseInt(day[1]);
+        year=Integer.parseInt(day[3]);
 
         bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
         grView_cld.setAdapter(
                 //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
-                new custom_grid_adapter(this,creat_mass.grv(
-                        Integer.parseInt(day[1]),
-                        Integer.parseInt(day[3])),
-                        creat_mass.convert_mass_for_render(
-                                creat_mass.grv(
-                                        Integer.parseInt(day[1]),
-                                        Integer.parseInt(day[3])
-
-                                )
-                        )
-                )
-        );
+                new custom_grid_adapter(this,
+                        creat_mass.grv(mns,year),
+                        creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
 
 
 grView_cld.setOnTouchListener(new View.OnTouchListener() {
@@ -99,22 +97,40 @@ grView_cld.setOnTouchListener(new View.OnTouchListener() {
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
 
 
-
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
             if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >
                     SWIPE_THRESHOLD_VELOCITY) {
+                if(mns<11) {
+                    mns = mns + 1;
+                    bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
+                    grView_cld.setAdapter(
+                            //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
+                            new custom_grid_adapter(MainActivity.this,
+                                    creat_mass.grv(mns,year),
+                                    creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
 
-                Toast.makeText(MainActivity.this,"--->",Toast.LENGTH_SHORT).show();
+                }
 
-
+                Toast.makeText(MainActivity.this,
+                        "<---^ "+mns,Toast.LENGTH_SHORT).show();
                 return false; // справа налево
 
             }  else if (e2.getX() - e1.getX() >
                     SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                if(mns>0){
+                    mns=mns-1;
+                    bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
+                    grView_cld.setAdapter(
+                            //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
+                            new custom_grid_adapter(MainActivity.this,
+                                    creat_mass.grv(mns,year),
+                                    creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
+                }
 
-                Toast.makeText(MainActivity.this,"<---",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,
+                        "^---> "+mns,Toast.LENGTH_SHORT).show();
 
                 return false; // слева направо
             }

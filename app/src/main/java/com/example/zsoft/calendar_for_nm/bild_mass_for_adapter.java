@@ -77,12 +77,12 @@ public class bild_mass_for_adapter {
         cld.set(y, month, 1);
         d = cld.get(Calendar.DAY_OF_WEEK);
         max = cld.getActualMaximum(Calendar.DAY_OF_MONTH);
-        String[] ms = new String[36];
+        String[] ms = new String[50];
         final List<String> list_d = new ArrayList<>();
 
 //из нетбина календарь
         int in = 1;
-        for (int ir = 1; ir < 35; ir++) {
+        for (int ir = 1; ir < 49; ir++) {
 
             if (in <= max) {
                 if (d == 1) {
