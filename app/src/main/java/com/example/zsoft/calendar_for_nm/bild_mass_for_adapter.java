@@ -12,9 +12,7 @@ import java.util.List;
  */
 
 public class bild_mass_for_adapter {
-    GregorianCalendar cld = new GregorianCalendar();
-    int d;
-    int max;
+
 
     public int[] convert_mass_for_render(List list_d){
 
@@ -61,18 +59,16 @@ public class bild_mass_for_adapter {
 
             }
 
-
         }
         return mass_pic;
-
     }
-
-    // если установленный год соответствует текущему и месяц соответствует текущему то дент выделяю
 
     public List grv(final int month, int y) {
 
         final String[] name = {"пн", "вт", "ср", "чт", "пт", "сб", "вс"};
-
+        GregorianCalendar cld = new GregorianCalendar();
+        int d;
+        int max;
 
         cld.set(y, month, 1);
         d = cld.get(Calendar.DAY_OF_WEEK);
@@ -86,14 +82,14 @@ public class bild_mass_for_adapter {
 
             if (in <= max) {
                 if (d == 1) {
-                    Log.i("d_grv_if=1", String.valueOf(d));
+
             /*то в массив первые 6 позиций пишем null*/
                     if (ir >= d + 6) {
                         ms[ir] = String.valueOf(in++);
                     }
 
                 } else if (ir >= d - 1) {
-                    Log.i("d_grv_if!=1", String.valueOf(d));
+
                     ms[ir] = String.valueOf(in++);
                 }
             }
@@ -108,18 +104,15 @@ public class bild_mass_for_adapter {
         return list_d;
     }
 
-    void dat(int month, int year){
+    void dat(){
         MainActivity dat=new MainActivity();
         String[] date = dat.day();
         boolean flags=false;
 
         //если год и месяц в массива соответствуют текущим то
-        if(year==Integer.parseInt(date[3])& month==Integer.parseInt(date[1]));
+        if(2018==MainActivity.year && 2==MainActivity.mns);
         flags=true;
         Log.i("flag", String.valueOf(flags));
-
-
-
 
 
     }
