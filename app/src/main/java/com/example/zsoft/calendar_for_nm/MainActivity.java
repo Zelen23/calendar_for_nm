@@ -25,16 +25,25 @@ public class MainActivity extends AppCompatActivity {
 
     GridView grView_cld;
 
-    int today;
-    int mns;
-    int year;
+    public static int today;
+    public static int mns;
+    public static int year;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         grView_cld=(GridView)findViewById(R.id.gridView);
+
         final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
+        grView_cld.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                gestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
+
 
         String [] day=day();
         today=Integer.parseInt(day[0]);
@@ -49,14 +58,7 @@ public class MainActivity extends AppCompatActivity {
                         creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
 
 
-grView_cld.setOnTouchListener(new View.OnTouchListener() {
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
 
-        gestureDetector.onTouchEvent(event);
-        return true;
-    }
-});
     }
 
 
@@ -87,7 +89,7 @@ grView_cld.setOnTouchListener(new View.OnTouchListener() {
     // размерность грида
     private void adjustGridView(){
         grView_cld.setNumColumns(7);
-        //grView_cld.setColumnWidth(50);
+        grView_cld.setColumnWidth(30);
     }
 
 
@@ -99,6 +101,7 @@ grView_cld.setOnTouchListener(new View.OnTouchListener() {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            bild_mass_for_adapter day_in_this_month=new bild_mass_for_adapter();
 
             if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >
                     SWIPE_THRESHOLD_VELOCITY) {
@@ -134,7 +137,7 @@ grView_cld.setOnTouchListener(new View.OnTouchListener() {
 
                 return false; // слева направо
             }
-
+            day_in_this_month.dat();
             return false;
         }
     }
