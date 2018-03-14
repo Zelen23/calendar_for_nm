@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     // размерность грида
     private void adjustGridView(){
         grView_cld.setNumColumns(7);
-        //grView_cld.setColumnWidth(50);
+        grView_cld.setColumnWidth(30);
     }
 
 
