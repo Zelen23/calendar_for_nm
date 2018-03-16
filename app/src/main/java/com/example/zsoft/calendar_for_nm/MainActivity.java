@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 gestureDetector.onTouchEvent(event);
-                return true;
+                return false;
             }
         });
 
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         final List<String> list_date=creat_mass.grv(mns,year);
         final int [] mass_pict= creat_mass.convert_mass_for_render(creat_mass.grv(mns,year));
 
-        set_date_to_label(mns,0,year);
+        set_date_to_label(mns,today,year);
         grView_cld.setAdapter(
                 //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                 new custom_grid_adapter(this,
@@ -84,13 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 grView_cld.setAdapter(
                         //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                         new custom_grid_adapter(MainActivity.this, list_date, mass_pict));
-                grView_cld.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
-                    }
-                });
 
             }
         });
@@ -163,11 +157,38 @@ public class MainActivity extends AppCompatActivity {
 
     // слушатель жестов
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
+        final bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
+
+
+    // прикрутил слушатель к одиночному клику
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+
+            grView_cld.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    // дата для запроса
+                    String day_of_pos=String.valueOf(
+                            creat_mass.grv(mns,year).get(position));
+                    String s_date= day_of_pos+":" +mns+ ":"+year;
+                    if(day_of_pos!=" ") {
+
+                        set_date_to_label(mns, Integer.parseInt(day_of_pos), year);
+                    }
+                }
+            });
+
+
+            return super.onSingleTapUp(e);
+
+
+        }
 
 
         @Override
         public boolean onDown(MotionEvent e) {
-            return false;
+
+            return true;
         }
 
         @Override
@@ -183,13 +204,14 @@ public class MainActivity extends AppCompatActivity {
                     year++;
 
                 }
-                bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
+
                 set_date_to_label(mns,0,year);
                 grView_cld.setAdapter(
                         //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                         new custom_grid_adapter(MainActivity.this,
                                 creat_mass.grv(mns,year),
                                 creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
+
                 return false; // справа налево
 
             }  else if (e2.getX() - e1.getX() >
@@ -200,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
                     mns=11;
                     year--;
                 }
-                bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
+                final bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
                 set_date_to_label(mns,0,year);
                 grView_cld.setAdapter(
                         //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
@@ -210,7 +232,10 @@ public class MainActivity extends AppCompatActivity {
 
                 return false; // слева направо
             }
+
+
             day_in_this_month.dat();
+
             return false;
         }
     }

@@ -98,9 +98,8 @@
             android:layout_height="299dp"
             android:clickable="true"
             android:focusable="true"
-            android:longClickable="true"
             android:numColumns="7"
-            android:visibility="visible" />
+            />
     </android.gesture.GestureOverlayView>
 
 </android.support.constraint.ConstraintLayout>
