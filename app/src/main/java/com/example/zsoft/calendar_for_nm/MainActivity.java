@@ -24,10 +24,12 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     GridView grView_cld;
+    TextView l_date, l_year;
 
     public static int today;
     public static int mns;
     public static int year;
+    public static String mns_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         grView_cld=(GridView)findViewById(R.id.gridView);
 
         final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
+
         grView_cld.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -49,8 +52,11 @@ public class MainActivity extends AppCompatActivity {
         today=Integer.parseInt(day[0]);
         mns=Integer.parseInt(day[1]);
         year=Integer.parseInt(day[3]);
+        mns_name=day[4];
+
 
         bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
+        set_date_to_label(mns,0,year);
         grView_cld.setAdapter(
                 //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                 new custom_grid_adapter(this,
@@ -70,11 +76,12 @@ public class MainActivity extends AppCompatActivity {
         String day = cld_m.getTime().toString();
         String[] getday = day.split(" ", 5);
         int mn = cld_m.get(Calendar.MONTH);
-        String[] show_day = new String[4];
+        String[] show_day = new String[5];
         show_day[0] = String.valueOf(Integer.parseInt(getday[2]));
         show_day[1] = String.valueOf(mn);
         show_day[2] = String.valueOf(getday[4]);
         show_day[3] = String.valueOf(cld_m.get(Calendar.YEAR));
+        show_day[4] = getday[1];
 
 
         Log.i("today**", getday[2]);
@@ -93,6 +100,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    void set_date_to_label(int month,int day,int th_syear){
+
+        List<String> l_month=new ArrayList<String>();
+        l_month.add("Январь");
+        l_month.add("Февраль");
+        l_month.add("Март");
+        l_month.add("Апрель");
+        l_month.add("Май");
+        l_month.add("Июнь");
+        l_month.add("Июль");
+        l_month.add("Август");
+        l_month.add("Сентябрь");
+        l_month.add("Октябрь");
+        l_month.add("Ноябрь");
+        l_month.add("Декабрь");
+
+
+        l_date=(TextView)findViewById(R.id.date_label);
+        l_year=(TextView)findViewById(R.id.year_label);
+        if (day==0){
+            l_date.setText(l_month.get(month));
+
+        }else
+
+        l_date.setText(l_month.get(month)+" "+day);
+        l_year.setText(""+th_syear);
+
+    }
+
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
@@ -108,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 if(mns<11) {
                     mns = mns + 1;
                     bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
+                    set_date_to_label(mns,0,year);
                     grView_cld.setAdapter(
                             //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                             new custom_grid_adapter(MainActivity.this,
@@ -125,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 if(mns>0){
                     mns=mns-1;
                     bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
+                    set_date_to_label(mns,0,year);
                     grView_cld.setAdapter(
                             //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                             new custom_grid_adapter(MainActivity.this,
