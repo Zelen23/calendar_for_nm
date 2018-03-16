@@ -84,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
                 grView_cld.setAdapter(
                         //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                         new custom_grid_adapter(MainActivity.this, list_date, mass_pict));
+                grView_cld.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                    }
+                });
 
             }
         });
@@ -157,6 +164,11 @@ public class MainActivity extends AppCompatActivity {
     // слушатель жестов
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
 
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return false;
+        }
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
