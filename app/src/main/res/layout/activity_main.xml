@@ -52,7 +52,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:text=" "
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/gestures"
         app:layout_constraintEnd_toStartOf="@+id/settings"
@@ -84,6 +83,8 @@
         android:layout_width="fill_parent"
         android:layout_height="266dp"
         android:layout_weight="1.0"
+        android:clickable="false"
+        android:gestureColor="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -95,8 +96,10 @@
             android:id="@+id/gridView"
             android:layout_width="match_parent"
             android:layout_height="299dp"
+            android:clickable="true"
             android:focusable="true"
-            android:numColumns="7" />
+            android:numColumns="7"
+            />
     </android.gesture.GestureOverlayView>
 
 </android.support.constraint.ConstraintLayout>

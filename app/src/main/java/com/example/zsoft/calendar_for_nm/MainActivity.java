@@ -37,18 +37,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         grView_cld=(GridView)findViewById(R.id.gridView);
 
+        // Прикутил слушатель на грид
         final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
-
         grView_cld.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 gestureDetector.onTouchEvent(event);
-                return true;
+                return false;
             }
         });
 
-
-        String [] day=day();
+        final String [] day=day();
         today=Integer.parseInt(day[0]);
         mns=Integer.parseInt(day[1]);
         year=Integer.parseInt(day[3]);
@@ -56,17 +55,41 @@ public class MainActivity extends AppCompatActivity {
 
 
         bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
-        set_date_to_label(mns,0,year);
+        final List<String> list_date=creat_mass.grv(mns,year);
+        final int [] mass_pict= creat_mass.convert_mass_for_render(creat_mass.grv(mns,year));
+
+        set_date_to_label(mns,today,year);
         grView_cld.setAdapter(
                 //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                 new custom_grid_adapter(this,
-                        creat_mass.grv(mns,year),
-                        creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
+                        list_date,mass_pict)
+                        //creat_mass.grv(mns,year),
+                      //  creat_mass.convert_mass_for_render(creat_mass.grv(mns,year)))
+        );
+
+        // клик по лейблу даты возвращает на текущуу страницу
+        l_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                set_date_to_label(
+                        Integer.parseInt(day[1]),
+                        Integer.parseInt(day[0]),
+                        Integer.parseInt(day[3])
+                );
+                today=Integer.parseInt(day[0]);
+                mns=Integer.parseInt(day[1]);
+                year=Integer.parseInt(day[3]);
+                mns_name=day[4];
+
+                grView_cld.setAdapter(
+                        //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
+                        new custom_grid_adapter(MainActivity.this, list_date, mass_pict));
 
 
+            }
+        });
 
     }
-
 
 
     // Разбор текущей даты для проверок
@@ -99,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         grView_cld.setColumnWidth(30);
     }
 
-
+    // шапка дата и год
     void set_date_to_label(int month,int day,int th_syear){
 
         List<String> l_month=new ArrayList<String>();
@@ -132,8 +155,41 @@ public class MainActivity extends AppCompatActivity {
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
+    // слушатель жестов
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
+        final bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
 
+
+    // прикрутил слушатель к одиночному клику
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+
+            grView_cld.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    // дата для запроса
+                    String day_of_pos=String.valueOf(
+                            creat_mass.grv(mns,year).get(position));
+                    String s_date= day_of_pos+":" +mns+ ":"+year;
+                    if(day_of_pos!=" ") {
+
+                        set_date_to_label(mns, Integer.parseInt(day_of_pos), year);
+                    }
+                }
+            });
+
+
+            return super.onSingleTapUp(e);
+
+
+        }
+
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+
+            return true;
+        }
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -142,40 +198,44 @@ public class MainActivity extends AppCompatActivity {
             if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >
                     SWIPE_THRESHOLD_VELOCITY) {
                 if(mns<11) {
-                    mns = mns + 1;
-                    bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
-                    set_date_to_label(mns,0,year);
-                    grView_cld.setAdapter(
-                            //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
-                            new custom_grid_adapter(MainActivity.this,
-                                    creat_mass.grv(mns,year),
-                                    creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
+                    mns++;
+                }else{
+                    mns=0;
+                    year++;
 
                 }
 
-                Toast.makeText(MainActivity.this,
-                        "<---^ "+mns,Toast.LENGTH_SHORT).show();
+                set_date_to_label(mns,0,year);
+                grView_cld.setAdapter(
+                        //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
+                        new custom_grid_adapter(MainActivity.this,
+                                creat_mass.grv(mns,year),
+                                creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
+
                 return false; // справа налево
 
             }  else if (e2.getX() - e1.getX() >
                     SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                 if(mns>0){
-                    mns=mns-1;
-                    bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
-                    set_date_to_label(mns,0,year);
-                    grView_cld.setAdapter(
-                            //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
-                            new custom_grid_adapter(MainActivity.this,
-                                    creat_mass.grv(mns,year),
-                                    creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
+                    mns--;
+                }else{
+                    mns=11;
+                    year--;
                 }
-
-                Toast.makeText(MainActivity.this,
-                        "^---> "+mns,Toast.LENGTH_SHORT).show();
+                final bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
+                set_date_to_label(mns,0,year);
+                grView_cld.setAdapter(
+                        //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
+                        new custom_grid_adapter(MainActivity.this,
+                                creat_mass.grv(mns,year),
+                                creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
 
                 return false; // слева направо
             }
+
+
             day_in_this_month.dat();
+
             return false;
         }
     }
