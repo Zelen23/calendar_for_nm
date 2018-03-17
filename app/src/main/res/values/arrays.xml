@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="text_size">
+        <item> 12 </item>
+        <item> 14 </item>
+        <item> 16 </item>
+        <item> 18 </item>
+    </string-array>
+    <string-array name="text_color">
+        <item> Red </item>
+        <item> Blue </item>
+        <item> Gray </item>
+        <item> White </item>
+</string-array>
+</resources>
