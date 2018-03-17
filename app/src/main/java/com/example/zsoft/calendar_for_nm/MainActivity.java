@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,17 +26,20 @@ public class MainActivity extends AppCompatActivity {
 
     GridView grView_cld;
     TextView l_date, l_year;
+    ImageButton b_set;
 
     public static int today;
     public static int mns;
     public static int year;
     public static String mns_name;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         grView_cld=(GridView)findViewById(R.id.gridView);
+        b_set=(ImageButton)findViewById(R.id.settings);
 
         // Прикутил слушатель на грид
         final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
@@ -44,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 gestureDetector.onTouchEvent(event);
                 return false;
+            }
+        });
+        b_set.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getBaseContext(),preference.class);
+                startActivity(intent);
             }
         });
 
