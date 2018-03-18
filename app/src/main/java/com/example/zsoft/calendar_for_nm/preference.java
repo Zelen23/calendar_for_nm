@@ -22,8 +22,7 @@ public class preference  extends PreferenceActivity{
             public boolean onPreferenceClick(Preference preference) {
                 SharedPreferences sharedPreferences=getSharedPreferences("shared",
                         Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor=sharedPreferences.edit();
-                editor.commit();
+
                 return true;
             }
         });

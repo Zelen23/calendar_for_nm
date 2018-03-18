@@ -18,7 +18,7 @@
     <ListPreference
         android:defaultValue="1"
         android:entries="@array/text_color"
-        android:entryValues="@array/text_size"
+        android:entryValues="@array/text_color"
         android:key="list_color"
         android:summary="Selected color text"
         android:title="List preference" />

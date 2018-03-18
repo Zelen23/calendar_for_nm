@@ -1,7 +1,10 @@
 package com.example.zsoft.calendar_for_nm;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,7 @@ public class custom_grid_adapter extends BaseAdapter {
     private final int[] Image_id;
     MainActivity main= new MainActivity();
     String[]ms_day=main.day();
+
 
     public custom_grid_adapter(Context mContext, List<String> string, int[] image_id) {
         this.mContext = mContext;
@@ -58,6 +62,11 @@ public class custom_grid_adapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         GregorianCalendar cld=new GregorianCalendar();
+        SharedPreferences sharedPreferences=PreferenceManager
+                .getDefaultSharedPreferences(mContext);
+        int size= Integer.parseInt(sharedPreferences.getString("list_size",""));
+        String color=sharedPreferences.getString("list_color","");
+
 
         final ViewHolder holder;
         View grid=view;
@@ -84,9 +93,11 @@ public class custom_grid_adapter extends BaseAdapter {
                 MainActivity.mns==Integer.parseInt(ms_day[1])&&
                 MainActivity.year==Integer.parseInt(ms_day[03])){
             holder.textView.setTextColor(Color.parseColor("Gray"));
+
         }
         else
-        holder.textView.setTextColor(Color.parseColor("White"));
+        holder.textView.setTextColor(Color.parseColor(color));
+        holder.textView.setTextSize(size);
 
         grid.setTag(holder);
         return grid;
