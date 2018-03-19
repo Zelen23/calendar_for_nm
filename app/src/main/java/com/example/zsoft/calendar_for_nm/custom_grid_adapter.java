@@ -64,8 +64,8 @@ public class custom_grid_adapter extends BaseAdapter {
         GregorianCalendar cld=new GregorianCalendar();
         SharedPreferences sharedPreferences=PreferenceManager
                 .getDefaultSharedPreferences(mContext);
-        int size= Integer.parseInt(sharedPreferences.getString("list_size",""));
-        String color=sharedPreferences.getString("list_color","");
+        int size= Integer.parseInt(sharedPreferences.getString("list_size","12"));
+        String color=sharedPreferences.getString("list_color","White");
 
 
         final ViewHolder holder;
