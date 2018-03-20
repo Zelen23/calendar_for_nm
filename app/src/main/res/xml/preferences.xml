@@ -22,10 +22,5 @@
         android:key="list_color"
         android:summary="Selected color text"
         android:title="List preference" />
-    <Preference
-        android:title="Custom Preference"
-        android:summary="This works almost like a button"
-        android:key="customPref" />
-
 
 </PreferenceScreen>
