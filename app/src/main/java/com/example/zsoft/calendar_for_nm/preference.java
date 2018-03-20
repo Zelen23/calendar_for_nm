@@ -55,6 +55,9 @@ public class preference  extends PreferenceActivity{
         Intent intent= new Intent(preference.this,MainActivity.class);
        // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         //startActivity(intent);
+
+        // head tree
+        //lalalala
     }
 
     @Override
