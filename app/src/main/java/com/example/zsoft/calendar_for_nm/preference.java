@@ -52,9 +52,8 @@ public class preference  extends PreferenceActivity{
     protected void onDestroy() {
         super.onDestroy();
 
-        Intent intent= new Intent(preference.this,MainActivity.class);
-       // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        //startActivity(intent);
+
+        // test branch
     }
 
     @Override
