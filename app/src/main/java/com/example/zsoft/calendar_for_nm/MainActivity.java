@@ -29,6 +29,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    // переписать на фрагменты
+
     GridView grView_cld;
     TextView l_date, l_year;
     ImageButton b_set;

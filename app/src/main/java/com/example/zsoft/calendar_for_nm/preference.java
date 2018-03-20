@@ -1,6 +1,7 @@
 package com.example.zsoft.calendar_for_nm;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -40,6 +41,21 @@ public class preference  extends PreferenceActivity{
 
 */
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Intent intent= new Intent(preference.this,MainActivity.class);
+       // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        //startActivity(intent);
+    }
 
     @Override
     public void onBuildHeaders(List<Header> target) {
@@ -54,8 +70,8 @@ public class preference  extends PreferenceActivity{
     }
 
 
-
     public static class PrefFragment extends PreferenceFragment{
+
 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +85,8 @@ public class preference  extends PreferenceActivity{
         public void onPause() {
             super.onPause();
 
+
+            //startActivity(refresh);
             Log.i("pref__psuse","Pause");
 
 
