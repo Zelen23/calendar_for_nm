@@ -1,9 +1,14 @@
 package com.example.zsoft.calendar_for_nm;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -13,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,19 +29,38 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    // переписать на фрагменты
+
     GridView grView_cld;
     TextView l_date, l_year;
+    ImageButton b_set;
+    ConstraintLayout layout;
 
     public static int today;
     public static int mns;
     public static int year;
     public static String mns_name;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         grView_cld=(GridView)findViewById(R.id.gridView);
+        b_set=(ImageButton)findViewById(R.id.settings);
+
+        layout=(ConstraintLayout)findViewById(R.id.layout_id);
+        SharedPreferences sharedPreferences=
+                PreferenceManager.getDefaultSharedPreferences(this);
+
+       String index_background=sharedPreferences.getString("background","0");
+        int[] back={
+                R.drawable.gradient_1,
+                R.drawable.gradient_2,
+                R.drawable.gradient_3};
+        layout.setBackgroundResource(back[Integer.parseInt(index_background)]);
+
+
 
         // Прикутил слушатель на грид
         final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
@@ -44,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 gestureDetector.onTouchEvent(event);
                 return false;
+            }
+        });
+        b_set.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getBaseContext(),preference.class);
+                startActivity(intent);
             }
         });
 
@@ -84,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
                 grView_cld.setAdapter(
                         //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                         new custom_grid_adapter(MainActivity.this, list_date, mass_pict));
-
 
             }
         });
@@ -168,11 +199,16 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     // дата для запроса
+                    SharedPreferences sharedPreferencs = PreferenceManager
+                            .getDefaultSharedPreferences(MainActivity.this);
+                    String edit_valve=sharedPreferencs.getString("background","0");
                     String day_of_pos=String.valueOf(
                             creat_mass.grv(mns,year).get(position));
                     String s_date= day_of_pos+":" +mns+ ":"+year;
                     if(day_of_pos!=" ") {
 
+
+                        Toast.makeText(MainActivity.this,"++"+edit_valve,Toast.LENGTH_SHORT).show();
                         set_date_to_label(mns, Integer.parseInt(day_of_pos), year);
                     }
                 }
