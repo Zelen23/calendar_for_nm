@@ -5,7 +5,6 @@
     android:id="@+id/layout_id"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_3"
     tools:context="com.example.zsoft.calendar_for_nm.MainActivity">
 
     <ImageButton

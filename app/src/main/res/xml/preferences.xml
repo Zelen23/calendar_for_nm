@@ -22,5 +22,10 @@
         android:key="list_color"
         android:summary="Selected color text"
         android:title="List preference" />
-
+    <ListPreference
+        android:entries="@array/background"
+        android:entryValues="@array/background"
+        android:key="background"
+        android:summary="Select background"
+        android:title="List preference" />
 </PreferenceScreen>
