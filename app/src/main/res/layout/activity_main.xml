@@ -12,6 +12,7 @@
         android:id="@+id/menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="8dp"
@@ -24,7 +25,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.22000003"
+        app:layout_constraintVertical_bias="0.18"
         app:srcCompat="@drawable/menu" />
 
     <TextView
@@ -65,6 +66,8 @@
         android:id="@+id/settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/menu_back"
@@ -73,10 +76,10 @@
         android:scaleY="0.5"
         app:layout_constraintBottom_toTopOf="@+id/gestures"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.99"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/menu"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.22000003"
+        app:layout_constraintVertical_bias="0.18"
         app:srcCompat="@drawable/settings2" />
 
     <android.gesture.GestureOverlayView
@@ -91,16 +94,15 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.110000014">
+        app:layout_constraintVertical_bias="0.24000001">
 
         <GridView
             android:id="@+id/gridView"
             android:layout_width="match_parent"
-            android:layout_height="299dp"
+            android:layout_height="match_parent"
             android:clickable="true"
             android:focusable="true"
-            android:numColumns="7"
-            />
+            android:numColumns="7" />
     </android.gesture.GestureOverlayView>
 
 </android.support.constraint.ConstraintLayout>

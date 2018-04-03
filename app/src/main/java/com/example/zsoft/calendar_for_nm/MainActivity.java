@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         grView_cld=(GridView)findViewById(R.id.gridView);
         b_set=(ImageButton)findViewById(R.id.settings);
 
+
         layout=(ConstraintLayout)findViewById(R.id.layout_id);
         SharedPreferences sharedPreferences=
                 PreferenceManager.getDefaultSharedPreferences(this);

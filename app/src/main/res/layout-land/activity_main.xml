@@ -2,9 +2,10 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_id"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_3"
+    android:id="@+id/layout_id"
     tools:context="com.example.zsoft.calendar_for_nm.MainActivity">
 
     <ImageButton
@@ -13,31 +14,37 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="1dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/menu_back"
         android:contentDescription="@string/app_name"
         android:scaleX="0.5"
         android:scaleY="0.5"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/gestures"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.991"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.17000002"
         app:srcCompat="@drawable/menu" />
 
     <TextView
         android:id="@+id/date_label"
-        android:layout_width="1dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="7dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:clickable="true"
         android:focusable="true"
         android:textSize="18sp"
-         />
+        app:layout_constraintBottom_toTopOf="@+id/gestures"
+        app:layout_constraintEnd_toStartOf="@+id/settings"
+        app:layout_constraintHorizontal_bias="0.408"
+        app:layout_constraintStart_toEndOf="@+id/menu"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.142" />
 
     <TextView
         android:id="@+id/year_label"
@@ -48,34 +55,12 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:textSize="18sp"
-         />
-
-    <android.gesture.GestureOverlayView
-        android:id="@+id/gestures"
-        android:layout_width="500dp"
-        android:layout_height="400dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1.0"
-        android:clickable="false"
-        android:gestureColor="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.017"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/gestures"
+        app:layout_constraintEnd_toStartOf="@+id/settings"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toEndOf="@+id/date_label"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.495">
-
-        <GridView
-            android:id="@+id/gridView"
-            android:layout_width="500dp"
-            android:layout_height="400dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:numColumns="7" />
-    </android.gesture.GestureOverlayView>
+        app:layout_constraintVertical_bias="0.14999998" />
 
     <ImageButton
         android:id="@+id/settings"
@@ -83,17 +68,41 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/menu_back"
         android:contentDescription="@string/app_name"
         android:scaleX="0.5"
         android:scaleY="0.5"
+        app:layout_constraintBottom_toTopOf="@+id/gestures"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/menu"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.17000002"
+        app:srcCompat="@drawable/settings2" />
+
+    <android.gesture.GestureOverlayView
+        android:id="@+id/gestures"
+        android:layout_width="380dp"
+        android:layout_height="300dp"
+        android:layout_weight="1.0"
+        android:clickable="false"
+        android:gestureColor="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/menu"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.016" />
+        app:layout_constraintVertical_bias="0.98">
+
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:numColumns="7" />
+    </android.gesture.GestureOverlayView>
 
 </android.support.constraint.ConstraintLayout>
