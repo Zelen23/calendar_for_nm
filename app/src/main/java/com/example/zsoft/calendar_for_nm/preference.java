@@ -51,17 +51,11 @@ public class preference  extends PreferenceActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        Intent intent= new Intent(preference.this,MainActivity.class);
         /*
-       // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        //startActivity(intent);
-
-        // head tree
-        //lalalala
-        // test branch
+        Intent intent= new Intent(preference.this,MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
         */
-
     }
 
     @Override
@@ -91,17 +85,28 @@ public class preference  extends PreferenceActivity{
         @Override
         public void onPause() {
             super.onPause();
-
-
             //startActivity(refresh);
-            Log.i("pref__psuse","Pause");
+            refrash();
+            Log.i("pref__psuse","" +
+                    "Pause");
 
 
 
         }
 
+        public  void refrash(){
+            Intent intent= null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                intent = new Intent(getContext(),MainActivity.class);
+            }
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+
+        }
 
     }
+
+
 
 
 }
