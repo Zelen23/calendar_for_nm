@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         grView_cld=(GridView)findViewById(R.id.gridView);
+
         b_set=(ImageButton)findViewById(R.id.settings);
 
 
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 gestureDetector.onTouchEvent(event);
-                return false;
+                return event.getAction()==MotionEvent.ACTION_MOVE;
             }
         });
         b_set.setOnClickListener(new View.OnClickListener() {
@@ -205,13 +206,22 @@ public class MainActivity extends AppCompatActivity {
                     String edit_valve=sharedPreferencs.getString("background","0");
                     String day_of_pos=String.valueOf(
                             creat_mass.grv(mns,year).get(position));
-                    String s_date= day_of_pos+":" +mns+ ":"+year;
+                    //String s_date= day_of_pos+":" +mns+ ":"+year;
+                    try{
+                    Toast.makeText(MainActivity.this,"++"+edit_valve,Toast.LENGTH_SHORT).show();
+                        set_date_to_label(mns, Integer.parseInt(day_of_pos), year);
+                    }
+                     catch(NumberFormatException ex){
+                     Log.i("number_format",ex.getMessage());
+                    }
+                    /*
                     if(day_of_pos!=" ") {
 
 
                         Toast.makeText(MainActivity.this,"++"+edit_valve,Toast.LENGTH_SHORT).show();
                         set_date_to_label(mns, Integer.parseInt(day_of_pos), year);
                     }
+                    */
                 }
             });
 

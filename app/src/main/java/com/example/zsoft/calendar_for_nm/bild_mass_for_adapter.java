@@ -75,6 +75,13 @@ public class bild_mass_for_adapter {
         max = cld.getActualMaximum(Calendar.DAY_OF_MONTH);
         String[] ms = new String[50];
         final List<String> list_d = new ArrayList<>();
+        list_d.add("Пн");
+        list_d.add("Вт");
+        list_d.add("Ср");
+        list_d.add("Чт");
+        list_d.add("Пт");
+        list_d.add("Сб");
+        list_d.add("Вс");
 
 //из нетбина календарь
         int in = 1;
