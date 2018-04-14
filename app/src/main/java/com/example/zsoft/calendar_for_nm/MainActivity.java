@@ -41,25 +41,25 @@ public class MainActivity extends AppCompatActivity {
     public static int year;
     public static String mns_name;
 
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+    public   static int[] back={
+            R.drawable.gradient_1,
+            R.drawable.gradient_2,
+            R.drawable.gradient_3};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         grView_cld=(GridView)findViewById(R.id.gridView);
-
         b_set=(ImageButton)findViewById(R.id.settings);
-
-
         layout=(ConstraintLayout)findViewById(R.id.layout_id);
         SharedPreferences sharedPreferences=
                 PreferenceManager.getDefaultSharedPreferences(this);
 
        String index_background=sharedPreferences.getString("background","0");
-        int[] back={
-                R.drawable.gradient_1,
-                R.drawable.gradient_2,
-                R.drawable.gradient_3};
+
         layout.setBackgroundResource(back[Integer.parseInt(index_background)]);
 
 
@@ -185,8 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private static final int SWIPE_MIN_DISTANCE = 120;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
 
     // слушатель жестов
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
@@ -206,9 +205,11 @@ public class MainActivity extends AppCompatActivity {
                     String edit_valve=sharedPreferencs.getString("background","0");
                     String day_of_pos=String.valueOf(
                             creat_mass.grv(mns,year).get(position));
-                    //String s_date= day_of_pos+":" +mns+ ":"+year;
+
                     try{
-                    Toast.makeText(MainActivity.this,"++"+edit_valve,Toast.LENGTH_SHORT).show();
+                        String s_date= day_of_pos+":" +mns+ ":"+year;
+                        Toast.makeText(MainActivity.this,
+                                "++"+s_date,Toast.LENGTH_SHORT).show();
                         set_date_to_label(mns, Integer.parseInt(day_of_pos), year);
                     }
                      catch(NumberFormatException ex){
@@ -223,6 +224,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                     */
                 }
+            });
+//LongClick
+            grView_cld.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView,
+                                               View view, int i, long l) {
+                    Intent intent=new Intent(MainActivity.this,Recycle_windows.class);
+                    startActivity(intent);
+                    return false;
+                }
+
             });
 
 
