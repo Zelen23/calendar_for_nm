@@ -27,9 +27,9 @@ public class Adapter_recycle extends RecyclerView.Adapter<Adapter_recycle.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             cardView=(CardView)itemView.findViewById(R.id.card);
-            textView=(TextView) itemView.findViewById(R.id.textView);
-            editText=(EditText)itemView.findViewById(R.id.editText);
-            checkBox=(CheckBox) itemView.findViewById(R.id.checkBox);
+            textView=(TextView) itemView.findViewById(R.id.textView12);
+            editText=(EditText)itemView.findViewById(R.id.editText2);
+            checkBox=(CheckBox) itemView.findViewById(R.id.checkBox2);
 
         }
 
