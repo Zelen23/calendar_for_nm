@@ -37,7 +37,7 @@ public class Recycle_windows extends AppCompatActivity {
     RecyclerView rv;
     ConstraintLayout layout;
 
-    private List<Constructor_data> data;
+    private List<Object> data;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,13 +56,29 @@ public class Recycle_windows extends AppCompatActivity {
         rv.setLayoutManager(li);
 
         data=new ArrayList<>();
-        data.add(new Constructor_data("ann",100,false));
-        data.add(new Constructor_data("jane",200,true));
-        data.add(new Constructor_data("e",100,true));
-        data.add(new Constructor_data("гена",700,false));
+        data.add(new Constructor_data("ann",100,false,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("jane",200,true,"18","55",
+                "19","20"));
+        data.add(new Constructor_data.Constructor_free_data("19","20",
+                "20","45"));
+        data.add(new Constructor_data("гена",700,false,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("ann",100,false,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("jane",200,true,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("Eedfhjd Dgfkgfk",1300,true,"17","35",
+                "18","55"));
+        data.add(new Constructor_data.Constructor_free_data("19","20",
+                "20","45"));
+        data.add(new Constructor_data("гена",700,false,"17","35",
+                "18","55"));
 
-        Adapter_recycle adapter=new Adapter_recycle(data);
+        Adapter_recycle adapter=new Adapter_recycle(Recycle_windows.this);
         rv.setAdapter(adapter);
+        adapter.setAdapter_recycle(data);
+        adapter.notifyDataSetChanged();
 
 
 
