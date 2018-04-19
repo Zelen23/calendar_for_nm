@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -44,8 +45,6 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-       // int layout=0;
-       // RecyclerView.ViewHolder viewHolder;
         View view;
         switch (viewType){
             case TYPE_FULL:
@@ -53,33 +52,13 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         .inflate(R.layout.card,parent,false);
                 return new FullHolder(view);
 
-                /*
-                layout=R.layout.card;
-                View full_view=LayoutInflater.from(parent.getContext())
-                        .inflate(layout,parent,false);
-                viewHolder= new FullHolder(full_view);
-                break;
-                */
-
-
             case  TYPE_EMPTY:
                 view=LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.card_empty,parent,false);
                 return new EmptyHolder(view);
 
-                /*
-                layout=R.layout.card_empty;
-                View empty_view=LayoutInflater.from(parent.getContext())
-                        .inflate(layout,parent,false);
-                viewHolder= new EmptyHolder(empty_view);
-                 break;
-
-            default:
-                viewHolder=null;
-                break;
-                */
         }
-       // return viewHolder;
+
         return null;
     }
 
@@ -112,6 +91,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView textView;
         EditText editText;
         CheckBox checkBox;
+        TextView h,m,h2,m2;
 
         public FullHolder(View itemView) {
             super(itemView);
@@ -119,11 +99,21 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
             textView=(TextView) itemView.findViewById(R.id.textView12);
             editText=(EditText)itemView.findViewById(R.id.editText2);
             checkBox=(CheckBox) itemView.findViewById(R.id.checkBox2);
+            h=(TextView) itemView.findViewById(R.id.h);
+            m=(TextView) itemView.findViewById(R.id.m);
+            h2=(TextView) itemView.findViewById(R.id.h2);
+            m2=(TextView) itemView.findViewById(R.id.m2);
+
         }
         public void show_data(Constructor_data ful_data){
             textView.setText(ful_data.name);
             editText.setText(String.valueOf(ful_data.sum));
             checkBox.setChecked(ful_data.flag);
+
+            h.setText(ful_data.h1);
+            m.setText(ful_data.m1);
+            h2.setText(ful_data.h2);
+            m2.setText(ful_data.m2);
 
         }
 
@@ -149,6 +139,15 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
             m.setText(free.m1);
             h2.setText(free.h2);
             m2.setText(free.m2);
+
+            card_empt.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+
+                    Toast.makeText(context,"ff",Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            });
 
         }
 
