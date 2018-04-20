@@ -18,6 +18,8 @@
         </activity>
         <activity android:name=".preference"
             />
+        <activity android:name=".Recycle_windows"
+            />
     </application>
 
 </manifest>
