@@ -20,6 +20,8 @@
             />
         <activity android:name=".Recycle_windows"
             />
+        <activity android:name=".WriteOrder"
+            />
     </application>
 
 </manifest>
