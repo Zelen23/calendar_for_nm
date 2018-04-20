@@ -1,6 +1,7 @@
 package com.example.zsoft.calendar_for_nm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.List;
+
+import static android.support.v4.content.ContextCompat.startActivity;
 
 /**
  * Created by adolf on 14.04.2018.
@@ -97,8 +100,10 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Constructor_data.Constructor_free_data empty_data = (Constructor_data.Constructor_free_data)
                         data.get(position);
                 ((EmptyHolder)holder).show_data(empty_data);
+
                 break;
         }
+
     }
 
     @Override
@@ -136,13 +141,25 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView h,m,h2,m2;
 
         public EmptyHolder(View itemView) {
+
             super(itemView);
             card_empt=(CardView)itemView.findViewById(R.id.card_emp);
             h=(TextView) itemView.findViewById(R.id.emty_h);
             m=(TextView) itemView.findViewById(R.id.empty_m);
             h2=(TextView) itemView.findViewById(R.id.empty_h2);
             m2=(TextView) itemView.findViewById(R.id.empty_m2);
+
+            card_empt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent0=new Intent(v.getContext(),WriteOrder.class);
+                    v.getContext().startActivity(intent0);
+
+                }
+            });
+
         }
+
 
         public void show_data(Constructor_data.Constructor_free_data free){
             h.setText(free.h1);
@@ -153,7 +170,10 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
 
+
+
     }
+
 
 
 }
