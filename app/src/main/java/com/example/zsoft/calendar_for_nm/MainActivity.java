@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     TextView l_date, l_year;
     ImageButton b_set;
     ConstraintLayout layout;
+    RecyclerView recyclerViewMain;
 
     public static int today;
     public static int mns;
@@ -54,13 +57,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         grView_cld=(GridView)findViewById(R.id.gridView);
         b_set=(ImageButton)findViewById(R.id.settings);
+        recyclerViewMain=(RecyclerView)findViewById(R.id.recycleMain);
         layout=(ConstraintLayout)findViewById(R.id.layout_id);
         SharedPreferences sharedPreferences=
                 PreferenceManager.getDefaultSharedPreferences(this);
 
-       String index_background=sharedPreferences.getString("background","0");
-
+        String index_background=sharedPreferences.getString("background","0");
         layout.setBackgroundResource(back[Integer.parseInt(index_background)]);
+
 
 
 
@@ -122,8 +126,45 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        viewRecycle();
     }
 
+    public void viewRecycle(){
+       List data=new ArrayList<>();
+        data.add(new Constructor_data("ann",100,false,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("jane",200,true,"18","55",
+                "19","20"));
+        data.add(new Constructor_data.Constructor_free_data("19","20",
+                "20","45"));
+        data.add(new Constructor_data("гена",700,false,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("ann",100,false,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("jane",200,true,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("Eedfhjd Dgfkgfk",1300,true,"17","35",
+                "18","55"));
+        data.add(new Constructor_data.Constructor_free_data("19","20",
+                "20","45"));
+        data.add(new Constructor_data("гена",700,false,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("jane",200,true,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("Eedfhjd Dgfkgfk",1300,true,"17","35",
+                "18","55"));
+        data.add(new Constructor_data.Constructor_free_data("19","20",
+                "20","45"));
+        data.add(new Constructor_data("гена",700,false,"17","35",
+                "18","55"));
+
+        LinearLayoutManager li=new LinearLayoutManager(MainActivity.this);
+        recyclerViewMain.setLayoutManager(li);
+        Adapter_recycle adapter=new Adapter_recycle(MainActivity.this);
+        adapter.setAdapter_recycle(data);
+        recyclerViewMain.setAdapter(adapter);
+
+    }
 
     // Разбор текущей даты для проверок
     String[] day() {
