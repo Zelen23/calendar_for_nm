@@ -1,9 +1,13 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +36,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.context=context;
     }
 
-  public void   setAdapter_recycle(List<Object> data){
+    public void   setAdapter_recycle(List<Object> data){
         this.data=data;
    }
 
@@ -90,7 +94,6 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return data.size();
     }
 
-
     public class FullHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView textView;
@@ -122,8 +125,6 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         }
 
-
-
     }
 
     public class EmptyHolder extends RecyclerView.ViewHolder {
@@ -142,8 +143,8 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
             card_empt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent0=new Intent(v.getContext(),WriteOrder.class);
-                    v.getContext().startActivity(intent0);
+                    AlertDiagWriteOrder alertDiagWriteOrder=new AlertDiagWriteOrder();
+                    alertDiagWriteOrder.Alert(context);
 
                 }
             });
@@ -161,7 +162,9 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public boolean onLongClick(View view) {
 
-                    Toast.makeText(context,"ff",Toast.LENGTH_LONG).show();
+                   // Intent intent0=new Intent(view.getContext(),WriteOrder.class);
+                   // view.getContext().startActivity(intent0);
+
                     return false;
                 }
             });
@@ -172,7 +175,5 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
     }
-
-
 
 }
