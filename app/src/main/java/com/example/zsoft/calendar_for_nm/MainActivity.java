@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         String index_background=sharedPreferences.getString("background","0");
         layout.setBackgroundResource(back[Integer.parseInt(index_background)]);
 
+        ExecuteDB executeDB=new ExecuteDB();
+        executeDB.permsion_ckecker(this);
+
 
 
 
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+//из базы рпскрасить месяц при старте
         final String [] day=day();
         today=Integer.parseInt(day[0]);
         mns=Integer.parseInt(day[1]);
@@ -131,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     public void viewRecycle(){
        List data=new ArrayList<>();
         data.add(new Constructor_data("ann",100,false,"17","35",
@@ -160,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Разбор текущей даты для проверок
+
     String[] day() {
 //month-day
         GregorianCalendar cld_m = new GregorianCalendar();
