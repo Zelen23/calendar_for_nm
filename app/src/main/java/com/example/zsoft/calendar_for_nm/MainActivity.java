@@ -65,11 +65,6 @@ public class MainActivity extends AppCompatActivity {
         String index_background=sharedPreferences.getString("background","0");
         layout.setBackgroundResource(back[Integer.parseInt(index_background)]);
 
-        ExecuteDB executeDB=new ExecuteDB();
-        executeDB.permsion_ckecker(this);
-
-
-
 
         // Прикутил слушатель на грид
         final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
@@ -94,18 +89,27 @@ public class MainActivity extends AppCompatActivity {
         year=Integer.parseInt(day[3]);
         mns_name=day[4];
 
+        /*при старте проверяю есть ли разрещение если нет- не даю листать календарь
+        * */
+        ExecuteDB executeDB=new ExecuteDB();
+        executeDB.permsion_ckecker(this);
+
+
+
+
 
         bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
         final List<String> list_date=creat_mass.grv(mns,year);
-        final int [] mass_pict= creat_mass.convert_mass_for_render(creat_mass.grv(mns,year));
+        //получаю цветной массив
+        final int [] mass_pict= creat_mass.convert_mass_for_render
+                (this,creat_mass.grv(mns,year)
+                        ,mns
+                        ,year);
 
         set_date_to_label(mns,today,year);
-        grView_cld.setAdapter(
-                //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
-                new custom_grid_adapter(this,
-                        list_date,mass_pict)
-                        //creat_mass.grv(mns,year),
-                      //  creat_mass.convert_mass_for_render(creat_mass.grv(mns,year)))
+        //      готовые массивы 1-с датами и пробелами 2- с цветами
+        grView_cld.setAdapter(new custom_grid_adapter(this, list_date
+                ,mass_pict)
         );
 
         // клик по лейблу даты возвращает на текущуу страницу
@@ -308,7 +312,10 @@ public class MainActivity extends AppCompatActivity {
                         //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                         new custom_grid_adapter(MainActivity.this,
                                 creat_mass.grv(mns,year),
-                                creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
+                                creat_mass.convert_mass_for_render(MainActivity.this
+                                        ,creat_mass.grv(mns,year)
+                                        ,mns
+                                        ,year)));
 
                 return false; // справа налево
 
@@ -326,7 +333,10 @@ public class MainActivity extends AppCompatActivity {
                         //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                         new custom_grid_adapter(MainActivity.this,
                                 creat_mass.grv(mns,year),
-                                creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
+                                creat_mass.convert_mass_for_render(MainActivity.this
+                                        ,creat_mass.grv(mns,year)
+                                        ,mns
+                                        ,year)));
 
                 return false; // слева направо
             }
