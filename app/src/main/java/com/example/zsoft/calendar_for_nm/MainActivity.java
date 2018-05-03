@@ -129,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
         viewRecycle();
     }
 
+
+
     public void viewRecycle(){
        List data=new ArrayList<>();
         data.add(new Constructor_data("ann",100,false,"17","35",
@@ -147,16 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 "18","55"));
         data.add(new Constructor_data.Constructor_free_data("19","20",
                 "20","45"));
-        data.add(new Constructor_data("гена",700,false,"17","35",
-                "18","55"));
-        data.add(new Constructor_data("jane",200,true,"17","35",
-                "18","55"));
-        data.add(new Constructor_data("Eedfhjd Dgfkgfk",1300,true,"17","35",
-                "18","55"));
-        data.add(new Constructor_data.Constructor_free_data("19","20",
-                "20","45"));
-        data.add(new Constructor_data("гена",700,false,"17","35",
-                "18","55"));
+
 
         LinearLayoutManager li=new LinearLayoutManager(MainActivity.this);
         recyclerViewMain.setLayoutManager(li);
