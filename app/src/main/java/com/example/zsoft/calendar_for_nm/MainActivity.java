@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     TextView l_date, l_year;
     ImageButton b_set;
     ConstraintLayout layout;
+    RecyclerView recyclerViewMain;
 
     public static int today;
     public static int mns;
@@ -54,17 +57,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         grView_cld=(GridView)findViewById(R.id.gridView);
         b_set=(ImageButton)findViewById(R.id.settings);
+        recyclerViewMain=(RecyclerView)findViewById(R.id.recycleMain);
         layout=(ConstraintLayout)findViewById(R.id.layout_id);
         SharedPreferences sharedPreferences=
                 PreferenceManager.getDefaultSharedPreferences(this);
 
-       String index_background=sharedPreferences.getString("background","0");
-
+        String index_background=sharedPreferences.getString("background","0");
         layout.setBackgroundResource(back[Integer.parseInt(index_background)]);
-
-        ExecuteDB executeDB=new ExecuteDB();
-        executeDB.permsion_ckecker(this);
-
 
 
         // Прикутил слушатель на грид
@@ -90,18 +89,27 @@ public class MainActivity extends AppCompatActivity {
         year=Integer.parseInt(day[3]);
         mns_name=day[4];
 
+        /*при старте проверяю есть ли разрещение если нет- не даю листать календарь
+        * */
+        ExecuteDB executeDB=new ExecuteDB();
+        executeDB.permsion_ckecker(this);
+
+
+
+
 
         bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
         final List<String> list_date=creat_mass.grv(mns,year);
-        final int [] mass_pict= creat_mass.convert_mass_for_render(creat_mass.grv(mns,year));
+        //получаю цветной массив
+        final int [] mass_pict= creat_mass.convert_mass_for_render
+                (this,creat_mass.grv(mns,year)
+                        ,mns
+                        ,year);
 
         set_date_to_label(mns,today,year);
-        grView_cld.setAdapter(
-                //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
-                new custom_grid_adapter(this,
-                        list_date,mass_pict)
-                        //creat_mass.grv(mns,year),
-                      //  creat_mass.convert_mass_for_render(creat_mass.grv(mns,year)))
+        //      готовые массивы 1-с датами и пробелами 2- с цветами
+        grView_cld.setAdapter(new custom_grid_adapter(this, list_date
+                ,mass_pict)
         );
 
         // клик по лейблу даты возвращает на текущуу страницу
@@ -125,10 +133,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        viewRecycle();
     }
 
 
-// Разбор текущей даты для проверок
+
+
+    public void viewRecycle(){
+       List data=new ArrayList<>();
+        data.add(new Constructor_data("ann",100,false,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("jane",200,true,"18","55",
+                "19","20"));
+        data.add(new Constructor_data.Constructor_free_data("19","20",
+                "20","45"));
+        data.add(new Constructor_data("гена",700,false,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("ann",100,false,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("jane",200,true,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("Eedfhjd Dgfkgfk",1300,true,"17","35",
+                "18","55"));
+        data.add(new Constructor_data.Constructor_free_data("19","20",
+                "20","45"));
+
+
+        LinearLayoutManager li=new LinearLayoutManager(MainActivity.this);
+        recyclerViewMain.setLayoutManager(li);
+        Adapter_recycle adapter=new Adapter_recycle(MainActivity.this);
+        adapter.setAdapter_recycle(data);
+        recyclerViewMain.setAdapter(adapter);
+
+    }
+
+    // Разбор текущей даты для проверок
+
     String[] day() {
 //month-day
         GregorianCalendar cld_m = new GregorianCalendar();
@@ -272,7 +312,10 @@ public class MainActivity extends AppCompatActivity {
                         //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                         new custom_grid_adapter(MainActivity.this,
                                 creat_mass.grv(mns,year),
-                                creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
+                                creat_mass.convert_mass_for_render(MainActivity.this
+                                        ,creat_mass.grv(mns,year)
+                                        ,mns
+                                        ,year)));
 
                 return false; // справа налево
 
@@ -290,7 +333,10 @@ public class MainActivity extends AppCompatActivity {
                         //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
                         new custom_grid_adapter(MainActivity.this,
                                 creat_mass.grv(mns,year),
-                                creat_mass.convert_mass_for_render(creat_mass.grv(mns,year))));
+                                creat_mass.convert_mass_for_render(MainActivity.this
+                                        ,creat_mass.grv(mns,year)
+                                        ,mns
+                                        ,year)));
 
                 return false; // слева направо
             }
