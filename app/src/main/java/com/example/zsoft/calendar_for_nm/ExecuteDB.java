@@ -17,6 +17,7 @@ import java.util.jar.Manifest;
 
 public class ExecuteDB extends MainActivity {
     private db mDbHelper;
+    boolean status;
 
 int PERMISSION_REQEST_CODE=123;
 int REQEST_WRT_EXTERNAL=2;
@@ -37,36 +38,36 @@ private  static  final String READ_EXTERNAL_PERM= android.Manifest.permission
                 },
                 PERMISSION_REQEST_CODE);
 
-    }
 
+    }
+//походу не работает
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if(requestCode==REQEST_WRT_EXTERNAL){
             for(int i=0;i<permissions.length;i++) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     //
-                    Log.i("Perm_Gr",permissions[i]);
-                } else {
-                    //
-                    Log.i("Perm_NO_Gr",permissions[i]);
-                    Toast.makeText(this, "NoPerm", Toast.LENGTH_LONG).show();
-                    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                    status = false;
+                    Log.i("Perm_Gr", permissions[i]);
+
                 }
             }
         }
 
     }
 
-    public void permsion_ckecker(Context context){
-        if(isPermissionGranted(context,WRITE_EXTERNAL_PERM)){
-            //init base
-            mDbHelper = new db(context);
-            mDbHelper.getWritableDatabase();
 
+
+    public boolean permsion_ckecker(Context context){
+
+        if(isPermissionGranted(context,WRITE_EXTERNAL_PERM)){
+            status=true;
         }else{
             reqestPerm(context);
-        }
 
+
+        }
+        return  status;
     }
 }

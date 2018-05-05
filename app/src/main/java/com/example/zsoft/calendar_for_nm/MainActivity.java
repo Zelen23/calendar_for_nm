@@ -1,11 +1,17 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton b_set;
     ConstraintLayout layout;
     RecyclerView recyclerViewMain;
+    custom_grid_adapter adapter;
 
     public static int today;
     public static int mns;
@@ -59,22 +66,12 @@ public class MainActivity extends AppCompatActivity {
         b_set=(ImageButton)findViewById(R.id.settings);
         recyclerViewMain=(RecyclerView)findViewById(R.id.recycleMain);
         layout=(ConstraintLayout)findViewById(R.id.layout_id);
+
         SharedPreferences sharedPreferences=
                 PreferenceManager.getDefaultSharedPreferences(this);
-
         String index_background=sharedPreferences.getString("background","0");
         layout.setBackgroundResource(back[Integer.parseInt(index_background)]);
-
-
-        // Прикутил слушатель на грид
-        final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
-        grView_cld.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                gestureDetector.onTouchEvent(event);
-                return event.getAction()==MotionEvent.ACTION_MOVE;
-            }
-        });
+// кнопка настроек
         b_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,90 +79,80 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//из базы рпскрасить месяц при старте
+
         final String [] day=day();
         today=Integer.parseInt(day[0]);
         mns=Integer.parseInt(day[1]);
         year=Integer.parseInt(day[3]);
         mns_name=day[4];
 
-        /*при старте проверяю есть ли разрещение если нет- не даю листать календарь
-        * */
-        ExecuteDB executeDB=new ExecuteDB();
-        executeDB.permsion_ckecker(this);
-
-
-
-
-
-        bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
-        final List<String> list_date=creat_mass.grv(mns,year);
-        //получаю цветной массив
-        final int [] mass_pict= creat_mass.convert_mass_for_render
-                (this,creat_mass.grv(mns,year)
-                        ,mns
-                        ,year);
-
+//  дата в лейбл
         set_date_to_label(mns,today,year);
-        //      готовые массивы 1-с датами и пробелами 2- с цветами
-        grView_cld.setAdapter(new custom_grid_adapter(this, list_date
-                ,mass_pict)
-        );
 
-        // клик по лейблу даты возвращает на текущуу страницу
-        l_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                set_date_to_label(
-                        Integer.parseInt(day[1]),
-                        Integer.parseInt(day[0]),
-                        Integer.parseInt(day[3])
-                );
-                today=Integer.parseInt(day[0]);
-                mns=Integer.parseInt(day[1]);
-                year=Integer.parseInt(day[3]);
-                mns_name=day[4];
+// Прикутил слушатель на грид
+        final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
 
-                grView_cld.setAdapter(
-                        //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
-                        new custom_grid_adapter(MainActivity.this, list_date, mass_pict));
 
-            }
-        });
 
-        viewRecycle();
+        int permission= ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(permission== PackageManager.PERMISSION_GRANTED){
+            // Yes
+            bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
+            final List<String> list_date=creat_mass.grv(mns,year);
+            grView_cld.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    gestureDetector.onTouchEvent(event);
+                    return event.getAction()==MotionEvent.ACTION_MOVE;
+                }
+            });
+// цветной массие
+            final int [] mass_pict= creat_mass.convert_mass_for_render
+                    (this,creat_mass.grv(mns,year)
+                            ,mns
+                            ,year);
+
+
+// готовые массивы 1-с датами и пробелами 2- с цветами
+            adapter=new custom_grid_adapter(this, list_date
+                    ,mass_pict);
+            grView_cld.setAdapter(adapter);
+
+// клик по лейблу даты возвращает на текущуу страницу
+            l_date.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    set_date_to_label(
+                            Integer.parseInt(day[1]),
+                            Integer.parseInt(day[0]),
+                            Integer.parseInt(day[3])
+                    );
+                    today=Integer.parseInt(day[0]);
+                    mns=Integer.parseInt(day[1]);
+                    year=Integer.parseInt(day[3]);
+                    mns_name=day[4];
+
+                    grView_cld.setAdapter(adapter
+                            //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
+                            // new custom_grid_adapter(MainActivity.this, list_date, mass_pict)
+                    );
+                }
+            });
+
+        }else{
+            ActivityCompat.requestPermissions(this ,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
+                    ,1);
+        }
+
+
     }
 
 
 
 
-    public void viewRecycle(){
-       List data=new ArrayList<>();
-        data.add(new Constructor_data("ann",100,false,"17","35",
-                "18","55"));
-        data.add(new Constructor_data("jane",200,true,"18","55",
-                "19","20"));
-        data.add(new Constructor_data.Constructor_free_data("19","20",
-                "20","45"));
-        data.add(new Constructor_data("гена",700,false,"17","35",
-                "18","55"));
-        data.add(new Constructor_data("ann",100,false,"17","35",
-                "18","55"));
-        data.add(new Constructor_data("jane",200,true,"17","35",
-                "18","55"));
-        data.add(new Constructor_data("Eedfhjd Dgfkgfk",1300,true,"17","35",
-                "18","55"));
-        data.add(new Constructor_data.Constructor_free_data("19","20",
-                "20","45"));
 
-
-        LinearLayoutManager li=new LinearLayoutManager(MainActivity.this);
-        recyclerViewMain.setLayoutManager(li);
-        Adapter_recycle adapter=new Adapter_recycle(MainActivity.this);
-        adapter.setAdapter_recycle(data);
-        recyclerViewMain.setAdapter(adapter);
-
-    }
 
     // Разбор текущей даты для проверок
 
@@ -228,6 +215,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void  refreshGridView(){
+        adapter.notifyDataSetChanged();
+        grView_cld.invalidateViews();
+        grView_cld.setAdapter(adapter);
+
+    }
+
+    public  void refreshMain(){
+        Intent intent=new Intent(this,MainActivity.class);
+        finish();
+        startActivity(intent);
+        Log.i("Main","refresh");
+
+    }
 
 
     // слушатель жестов
@@ -346,5 +347,27 @@ public class MainActivity extends AppCompatActivity {
 
             return false;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 1:
+                if(grantResults.length>0 &&grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                    // yes
+                   // status=true;
+                    refreshMain();
+                    Toast.makeText(this, "Permission granted "
+                            , Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "Permission denied to " +
+                                    "read your External storage"
+                            , Toast.LENGTH_SHORT).show();
+                }
+                return;
+        }
+        // super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
     }
 }
