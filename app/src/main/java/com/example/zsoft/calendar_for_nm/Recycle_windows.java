@@ -37,19 +37,16 @@ public class Recycle_windows extends AppCompatActivity {
     RecyclerView rv;
     ConstraintLayout layout;
 
-    private List<Object> data;
+    public static  List<Object> data;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycle_windows);
+
         layout=(ConstraintLayout)findViewById(R.id.layout_rec_win_id);
-        SharedPreferences sharedPreferences=
-                PreferenceManager.getDefaultSharedPreferences(this);
-
-        String index_background=sharedPreferences.getString("background","0");
-
-        layout.setBackgroundResource(MainActivity.back[Integer.parseInt(index_background)]);
+        layout.setBackgroundResource(new MainActivity().background_pref(this));
 
         rv=(RecyclerView) findViewById(R.id.recycleView);
         LinearLayoutManager li=new LinearLayoutManager(this);
@@ -74,6 +71,15 @@ public class Recycle_windows extends AppCompatActivity {
                 "20","45"));
         data.add(new Constructor_data("гена",700,false,"17","35",
                 "18","55"));
+        data.add(new Constructor_data("jane",200,true,"17","35",
+                "18","55"));
+        data.add(new Constructor_data("Eedfhjd Dgfkgfk",1300,true,"17","35",
+                "18","55"));
+        data.add(new Constructor_data.Constructor_free_data("19","20",
+                "20","45"));
+        data.add(new Constructor_data("гена",700,false,"17","35",
+                "18","55"));
+
 
         Adapter_recycle adapter=new Adapter_recycle(Recycle_windows.this);
         rv.setAdapter(adapter);

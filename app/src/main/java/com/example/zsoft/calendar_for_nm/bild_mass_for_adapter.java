@@ -1,5 +1,8 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -12,23 +15,56 @@ import java.util.List;
  */
 
 public class bild_mass_for_adapter {
+    public db mDbHelper;
+    public ArrayList<String> mn_;
+    public ArrayList<Integer> cl_;
 
 
-    public int[] convert_mass_for_render(List list_d){
+// прислан массив и дата c годом,
+// дату и год исп для получения массивов
+    void init_mass(Context context, int month, int y){
+    mn_ = new ArrayList<String>();
+    cl_ = new ArrayList<Integer>();
+    mDbHelper = new db(context);
+    //Application did not close the cursor or database object that was opened here
+    mDbHelper.getWritableDatabase();
+    SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+// показывать только на выбранный месяц!!
+//*создать два массива записи в день и цвет дня */
+///*Запрос из истории*/
 
-        List<String> day_for_render=new ArrayList<String>();
-        day_for_render.add("1");
-        day_for_render.add("2");
-        day_for_render.add("3");
-        day_for_render.add("21");
-        day_for_render.add("22");
+    Cursor c = db1.rawQuery("SELECT * FROM history where date " +
+            "like '" + y + "-" + month + "-%'", null);
 
-        List<String> weight_of_day=new ArrayList<String>();
-        weight_of_day.add("2");
-        weight_of_day.add("8");
-        weight_of_day.add("15");
-        weight_of_day.add("2");
-        weight_of_day.add("15");
+    if (c.moveToFirst()) {
+        int id = c.getColumnIndex("id");
+        int date = c.getColumnIndex("date");
+        int d_count = c.getColumnIndex("d_count");
+// Привести в проядок
+        do {
+//распарсить дату до числа 2016-6-17
+            String d = c.getString(date).toString();
+            String[] pd = d.split("-", 3);
+            //mn_ day in history_for_fender
+            mn_.add(pd[2]);
+            //cl_ weight of gay(color_weight)
+            cl_.add(c.getInt(d_count));
+        }
+        while (c.moveToNext());
+        c.close();
+
+    }
+    Log.i("1_mn_", String.valueOf(mn_.size()));
+    Log.i("1_mn", String.valueOf(mn_));
+    Log.i("1_cl_", String.valueOf(cl_));
+
+}
+
+    public int[] convert_mass_for_render(Context context, List list_d,int month,int year){
+
+        init_mass(context,month,year);
+        List<String> day_for_render=mn_;
+        List<Integer> weight_of_day=cl_;
 
         int[] mass_pic=new int[list_d.size()];
 
@@ -37,28 +73,76 @@ public class bild_mass_for_adapter {
             Log.i("conv_mass_position",String.valueOf(list_d.indexOf(day_for_render.get(i))));
 
             switch (weight_of_day.get(i)){
-                case "2":
+                case 1:
                     mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.minday;
                 break;
+                case 2:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.minday;
+                    break;
+                case 3:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.minday;
+                    break;
+                case 4:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.minday;
+                    break;
+                case 5:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.minday;
+                    break;
+                case 6:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.minday;
+                    break;
 
-                case "8":
+                case 7:
                     mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
                     break;
 
-                case "15":
+                case 8:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    break;
+                case 9:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    break;
+                case 10:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    break;
+                case 11:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    break;
+                case 12:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    break;
+                case 13:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    break;
+
+                case 14:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.maxday;
+                    break;
+                case 15:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.maxday;
+                    break;
+                case 16:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.maxday;
+                    break;
+                case 17:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.maxday;
+                    break;
+                case 18:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.maxday;
+                    break;
+                case 19:
                     mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.maxday;
                     break;
 
-                case "":
+
+
+                case -1:
                     mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.empty;
                     break;
-
-                case "-1":
+                default:
                     mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.empty;
                     break;
-
             }
-
         }
         return mass_pic;
     }
@@ -112,8 +196,8 @@ public class bild_mass_for_adapter {
     }
 
     void dat(){
-        MainActivity dat=new MainActivity();
-        String[] date = dat.day();
+
+        String[] date =new MainActivity().day();
         boolean flags=false;
 
         //если год и месяц в массива соответствуют текущим то
@@ -123,6 +207,8 @@ public class bild_mass_for_adapter {
 
 
     }
+
+
 
 
 }
