@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         b_set=(ImageButton)findViewById(R.id.settings);
         recyclerViewMain=(RecyclerView)findViewById(R.id.recycleMain);
 
-
         layout=(ConstraintLayout)findViewById(R.id.layout_id);
         layout.setBackgroundResource(background_pref(this));
 
@@ -96,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
 // клик по лейблу
             click_label(day);
+
 // показываю календарь
             grView_cld.setAdapter(ads(mns,year));
             grView_cld.setOnTouchListener(new View.OnTouchListener() {
@@ -212,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
         return show_day;
     }
 
+// ставлю фон активити
     public int background_pref(Context context){
          int[] back={
                 R.drawable.gradient_1,
