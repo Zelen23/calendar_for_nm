@@ -61,4 +61,54 @@ public class ExexDB {
 
 
     }
+
+    // получаю по дате массив
+    //[397, 19:00, 20:00, лукьянчикова ирина, , true]
+    List<String> l_clients_of_day(Context ct, String ddat) {
+//ddat="2016-4-12";
+        // read db
+        List<String> sqldat = new ArrayList<>();
+        mDbHelper = new db(ct);
+        mDbHelper.getWritableDatabase();
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+
+        Cursor c = db1.rawQuery("SELECT * FROM clients where date like '" + ddat
+                + "' order by time1 asc", null);
+        if (c.moveToFirst()) {
+            int id = c.getColumnIndex("_id");
+            int time1 = c.getColumnIndex("time1");
+            int time2 = c.getColumnIndex("time2");
+            int name = c.getColumnIndex("name");
+            // int date = c.getColumnIndex("date");
+            int pay = c.getColumnIndex("pay");
+            int flag = c.getColumnIndex("visit");
+            // int sf_num = c.getColumnIndex("sf_num");
+
+            do {
+                sqldat.add(c.getString(id));
+                if (c.getString(time1).length() == 8) {
+                    sqldat.add(c.getString(time1).substring(0, c.getString(time1).length() - 3));
+                } else {
+                    sqldat.add(c.getString(time1).substring(0, c.getString(time1).length() - 7));
+                }
+                if (c.getString(time2).length() == 8) {
+                    sqldat.add(c.getString(time2).substring(0, c.getString(time2).length() - 3));
+                } else {
+                    sqldat.add(c.getString(time2).substring(0, c.getString(time2).length() - 7));
+                }
+
+                sqldat.add(c.getString(name));
+                sqldat.add(c.getString(pay));
+                sqldat.add(c.getString(flag));
+                // sqldat.add(c.getString(sf_num).toString());
+                // + c.getString(date).toString());
+            }
+            while (c.moveToNext());
+            c.close();
+            db1.close();
+        }
+      // Log.i("2_read", String.valueOf(sqldat));
+        return sqldat;
+    }
+
 }

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,8 @@ public class Recycle_windows extends AppCompatActivity {
     TextView rv_date;
     LinearLayout layout;
     String dateDB;
+    String sFt = "07:00";
+    String sEn = "23:59";
 
     public static  List<Object> data;
 
@@ -60,21 +63,97 @@ public class Recycle_windows extends AppCompatActivity {
         LinearLayoutManager li=new LinearLayoutManager(this);
         rv.setLayoutManager(li);
 
+        List<String> dataDB=new ExexDB().l_clients_of_day(this,get_day_orders());
+
         data=new ArrayList<>();
-        data.add(new Constructor_data("ann",100,false,"17","35",
-                "18","55"));
-        data.add(new Constructor_data("jane",200,true,"18","55",
-                "19","20"));
-        data.add(new Constructor_data.Constructor_free_data("19","20",
-                "20","45"));
-
-
+        set_test(dataDB);
 
 
         Adapter_recycle adapter=new Adapter_recycle(Recycle_windows.this);
         rv.setAdapter(adapter);
         adapter.setAdapter_recycle(data);
         adapter.notifyDataSetChanged();
+
+    }
+
+    // создаю лайнер(для  бейсадаптера конвертирую строку с данныим)
+    void set_test(List<String> dataDB) {
+        Log.i("DataDB",dataDB.toString());
+
+
+        Constructor_data liner;
+        ArrayList<String> input=new ArrayList<>();
+        // если день пустой
+        if (data.size() <= 5) {
+            data.add(new Constructor_data.Constructor_free_data(sFt,sEn));
+
+
+        } else {
+            int i = 0;
+            for (String elt : dataDB) {
+
+                if (i % 6 == 0) {
+                    if (i == 0) {
+// если первое время равно началу дня то с начала дня первая запись
+                        if (dataDB.get(1).equals(sFt)) {
+                            data.add(new Constructor_data(
+                                    dataDB.get(i),
+                                    dataDB.get(i + 1),
+                                    dataDB.get(i + 2),
+                                    dataDB.get(i + 3),
+                                    dataDB.get(i + 4),
+                                    Boolean.parseBoolean(dataDB.get(i + 5))));
+// если первое время позже то сначала пустая запись до первого времени и потом запись
+                        } else {
+                            data.add(new Constructor_data.Constructor_free_data(sFt ,dataDB.get(i + 1)));
+                            data.add(new Constructor_data(
+                                    dataDB.get(i),
+                                    dataDB.get(i + 1),
+                                    dataDB.get(i + 2),
+                                    dataDB.get(i + 3),
+                                    dataDB.get(i + 4),
+                                    Boolean.parseBoolean(dataDB.get(i + 5))));
+                        }
+                    }
+
+                    if (i > 0) {
+                        // если дата начала ==дате конца то
+                        //i-5
+                        if (dataDB.get(i + 1).equals(data.get(i - 4))) {
+                            data.add(new Constructor_data(
+                                    dataDB.get(i),
+                                    dataDB.get(i + 1),
+                                    dataDB.get(i + 2),
+                                    dataDB.get(i + 3),
+                                    dataDB.get(i + 4),
+                                    Boolean.parseBoolean(dataDB.get(i + 5))));
+                        }
+                        } else {
+                        data.add(new Constructor_data.Constructor_free_data(
+                                dataDB.get(i - 4),
+                                dataDB.get(i + 1)));
+                        data.add(new Constructor_data(
+                                dataDB.get(i),
+                                dataDB.get(i + 1),
+                                dataDB.get(i + 2),
+                                dataDB.get(i + 3),
+                                dataDB.get(i + 4),
+                                Boolean.parseBoolean(dataDB.get(i + 5))));
+                        }
+                    }
+                }
+                i++;
+
+            // нсли последнее время в записи равно последнему в дне
+            if(dataDB.get(dataDB.size() - 4).equals(sEn)){
+
+            }else
+                data.add(new Constructor_data.Constructor_free_data(
+                        dataDB.get(i - 4),
+                        sEn));
+        }
+
+        Log.i("DATA",data.get(0).toString());
 
     }
 
