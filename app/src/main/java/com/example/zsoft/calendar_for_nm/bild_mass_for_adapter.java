@@ -61,6 +61,7 @@ public class bild_mass_for_adapter {
 }
 
     public int[] convert_mass_for_render(Context context, List list_d,int month,int year){
+
         init_mass(context,month,year);
         List<String> day_for_render=mn_;
         List<Integer> weight_of_day=cl_;

@@ -59,22 +59,13 @@ public class MainActivity extends AppCompatActivity {
         b_set=(ImageButton)findViewById(R.id.settings);
         recyclerViewMain=(RecyclerView)findViewById(R.id.recycleMain);
         layout=(ConstraintLayout)findViewById(R.id.layout_id);
+
         SharedPreferences sharedPreferences=
                 PreferenceManager.getDefaultSharedPreferences(this);
 
         String index_background=sharedPreferences.getString("background","0");
         layout.setBackgroundResource(back[Integer.parseInt(index_background)]);
-
-
-        // Прикутил слушатель на грид
-        final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
-        grView_cld.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                gestureDetector.onTouchEvent(event);
-                return event.getAction()==MotionEvent.ACTION_MOVE;
-            }
-        });
+//кнопка настроек
         b_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,36 +74,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 //из базы рпскрасить месяц при старте
+        bild_mass_for_adapter creat_mass = new bild_mass_for_adapter();
+        final List<String> list_date = creat_mass.grv(mns, year);
+
+        int[] mass_pict= new int[list_date.size()];
         final String [] day=day();
         today=Integer.parseInt(day[0]);
         mns=Integer.parseInt(day[1]);
         year=Integer.parseInt(day[3]);
         mns_name=day[4];
 
-        /*при старте проверяю есть ли разрещение если нет- не даю листать календарь
-        * */
-        ExecuteDB executeDB=new ExecuteDB();
-        executeDB.permsion_ckecker(this);
-
-
-
-
-
-        bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
-        final List<String> list_date=creat_mass.grv(mns,year);
-        //получаю цветной массив
-        final int [] mass_pict= creat_mass.convert_mass_for_render
-                (this,creat_mass.grv(mns,year)
-                        ,mns
-                        ,year);
-
+//лейбл с датой и днем
         set_date_to_label(mns,today,year);
-        //      готовые массивы 1-с датами и пробелами 2- с цветами
-        grView_cld.setAdapter(new custom_grid_adapter(this, list_date
-                ,mass_pict)
-        );
-
-        // клик по лейблу даты возвращает на текущуу страницу
+        // слушатель на лейбл возвращет текущую дату
+        final int[] finalMass_pict = mass_pict;
         l_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,17 +96,50 @@ public class MainActivity extends AppCompatActivity {
                         Integer.parseInt(day[0]),
                         Integer.parseInt(day[3])
                 );
-                today=Integer.parseInt(day[0]);
-                mns=Integer.parseInt(day[1]);
-                year=Integer.parseInt(day[3]);
-                mns_name=day[4];
+                today = Integer.parseInt(day[0]);
+                mns = Integer.parseInt(day[1]);
+                year = Integer.parseInt(day[3]);
+                mns_name = day[4];
 
                 grView_cld.setAdapter(
                         //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
-                        new custom_grid_adapter(MainActivity.this, list_date, mass_pict));
+                        new custom_grid_adapter(MainActivity.this, list_date, finalMass_pict));
 
             }
         });
+
+        CheckerDB checkerDB=new CheckerDB();
+        if(checkerDB.permsion_ckecker_status(this,checkerDB.WRITE_EXTERNAL_PERM)==false){
+
+
+        }else {
+
+//получаю цветной массив
+            mass_pict = creat_mass.convert_mass_for_render
+                    (this, creat_mass.grv(mns, year)
+                            , mns
+                            , year);
+
+//готовые массивы 1-с датами и пробелами 2- с цветами
+            grView_cld.setAdapter(new custom_grid_adapter(this, list_date
+                    , mass_pict)
+            );
+
+
+
+
+// Прикутил слушатель на грид
+            final GestureDetector gestureDetector = new GestureDetector(new GestureListener());
+            grView_cld.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    gestureDetector.onTouchEvent(event);
+                    return event.getAction() == MotionEvent.ACTION_MOVE;
+                }
+            });
+
+
+        }
 
         viewRecycle();
     }
@@ -158,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
         data.add(new Constructor_data.Constructor_free_data("19","20",
                 "20","45"));
 
-
         LinearLayoutManager li=new LinearLayoutManager(MainActivity.this);
         recyclerViewMain.setLayoutManager(li);
         Adapter_recycle adapter=new Adapter_recycle(MainActivity.this);
@@ -170,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
     // Разбор текущей даты для проверок
 
     String[] day() {
-//month-day
+    //month-day
         GregorianCalendar cld_m = new GregorianCalendar();
         String day = cld_m.getTime().toString();
         String[] getday = day.split(" ", 5);
@@ -228,7 +235,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    void  refreser_MainAct(){
+        Intent intent=new Intent(this,MainActivity.class);
+        finish();
+        startActivity(intent);
+    }
 
     // слушатель жестов
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
