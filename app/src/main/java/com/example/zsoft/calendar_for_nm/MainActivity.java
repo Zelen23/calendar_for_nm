@@ -266,56 +266,90 @@ public class MainActivity extends AppCompatActivity {
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
         final bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
 
+        // получаю дату по позиции клика в слушателе
+        private  int [] dat_of_pos(int position){
+            int [] idate;
+            try{
+                final int iday=Integer.parseInt(creat_mass.grv(mns,year).get(position).toString());
+                idate=new int[3];
+                idate[0]=year;
+                idate[1]=mns;
+                idate[2]=iday;
+            }
+            catch(NumberFormatException ex){
+                Log.i("number_format",ex.getMessage());
+                idate=new int[1];
+            }
 
-    // прикрутил слушатель к одиночному клику
+            return idate;
+        }
+
+
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
 
             grView_cld.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    // дата для запроса
-                    SharedPreferences sharedPreferencs = PreferenceManager
-                            .getDefaultSharedPreferences(MainActivity.this);
-                    String edit_valve=sharedPreferencs.getString("background","0");
-                    String day_of_pos=String.valueOf(
-                            creat_mass.grv(mns,year).get(position));
+                   int date_db[]=dat_of_pos(position);
 
-                    try{
-                        String s_date= day_of_pos+":" +mns+ ":"+year;
-                        Toast.makeText(MainActivity.this,
-                                "++"+s_date,Toast.LENGTH_SHORT).show();
-                        set_date_to_label(mns, Integer.parseInt(day_of_pos), year);
-                    }
-                     catch(NumberFormatException ex){
-                     Log.i("number_format",ex.getMessage());
-                    }
-                    /*
-                    if(day_of_pos!=" ") {
-
-
-                        Toast.makeText(MainActivity.this,"++"+edit_valve,Toast.LENGTH_SHORT).show();
-                        set_date_to_label(mns, Integer.parseInt(day_of_pos), year);
-                    }
-                    */
+                   if (date_db.length>1) {
+                       final String s_date = date_db[0] + "-" + date_db[1] + "-" + date_db[2];
+                       set_date_to_label(date_db[1], date_db[2], date_db[0]);
+                       Log.i("_data", s_date);
+                   }
                 }
-            });
-//LongClick
-            grView_cld.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> adapterView,
-                                               View view, int i, long l) {
-                    Intent intent=new Intent(MainActivity.this,Recycle_windows.class);
-                    startActivity(intent);
-                    return false;
-                }
-
             });
 
 
             return super.onSingleTapUp(e);
 
 
+        }
+/*
+        @Override
+        public void onLongPress(MotionEvent e) {
+            grView_cld.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView,
+                                               View view, int i, long l) {
+                    //Log.i("long_clck",String.valueOf(""));
+                    int date_db[] = dat_of_pos(i);
+
+                    if(date_db.length>1){
+                        Intent intent = new Intent(MainActivity.this,
+                                Recycle_windows.class);
+                        intent.putExtra("date_for_db", date_db);
+                        startActivity(intent);
+                    }
+                    return false;
+                }
+            });
+
+            super.onLongPress(e);
+        }
+
+*/
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            //если в момент скролла то не слшушаю долгий клик или прицепить другой клик(двойной)
+            Log.i("tap","tap");
+            grView_cld.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    int date_db[] = dat_of_pos(position);
+
+                    if(date_db.length>1){
+                        Intent intent = new Intent(MainActivity.this,
+                                Recycle_windows.class);
+                        intent.putExtra("date_for_db", date_db);
+                        startActivity(intent);
+                    }
+                }
+            });
+
+
+            return super.onDoubleTap(e);
         }
 
         @Override
@@ -327,7 +361,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             bild_mass_for_adapter day_in_this_month=new bild_mass_for_adapter();
-
             if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >
                     SWIPE_THRESHOLD_VELOCITY) {
                 if(mns<11) {

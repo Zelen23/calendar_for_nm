@@ -57,7 +57,8 @@
                 android:layout_toEndOf="@+id/h"
                 android:fontFamily="serif-monospace"
                 android:text="111111"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:focusable="true"/>
 
             <EditText
                 android:id="@+id/editText2"
@@ -70,11 +71,10 @@
                 android:ems="10"
                 android:inputType="number"
                 android:labelFor="@+id/textView"
-                android:selectAllOnFocus="true"
+                android:focusable="false"
                 android:singleLine="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textSize="18sp"
-                android:visibility="visible" />
+                android:textSize="18sp" />
 
             <CheckBox
                 android:id="@+id/checkBox2"
