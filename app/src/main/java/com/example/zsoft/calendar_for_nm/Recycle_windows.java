@@ -44,13 +44,9 @@ public class Recycle_windows extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycle_windows);
+
         layout=(ConstraintLayout)findViewById(R.id.layout_rec_win_id);
-        SharedPreferences sharedPreferences=
-                PreferenceManager.getDefaultSharedPreferences(this);
-
-        String index_background=sharedPreferences.getString("background","0");
-
-        layout.setBackgroundResource(MainActivity.back[Integer.parseInt(index_background)]);
+        layout.setBackgroundResource(new MainActivity().background_pref(this));
 
         rv=(RecyclerView) findViewById(R.id.recycleView);
         LinearLayoutManager li=new LinearLayoutManager(this);

@@ -196,8 +196,8 @@ public class bild_mass_for_adapter {
     }
 
     void dat(){
-        MainActivity dat=new MainActivity();
-        String[] date = dat.day();
+
+        String[] date =new MainActivity().day();
         boolean flags=false;
 
         //если год и месяц в массива соответствуют текущим то
