@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
 
                 grView_cld.setAdapter(ads(mns,year)
                         //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
-
                         // new custom_grid_adapter(MainActivity.this, list_date, mass_pict)
                 );
                 dataMain(year+"-"+mns+"-"+today);
@@ -225,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
         String index_background=sharedPreferences.getString("background","0");
        return back[Integer.parseInt(index_background)];
     }
+
 //перезапуск активити
     public  void refreshMain(){
         Intent intent=new Intent(this,MainActivity.class);
