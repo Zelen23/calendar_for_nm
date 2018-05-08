@@ -42,7 +42,7 @@ public class Recycle_windows extends AppCompatActivity {
     RecyclerView rv;
     TextView rv_date;
     LinearLayout layout;
-    String dateDB;
+
     String sFt = "07:00";
     String sEn = "23:59";
 
@@ -64,12 +64,9 @@ public class Recycle_windows extends AppCompatActivity {
         rv.setLayoutManager(li);
 
         List<String> dataDB=new ExexDB().l_clients_of_day(this,get_day_orders());
-        set_test(dataDB);
-
-
         Adapter_recycle adapter=new Adapter_recycle(Recycle_windows.this);
         rv.setAdapter(adapter);
-        adapter.setAdapter_recycle(data);
+        adapter.setAdapter_recycle(set_test(dataDB));
         adapter.notifyDataSetChanged();
 
     }

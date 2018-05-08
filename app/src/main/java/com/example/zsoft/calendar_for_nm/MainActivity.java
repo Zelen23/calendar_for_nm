@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -89,28 +90,31 @@ public class MainActivity extends AppCompatActivity {
         final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
 
 //проверка разрешения нужно добавить обход для >23
-        int permission= ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if(permission== PackageManager.PERMISSION_GRANTED){
+        int MyVersion = Build.VERSION.SDK_INT;
+        if (MyVersion > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            int permission = ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (permission == PackageManager.PERMISSION_GRANTED) {
 
 // клик по лейблу
-            click_label(day);
+                click_label(day);
 
 // показываю календарь
-            grView_cld.setAdapter(ads(mns,year));
-            grView_cld.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    gestureDetector.onTouchEvent(event);
-                    return event.getAction()==MotionEvent.ACTION_MOVE;
-                }
-            });
-            dataMain(year+"-"+mns+"-"+today);
-        }else{
+                grView_cld.setAdapter(ads(mns, year));
+                grView_cld.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        gestureDetector.onTouchEvent(event);
+                        return event.getAction() == MotionEvent.ACTION_MOVE;
+                    }
+                });
+                dataMain(year + "-" + mns + "-" + today);
+            } else {
 // прошу разрешения
-            ActivityCompat.requestPermissions(this ,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
-                    ,1);
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
+                        , 1);
+            }
         }
     }
 
