@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -175,5 +177,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
     }
+
+
 
 }
