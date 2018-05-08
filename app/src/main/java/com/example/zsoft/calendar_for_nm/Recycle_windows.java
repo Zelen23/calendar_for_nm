@@ -1,5 +1,6 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,8 +15,11 @@ import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,6 +52,7 @@ public class Recycle_windows extends AppCompatActivity {
 
 
     public static  List<Object> data;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,12 +73,14 @@ public class Recycle_windows extends AppCompatActivity {
         rv.setAdapter(adapter);
         adapter.setAdapter_recycle(set_test(dataDB));
         adapter.notifyDataSetChanged();
-
+        settingsTime(this);
     }
 
     // создаю лайнер(для  бейсадаптера конвертирую строку с данныим)
     public List<Object> set_test(List<String> dataDB) {
+
         Log.i("DataDB",dataDB.toString());
+
 
         data =new ArrayList<>();
         ArrayList <Constructor_data> liner=new ArrayList<>();
@@ -88,7 +95,7 @@ public class Recycle_windows extends AppCompatActivity {
 
                 if (i % 6 == 0) {
                     if (i == 0) {
-// если первое время равно началу дня то с начала дня первая запись
+// если первая строчка-первое время- равно началу дня то с начала дня первая запись
                         if (dataDB.get(1).equals(sFt)) {
                             data.add(new Constructor_data(
                                     dataDB.get(i),
@@ -97,8 +104,10 @@ public class Recycle_windows extends AppCompatActivity {
                                     dataDB.get(i + 3),
                                     dataDB.get(i + 4),
                                     Boolean.parseBoolean(dataDB.get(i + 5))));
-// если первое время позже то сначала пустая запись до первого времени и потом запись
+// если первая запись не равна началу дня
                         } else {
+                            // если первая запись раньше чем начало дня,то вывожу первую запись
+                            // если первая запись позже начала дня то от начала дня до первой записи
                             data.add(new Constructor_data.Constructor_free_data(sFt, dataDB.get(i + 1)));
                             data.add(new Constructor_data(
                                     dataDB.get(i),
@@ -111,6 +120,7 @@ public class Recycle_windows extends AppCompatActivity {
                     }
 
                     if (i > 0) {
+
                         // если дата начала ==дате конца то
                         //i-5
                         if (dataDB.get(i + 1).equals(dataDB.get(i - 4))) {
@@ -161,6 +171,35 @@ return data;
         int idat[]=intent.getIntArrayExtra("date_for_db");
         Log.i("RecWin_data",idat[0]+"-"+idat[1]+"-"+idat[2]);
         return idat[0]+"-"+idat[1]+"-"+idat[2];
+
+    }
+
+    // получаю строки времени из настоек
+    public  void settingsTime(Context context){
+        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(context);
+        String t1=sharedPreferences.getString("t1","07:30");
+        String t2=sharedPreferences.getString("t2","23:59");
+        convtoTime(t1);
+        convtoTime(t2);
+
+        //  если эти стоки время и t1>t2 то sFt и sEn принимают значения из настроек
+        // если ощибка то пишу время по дефолту
+
+    }
+
+    public void convtoTime(String time){
+        SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
+        try {
+            Date sDate=sdf.parse(time);
+            int h=sDate.getHours();
+            int m=sDate.getMinutes();
+            Log.i("this_time,",h+":"+m);
+        } catch (ParseException e) {
+            e.printStackTrace();
+
+            Log.i("this_noTime","fuck");
+        }
+
 
     }
 }
