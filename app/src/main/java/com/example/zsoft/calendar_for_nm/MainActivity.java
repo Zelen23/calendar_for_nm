@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     return event.getAction()==MotionEvent.ACTION_MOVE;
                 }
             });
+            dataMain(year+"-"+mns+"-"+today);
         }else{
 // прошу разрешения
             ActivityCompat.requestPermissions(this ,
@@ -150,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // new custom_grid_adapter(MainActivity.this, list_date, mass_pict)
                 );
+                dataMain(year+"-"+mns+"-"+today);
             }
         });
 
@@ -238,6 +240,20 @@ public class MainActivity extends AppCompatActivity {
         grView_cld.setColumnWidth(30);
     }
 
+    public void dataMain(String date){
+        LinearLayoutManager li=new LinearLayoutManager(this);
+        recyclerViewMain.setLayoutManager(li);
+        Adapter_recycle adapter=new Adapter_recycle(MainActivity.this);
+        List<Object>data=new Recycle_windows().set_test(
+                new ExexDB().l_clients_of_day(this,date));
+        adapter.setAdapter_recycle(data);
+        recyclerViewMain.setAdapter(adapter);
+
+
+
+
+    }
+
 //permission
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -297,6 +313,8 @@ public class MainActivity extends AppCompatActivity {
                        final String s_date = date_db[0] + "-" + date_db[1] + "-" + date_db[2];
                        set_date_to_label(date_db[1], date_db[2], date_db[0]);
                        Log.i("_data", s_date);
+
+                       dataMain(s_date);
                    }
                 }
             });
@@ -383,6 +401,7 @@ public class MainActivity extends AppCompatActivity {
                                         ,mns
                                         ,year))
                                         */);
+
 
                 return false; // справа налево
 

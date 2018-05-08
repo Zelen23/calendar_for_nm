@@ -23,8 +23,8 @@ public class Constructor_data {
     Constructor_data(String id,String t1,String t2,String name,String sum,boolean flag){
         this.id=id;
         this.h1=parseTimefree(t1)[0];
-        this.h2=parseTimefree(t1)[1];
-        this.m1=parseTimefree(t2)[0];
+        this.h2=parseTimefree(t2)[0];
+        this.m1=parseTimefree(t1)[1];
         this.m2=parseTimefree(t2)[1];
 
         this.name=name;
@@ -47,8 +47,8 @@ public class Constructor_data {
         }
         Constructor_free_data(String t1,String t2){
             this.h1=parseTimefree(t1)[0];
-            this.h2=parseTimefree(t1)[1];
-            this.m1=parseTimefree(t2)[0];
+            this.h2=parseTimefree(t2)[0];
+            this.m1=parseTimefree(t1)[1];
             this.m2=parseTimefree(t2)[1];
 
         }

@@ -46,8 +46,8 @@ public class Recycle_windows extends AppCompatActivity {
     String sFt = "07:00";
     String sEn = "23:59";
 
-    public static  List<Object> data;
 
+    public static  List<Object> data;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,8 +64,6 @@ public class Recycle_windows extends AppCompatActivity {
         rv.setLayoutManager(li);
 
         List<String> dataDB=new ExexDB().l_clients_of_day(this,get_day_orders());
-
-        data=new ArrayList<>();
         set_test(dataDB);
 
 
@@ -77,16 +75,15 @@ public class Recycle_windows extends AppCompatActivity {
     }
 
     // создаю лайнер(для  бейсадаптера конвертирую строку с данныим)
-    void set_test(List<String> dataDB) {
+    public List<Object> set_test(List<String> dataDB) {
         Log.i("DataDB",dataDB.toString());
 
-
-        Constructor_data liner;
+        data =new ArrayList<>();
+        ArrayList <Constructor_data> liner=new ArrayList<>();
         ArrayList<String> input=new ArrayList<>();
         // если день пустой
-        if (data.size() <= 5) {
+        if (dataDB.size() <= 5) {
             data.add(new Constructor_data.Constructor_free_data(sFt,sEn));
-
 
         } else {
             int i = 0;
@@ -105,7 +102,7 @@ public class Recycle_windows extends AppCompatActivity {
                                     Boolean.parseBoolean(dataDB.get(i + 5))));
 // если первое время позже то сначала пустая запись до первого времени и потом запись
                         } else {
-                            data.add(new Constructor_data.Constructor_free_data(sFt ,dataDB.get(i + 1)));
+                            data.add(new Constructor_data.Constructor_free_data(sFt, dataDB.get(i + 1)));
                             data.add(new Constructor_data(
                                     dataDB.get(i),
                                     dataDB.get(i + 1),
@@ -119,7 +116,19 @@ public class Recycle_windows extends AppCompatActivity {
                     if (i > 0) {
                         // если дата начала ==дате конца то
                         //i-5
-                        if (dataDB.get(i + 1).equals(data.get(i - 4))) {
+                        if (dataDB.get(i + 1).equals(dataDB.get(i - 4))) {
+                            data.add(new Constructor_data(
+                                    dataDB.get(i),
+                                    dataDB.get(i + 1),
+                                    dataDB.get(i + 2),
+                                    dataDB.get(i + 3),
+                                    dataDB.get(i + 4),
+                                    Boolean.parseBoolean(dataDB.get(i + 5))));
+
+                        } else {
+                            data.add(new Constructor_data.Constructor_free_data(
+                                    dataDB.get(i - 4),
+                                    dataDB.get(i + 1)));
                             data.add(new Constructor_data(
                                     dataDB.get(i),
                                     dataDB.get(i + 1),
@@ -128,21 +137,10 @@ public class Recycle_windows extends AppCompatActivity {
                                     dataDB.get(i + 4),
                                     Boolean.parseBoolean(dataDB.get(i + 5))));
                         }
-                        } else {
-                        data.add(new Constructor_data.Constructor_free_data(
-                                dataDB.get(i - 4),
-                                dataDB.get(i + 1)));
-                        data.add(new Constructor_data(
-                                dataDB.get(i),
-                                dataDB.get(i + 1),
-                                dataDB.get(i + 2),
-                                dataDB.get(i + 3),
-                                dataDB.get(i + 4),
-                                Boolean.parseBoolean(dataDB.get(i + 5))));
-                        }
                     }
                 }
                 i++;
+            }
 
             // нсли последнее время в записи равно последнему в дне
             if(dataDB.get(dataDB.size() - 4).equals(sEn)){
@@ -153,8 +151,10 @@ public class Recycle_windows extends AppCompatActivity {
                         sEn));
         }
 
-        Log.i("DATA",data.get(0).toString());
 
+        Log.i("DATA",""+data.size());
+
+return data;
     }
 
     //  получаю дату
