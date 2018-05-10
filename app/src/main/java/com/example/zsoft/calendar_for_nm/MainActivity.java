@@ -249,10 +249,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewMain.setLayoutManager(li);
         Adapter_recycle adapter=new Adapter_recycle(MainActivity.this);
         List<Object>data=new Recycle_windows().set_test(
-                new ExexDB().l_clients_of_day(this,date));
+                new ExexDB().l_clients_of_day(this,date),this);
         adapter.setAdapter_recycle(data);
-        recyclerViewMain.setAdapter(adapter);
 
+        recyclerViewMain.setAdapter(adapter);
 
 
 
