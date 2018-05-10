@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import java.util.AbstractList;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,6 +77,7 @@ public class Recycle_windows extends AppCompatActivity {
         adapter.setAdapter_recycle(set_test(dataDB,this));
         adapter.notifyDataSetChanged();
 
+
         settingsTime(this);
 
     }
@@ -82,6 +86,7 @@ public class Recycle_windows extends AppCompatActivity {
     public List<Object> set_test(List<String> dataDB,Context context) {
 
         settingsTime(context);
+
         Log.i("DataDB",dataDB.toString());
 
 
@@ -98,6 +103,7 @@ public class Recycle_windows extends AppCompatActivity {
 
                 if (i % 6 == 0) {
                     if (i == 0) {
+
                 // если первая строчка-первое время- равно началу дня то с начала дня первая запись
 
                         if (dataDB.get(1).equals(firstTime)) {
@@ -108,6 +114,7 @@ public class Recycle_windows extends AppCompatActivity {
                                     dataDB.get(i + 3),
                                     dataDB.get(i + 4),
                                     Boolean.parseBoolean(dataDB.get(i + 5))));
+
                 // если первая запись не равна началу дня
                         } else {
 
@@ -116,6 +123,7 @@ public class Recycle_windows extends AppCompatActivity {
                             // если первая запись позже начала дня то от начала дня до первой записи
                             if(getTimeInStr(firstTime,dataDB.get(i + 1))<0)
                             data.add(new Constructor_data.Constructor_free_data(firstTime, dataDB.get(i + 1)));
+
                             data.add(new Constructor_data(
                                     dataDB.get(i),
                                     dataDB.get(i + 1),
@@ -127,7 +135,7 @@ public class Recycle_windows extends AppCompatActivity {
                     }
 
                     if (i > 0) {
-                // если дата начала ==дате конца то
+
                         //i-5
                         if (dataDB.get(i + 1).equals(dataDB.get(i - 4))) {
                 // если конец записи = началу следующей
@@ -189,6 +197,7 @@ return data;
 
     // получаю строки времени из настоек
     public  void settingsTime(Context context){
+
         SharedPreferences sharedPreferences=
                 PreferenceManager.getDefaultSharedPreferences(context);
         String t1=sharedPreferences.getString("t1","07:30");
@@ -200,6 +209,7 @@ return data;
         // если ощибка то пишу время по дефолту
 
     }
+
 
     public  int getTimeInStr(String time1,String time2){
         // получаю сторку парсю из нее время
