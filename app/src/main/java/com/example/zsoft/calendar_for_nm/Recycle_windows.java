@@ -141,19 +141,10 @@ public class Recycle_windows extends AppCompatActivity {
 
                         } else {
                 // если между записями окно
-                            if(getTimeInStr(dataDB.get(i -4),firstTime)<0&&
-                                    getTimeInStr( dataDB.get(i -4),secondTime)<0){
 
                             data.add(new Constructor_data.Constructor_free_data(
                                     dataDB.get(i - 4),
                                     dataDB.get(i + 1)));
-                            }else{
-
-                                data.add(new Constructor_data.Constructor_free_data(
-                                        dataDB.get(i - 4),
-                                        secondTime));
-
-                            }
                             data.add(new Constructor_data(
                                     dataDB.get(i),
                                     dataDB.get(i + 1),
