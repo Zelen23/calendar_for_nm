@@ -1,11 +1,14 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -86,6 +89,8 @@ public class ExexDB {
 
             do {
                 sqldat.add(c.getString(id));
+
+
                 if (c.getString(time1).length() == 8) {
                     sqldat.add(c.getString(time1).substring(0, c.getString(time1).length() - 3));
                 } else {
@@ -109,6 +114,45 @@ public class ExexDB {
         }
       // Log.i("2_read", String.valueOf(sqldat));
         return sqldat;
+    }
+
+    // пишу в базу(дата/время1/время2/сумма/имя/Номер/таблица/ид)
+    public  void  write_orders(Context context, String dats, String times, String times2,String pays,String names, String conts,String table,String id){
+
+        Date now = Calendar.getInstance().getTime();
+        String nowDate;
+        nowDate = String.valueOf(now);
+
+        mDbHelper = new db(context);
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+        ContentValues val = new ContentValues();
+
+        switch(table){
+            case "clients":
+                val.put(db.DATE1_COLUMN, nowDate);
+                val.put(db.CONTACT_COLUMN, conts);
+                val.put(db.NAME_COLUMN, names);
+                val.put(db.PAY_COLUMN,pays);
+                val.put(db.TIME1_COLUMN, times);
+                val.put(db.TIME2_COLUMN, times2);
+                val.put(db.DATE_COLUMN, dats);
+                break;
+            case "temp":
+
+                val.put(db.DATE1_TEMP, nowDate);
+                val.put(db.CONTACT_TEMP, conts);
+                val.put(db.NAME_TEMP, names);
+                val.put(db.PAY_TEMP,pays);
+                val.put(db.TIME1_TEMP, times);
+                val.put(db.TIME2_TEMP, times2);
+                val.put(db.DATE_TEMP, dats);
+                val.put(db.ID_TEMP, id);
+                break;
+        }
+        db1.insert(table, null, val);
+        Log.i("insert", "selectedDate_ord" + table);
+        Log.i("time_ord", "*********" + nowDate);
+        db1.close();
     }
 
 }

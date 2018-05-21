@@ -46,6 +46,8 @@ public class Recycle_windows extends AppCompatActivity {
     RecyclerView rv;
     TextView rv_date;
     LinearLayout layout;
+    Adapter_recycle adapter;
+
 
     String sFt = "07:00";
     String sEn = "23:59";
@@ -72,10 +74,9 @@ public class Recycle_windows extends AppCompatActivity {
 
 
         List<String> dataDB=new ExexDB().l_clients_of_day(this,get_day_orders());
-        Adapter_recycle adapter=new Adapter_recycle(Recycle_windows.this);
+        adapter=new Adapter_recycle(Recycle_windows.this);
         rv.setAdapter(adapter);
-        adapter.setAdapter_recycle(set_test(dataDB,this));
-        adapter.notifyDataSetChanged();
+        adapter.setAdapter_recycle(set_test(dataDB,this),get_day_orders());
 
 
         settingsTime(this);
@@ -135,7 +136,6 @@ public class Recycle_windows extends AppCompatActivity {
                     }
 
                     if (i > 0) {
-
                         //i-5
                         if (dataDB.get(i + 1).equals(dataDB.get(i - 4))) {
                 // если конец записи = началу следующей
@@ -149,6 +149,7 @@ public class Recycle_windows extends AppCompatActivity {
 
                         } else {
                 // если между записями окно
+                /*проверяю последнюю дату в окне*/
 
                             data.add(new Constructor_data.Constructor_free_data(
                                     dataDB.get(i - 4),
@@ -246,4 +247,10 @@ return data;
 
     return stime;
     }
+
+    public void upd(){
+        adapter.notifyDataSetChanged();
+    }
+
+
 }

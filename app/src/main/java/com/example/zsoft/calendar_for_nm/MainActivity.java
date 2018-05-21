@@ -43,10 +43,10 @@ public class MainActivity extends AppCompatActivity {
 
     GridView grView_cld;
     TextView l_date, l_year;
-    ImageButton b_set;
+    ImageButton b_set,b_menu;
     ConstraintLayout layout;
     RecyclerView recyclerViewMain;
-
+    Adapter_recycle adapter;
     public static int today;
     public static int mns;
     public static int year;
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         grView_cld=(GridView)findViewById(R.id.gridView);
         b_set=(ImageButton)findViewById(R.id.settings);
+        b_menu=(ImageButton)findViewById(R.id.menu);
         recyclerViewMain=(RecyclerView)findViewById(R.id.recycleMain);
 
         layout=(ConstraintLayout)findViewById(R.id.layout_id);
@@ -68,11 +69,15 @@ public class MainActivity extends AppCompatActivity {
 
 // кнопка настроек
 
+
         b_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(getBaseContext(),preference.class);
                 startActivity(intent);
+
+
+
             }
         });
 
@@ -81,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
         mns=Integer.parseInt(day[1]);
         year=Integer.parseInt(day[3]);
         mns_name=day[4];
+
+        b_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
 
 //  дата в лейбл
@@ -247,10 +259,10 @@ public class MainActivity extends AppCompatActivity {
     public void dataMain(String date){
         LinearLayoutManager li=new LinearLayoutManager(this);
         recyclerViewMain.setLayoutManager(li);
-        Adapter_recycle adapter=new Adapter_recycle(MainActivity.this);
+         adapter=new Adapter_recycle(MainActivity.this);
         List<Object>data=new Recycle_windows().set_test(
                 new ExexDB().l_clients_of_day(this,date),this);
-        adapter.setAdapter_recycle(data);
+        adapter.setAdapter_recycle(data,date);
 
         recyclerViewMain.setAdapter(adapter);
 
