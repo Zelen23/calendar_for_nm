@@ -233,6 +233,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     // если 23ч аходит в интервал свободных
     // то при пыставлении 23 59 в  дату начала позволяет  дату окончания сделать меньше
+    // смог с 7:00 записать на 7.00 и слежд запись косячная
     void set_time_to_spiner(String time,String time2)throws ParseException {
 
 
