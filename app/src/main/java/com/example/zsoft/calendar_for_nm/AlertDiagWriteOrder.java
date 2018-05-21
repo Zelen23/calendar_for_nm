@@ -23,7 +23,9 @@ public class AlertDiagWriteOrder  {
     NumberPicker h1,h2,m1,m2;
     int sh1,sm1,sh2,sm2;
 
-   public void Alert(final Context context, final String date, String time1, String time2){
+
+
+    public void Alert(final Context context, final String date, String time1, String time2){
        android.app.AlertDialog alert;
 
        LayoutInflater li= LayoutInflater.from(context);
@@ -50,7 +52,7 @@ public class AlertDiagWriteOrder  {
                                eSum.getText().toString(),
                                eName.getText().toString(),
                                eNum.getText().toString(),"clients","");
-                      new Adapter_recycle(context).refresh();
+                      // upd
                        dialogInterface.dismiss();
 
                    }

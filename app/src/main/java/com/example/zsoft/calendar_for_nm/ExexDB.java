@@ -117,7 +117,9 @@ public class ExexDB {
     }
 
     // пишу в базу(дата/время1/время2/сумма/имя/Номер/таблица/ид)
-    public  void  write_orders(Context context, String dats, String times, String times2,String pays,String names, String conts,String table,String id){
+    public  void  write_orders(Context context, String dats, String times,
+                               String times2,String pays,String names,
+                               String conts,String table,String id){
 
         Date now = Calendar.getInstance().getTime();
         String nowDate;

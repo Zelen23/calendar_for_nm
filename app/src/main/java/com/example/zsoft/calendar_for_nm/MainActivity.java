@@ -263,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
         List<Object>data=new Recycle_windows().set_test(
                 new ExexDB().l_clients_of_day(this,date),this);
         adapter.setAdapter_recycle(data,date);
-
         recyclerViewMain.setAdapter(adapter);
 
 

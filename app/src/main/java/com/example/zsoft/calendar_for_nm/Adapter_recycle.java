@@ -15,7 +15,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,7 +32,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
     int sh1,sm1,sh2,sm2;
     private final static int TYPE_FULL=1,TYPE_EMPTY=2;
 
-    private Context context;
+    Context context;
 
 
     public Adapter_recycle(Context context){
@@ -185,6 +184,8 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
+//Для алерта запрет на запись в базу пустоты. при нажатии на ок
+// то что записано в эдиты равно тому что было раньше,то не пишу
 
     public void Alert(final Context context, final String date, String time1, String time2){
         android.app.AlertDialog alert;
