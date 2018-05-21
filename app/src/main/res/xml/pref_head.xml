@@ -5,7 +5,12 @@
     android:fragment="com.example.zsoft.calendar_for_nm.preference$PrefFragment"
     android:title="ViewSettings"
     android:summary="prefs_summ_category_one"/>
+    <header/>
 
+    <header
+        android:fragment="com.example.zsoft.calendar_for_nm.preference$PrefUserSettingsFragment"
+        android:title="User Interface Settings"
+        android:summary="Interface Settings"/>
     <header/>
 
 

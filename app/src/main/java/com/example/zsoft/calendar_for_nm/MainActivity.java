@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -42,10 +43,10 @@ public class MainActivity extends AppCompatActivity {
 
     GridView grView_cld;
     TextView l_date, l_year;
-    ImageButton b_set;
+    ImageButton b_set,b_menu;
     ConstraintLayout layout;
     RecyclerView recyclerViewMain;
-
+    Adapter_recycle adapter;
     public static int today;
     public static int mns;
     public static int year;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         grView_cld=(GridView)findViewById(R.id.gridView);
         b_set=(ImageButton)findViewById(R.id.settings);
+        b_menu=(ImageButton)findViewById(R.id.menu);
         recyclerViewMain=(RecyclerView)findViewById(R.id.recycleMain);
 
         layout=(ConstraintLayout)findViewById(R.id.layout_id);
@@ -67,11 +69,15 @@ public class MainActivity extends AppCompatActivity {
 
 // кнопка настроек
 
+
         b_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(getBaseContext(),preference.class);
                 startActivity(intent);
+
+
+
             }
         });
 
@@ -81,6 +87,13 @@ public class MainActivity extends AppCompatActivity {
         year=Integer.parseInt(day[3]);
         mns_name=day[4];
 
+        b_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
 //  дата в лейбл
         set_date_to_label(mns,today,year);
@@ -89,27 +102,31 @@ public class MainActivity extends AppCompatActivity {
         final GestureDetector gestureDetector=new GestureDetector(new GestureListener() );
 
 //проверка разрешения нужно добавить обход для >23
-        int permission= ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if(permission== PackageManager.PERMISSION_GRANTED){
+        int MyVersion = Build.VERSION.SDK_INT;
+        if (MyVersion > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            int permission = ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (permission == PackageManager.PERMISSION_GRANTED) {
 
 // клик по лейблу
-            click_label(day);
+                click_label(day);
 
 // показываю календарь
-            grView_cld.setAdapter(ads(mns,year));
-            grView_cld.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    gestureDetector.onTouchEvent(event);
-                    return event.getAction()==MotionEvent.ACTION_MOVE;
-                }
-            });
-        }else{
+                grView_cld.setAdapter(ads(mns, year));
+                grView_cld.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        gestureDetector.onTouchEvent(event);
+                        return event.getAction() == MotionEvent.ACTION_MOVE;
+                    }
+                });
+                dataMain(year + "-" + mns + "-" + today);
+            } else {
 // прошу разрешения
-            ActivityCompat.requestPermissions(this ,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
-                    ,1);
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
+                        , 1);
+            }
         }
     }
 
@@ -147,9 +164,9 @@ public class MainActivity extends AppCompatActivity {
 
                 grView_cld.setAdapter(ads(mns,year)
                         //  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,line));
-
                         // new custom_grid_adapter(MainActivity.this, list_date, mass_pict)
                 );
+                dataMain(year+"-"+mns+"-"+today);
             }
         });
 
@@ -223,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
         String index_background=sharedPreferences.getString("background","0");
        return back[Integer.parseInt(index_background)];
     }
+
 //перезапуск активити
     public  void refreshMain(){
         Intent intent=new Intent(this,MainActivity.class);
@@ -236,6 +254,19 @@ public class MainActivity extends AppCompatActivity {
     private void adjustGridView(){
         grView_cld.setNumColumns(7);
         grView_cld.setColumnWidth(30);
+    }
+
+    public void dataMain(String date){
+        LinearLayoutManager li=new LinearLayoutManager(this);
+        recyclerViewMain.setLayoutManager(li);
+         adapter=new Adapter_recycle(MainActivity.this);
+        List<Object>data=new Recycle_windows().set_test(
+                new ExexDB().l_clients_of_day(this,date),this);
+        adapter.setAdapter_recycle(data,date);
+        recyclerViewMain.setAdapter(adapter);
+
+
+
     }
 
 //permission
@@ -266,56 +297,92 @@ public class MainActivity extends AppCompatActivity {
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
         final bild_mass_for_adapter creat_mass=new bild_mass_for_adapter();
 
+        // получаю дату по позиции клика в слушателе
+        private  int [] dat_of_pos(int position){
+            int [] idate;
+            try{
+                final int iday=Integer.parseInt(creat_mass.grv(mns,year).get(position).toString());
+                idate=new int[3];
+                idate[0]=year;
+                idate[1]=mns;
+                idate[2]=iday;
+            }
+            catch(NumberFormatException ex){
+                Log.i("number_format",ex.getMessage());
+                idate=new int[1];
+            }
 
-    // прикрутил слушатель к одиночному клику
+            return idate;
+        }
+
+
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
 
             grView_cld.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    // дата для запроса
-                    SharedPreferences sharedPreferencs = PreferenceManager
-                            .getDefaultSharedPreferences(MainActivity.this);
-                    String edit_valve=sharedPreferencs.getString("background","0");
-                    String day_of_pos=String.valueOf(
-                            creat_mass.grv(mns,year).get(position));
+                   int date_db[]=dat_of_pos(position);
 
-                    try{
-                        String s_date= day_of_pos+":" +mns+ ":"+year;
-                        Toast.makeText(MainActivity.this,
-                                "++"+s_date,Toast.LENGTH_SHORT).show();
-                        set_date_to_label(mns, Integer.parseInt(day_of_pos), year);
-                    }
-                     catch(NumberFormatException ex){
-                     Log.i("number_format",ex.getMessage());
-                    }
-                    /*
-                    if(day_of_pos!=" ") {
+                   if (date_db.length>1) {
+                       final String s_date = date_db[0] + "-" + date_db[1] + "-" + date_db[2];
+                       set_date_to_label(date_db[1], date_db[2], date_db[0]);
+                       Log.i("_data", s_date);
 
-
-                        Toast.makeText(MainActivity.this,"++"+edit_valve,Toast.LENGTH_SHORT).show();
-                        set_date_to_label(mns, Integer.parseInt(day_of_pos), year);
-                    }
-                    */
+                       dataMain(s_date);
+                   }
                 }
-            });
-//LongClick
-            grView_cld.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> adapterView,
-                                               View view, int i, long l) {
-                    Intent intent=new Intent(MainActivity.this,Recycle_windows.class);
-                    startActivity(intent);
-                    return false;
-                }
-
             });
 
 
             return super.onSingleTapUp(e);
 
 
+        }
+/*
+        @Override
+        public void onLongPress(MotionEvent e) {
+            grView_cld.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView,
+                                               View view, int i, long l) {
+                    //Log.i("long_clck",String.valueOf(""));
+                    int date_db[] = dat_of_pos(i);
+
+                    if(date_db.length>1){
+                        Intent intent = new Intent(MainActivity.this,
+                                Recycle_windows.class);
+                        intent.putExtra("date_for_db", date_db);
+                        startActivity(intent);
+                    }
+                    return false;
+                }
+            });
+
+            super.onLongPress(e);
+        }
+
+*/
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            //если в момент скролла то не слшушаю долгий клик или прицепить другой клик(двойной)
+            Log.i("tap","tap");
+            grView_cld.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    int date_db[] = dat_of_pos(position);
+
+                    if(date_db.length>1){
+                        Intent intent = new Intent(MainActivity.this,
+                                Recycle_windows.class);
+                        intent.putExtra("date_for_db", date_db);
+                        startActivity(intent);
+                    }
+                }
+            });
+
+
+            return super.onDoubleTap(e);
         }
 
         @Override
@@ -327,7 +394,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             bild_mass_for_adapter day_in_this_month=new bild_mass_for_adapter();
-
             if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >
                     SWIPE_THRESHOLD_VELOCITY) {
                 if(mns<11) {
@@ -350,6 +416,7 @@ public class MainActivity extends AppCompatActivity {
                                         ,mns
                                         ,year))
                                         */);
+
 
                 return false; // справа налево
 
