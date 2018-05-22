@@ -55,6 +55,18 @@ public class Constructor_data {
 
 
     }
+
 }
 
+ class Constructor_dayWeight{
+    String day;
+    int weight;
+
+     Constructor_dayWeight(String day,int weight){
+         this.day=day;
+         this.weight=weight;
+
+     }
+
+}
 

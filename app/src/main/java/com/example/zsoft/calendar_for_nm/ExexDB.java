@@ -23,14 +23,13 @@ public class ExexDB {
     public List<Integer> cl_ = new ArrayList<Integer>();
     private db mDbHelper;
 
-    void init_mass(Context context, int month, int y){
-        mn_  = new ArrayList<String>();
-        cl_ = new ArrayList<Integer>();
-
+    List<Constructor_dayWeight> init_mass(Context context, int month, int y){
         mDbHelper = new db(context);
         //Application did not close the cursor or database object that was opened here
         mDbHelper.getWritableDatabase();
         SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+        List<Constructor_dayWeight> dateWeight=new ArrayList<Constructor_dayWeight>() {
+        };
 // показывать только на выбранный месяц!!
 //*создать два массива записи в день и цвет дня */
 ///*Запрос из истории*/
@@ -40,7 +39,7 @@ public class ExexDB {
                 "like '" + y + "-" + month + "-%'", null);
 
         if (c.moveToFirst()) {
-            int id = c.getColumnIndex("id");
+
             int date = c.getColumnIndex("date");
             int d_count = c.getColumnIndex("d_count");
 // Привести в проядок
@@ -48,10 +47,8 @@ public class ExexDB {
 //распарсить дату до числа 2016-6-17
                 String d = c.getString(date).toString();
                 String[] pd = d.split("-", 3);
-                //mn_ day in history_for_fender
-                mn_.add(pd[2]);
-                //cl_ weight of gay(color_weight)
-                cl_.add(c.getInt(d_count));
+                dateWeight.add(new Constructor_dayWeight(pd[2],c.getInt(d_count)));
+
             }
             while (c.moveToNext());
             c.close();
@@ -62,7 +59,7 @@ public class ExexDB {
         Log.i("1_cl_", String.valueOf(cl_));
 
 
-
+    return dateWeight;
     }
 
     // получаю по дате массив

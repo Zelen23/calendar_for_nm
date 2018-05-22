@@ -16,8 +16,6 @@ import android.widget.TextView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import java.util.AbstractList;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +39,7 @@ false
 */
 
 
-public class Recycle_windows extends AppCompatActivity {
+public class RecycleWinActivity extends AppCompatActivity {
 
     RecyclerView rv;
     TextView rv_date;
@@ -74,7 +72,7 @@ public class Recycle_windows extends AppCompatActivity {
 
 
         List<String> dataDB=new ExexDB().l_clients_of_day(this,get_day_orders());
-        adapter=new Adapter_recycle(Recycle_windows.this);
+        adapter=new Adapter_recycle(RecycleWinActivity.this);
         rv.setAdapter(adapter);
         adapter.setAdapter_recycle(set_test(dataDB,this),get_day_orders());
 

@@ -1,10 +1,12 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,34 +22,35 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.String.format;
+
 /**
  * Created by adolf on 14.04.2018.
  */
 
 public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    List<Object> data;
-    String date;
-    EditText eName,eNum,eSum;
-    NumberPicker h1,h2,m1,m2;
-    int sh1,sm1,sh2,sm2;
+    private List<Object> data;
+    private String date;
+    private EditText eName,eNum,eSum;
+    private NumberPicker h1,h2,m1,m2;
+    private int sh1,sm1,sh2,sm2;
     private final static int TYPE_FULL=1,TYPE_EMPTY=2;
 
-    Context context;
+    private Context context;
 
 
-    public Adapter_recycle(Context context){
+     Adapter_recycle(Context context){
         this.context=context;
     }
 
-    public void   setAdapter_recycle(List<Object> data,String date){
+     void   setAdapter_recycle(List<Object> data,String date){
         this.data=data;
         this.date=date;
    }
 
-    public  void refresh(){
+      private void refresh(){
         List<String> dataDB=new ExexDB().l_clients_of_day(context,date);
-        List<Object>ulist=new Recycle_windows().set_test(dataDB,context);
-        this.data=ulist;
+          this.data= new RecycleWinActivity().set_test(dataDB,context);
         notifyDataSetChanged();
     }
 
@@ -61,8 +64,9 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return -1;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         switch (viewType){
             case TYPE_FULL:
@@ -81,7 +85,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         int viewType=holder.getItemViewType();
         switch (viewType) {
             case TYPE_FULL:
@@ -112,19 +116,20 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         CheckBox checkBox;
         TextView h,m,h2,m2;
 
-        public FullHolder(View itemView) {
+        FullHolder(View itemView) {
             super(itemView);
-            cardView=(CardView)itemView.findViewById(R.id.card);
-            textView=(TextView) itemView.findViewById(R.id.textView12);
-            editText=(EditText)itemView.findViewById(R.id.editText2);
-            checkBox=(CheckBox) itemView.findViewById(R.id.checkBox2);
-            h=(TextView) itemView.findViewById(R.id.h);
-            m=(TextView) itemView.findViewById(R.id.m);
-            h2=(TextView) itemView.findViewById(R.id.h2);
-            m2=(TextView) itemView.findViewById(R.id.m2);
+            cardView=itemView.findViewById(R.id.card);
+            textView=itemView.findViewById(R.id.textView12);
+            editText=itemView.findViewById(R.id.editText2);
+            checkBox= itemView.findViewById(R.id.checkBox2);
+            h=itemView.findViewById(R.id.h);
+            m=itemView.findViewById(R.id.m);
+            h2=itemView.findViewById(R.id.h2);
+            m2=itemView.findViewById(R.id.m2);
 
         }
-        public void show_data(Constructor_data ful_data){
+
+        void show_data(Constructor_data ful_data){
             textView.setText(ful_data.name);
             editText.setText(String.valueOf(ful_data.sum));
             checkBox.setChecked(ful_data.flag);
@@ -135,25 +140,23 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
             m2.setText(ful_data.m2);
 
         }
-
     }
 
     public class EmptyHolder extends RecyclerView.ViewHolder {
         CardView card_empt;
         TextView h,m,h2,m2;
 
-        public EmptyHolder(View itemView) {
+        EmptyHolder(View itemView) {
 
             super(itemView);
-            card_empt=(CardView)itemView.findViewById(R.id.card_emp);
-            h=(TextView) itemView.findViewById(R.id.emty_h);
-            m=(TextView) itemView.findViewById(R.id.empty_m);
-            h2=(TextView) itemView.findViewById(R.id.empty_h2);
-            m2=(TextView) itemView.findViewById(R.id.empty_m2);
+            card_empt=itemView.findViewById(R.id.card_emp);
+            h=itemView.findViewById(R.id.emty_h);
+            m= itemView.findViewById(R.id.empty_m);
+            h2= itemView.findViewById(R.id.empty_h2);
+            m2= itemView.findViewById(R.id.empty_m2);
         }
 
-
-        public void show_data(final Constructor_data.Constructor_free_data free){
+        void show_data(final Constructor_data.Constructor_free_data free){
             h.setText(free.h1);
             m.setText(free.m1);
             h2.setText(free.h2);
@@ -162,10 +165,6 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
             card_empt.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-
-                   // Intent intent0=new Intent(view.getContext(),WriteOrder.class);
-                   // view.getContext().startActivity(intent0);
-
                     return false;
                 }
             });
@@ -173,7 +172,6 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
             card_empt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                   Alert(context,date,
                             free.h1+":"+free.m1,
                             free.h2+":"+free.m2);
@@ -188,70 +186,79 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
 // то что записано в эдиты равно тому что было раньше,то не пишу
 
     public void Alert(final Context context, final String date, String time1, String time2){
-        android.app.AlertDialog alert;
+           AlertDialog alert;
+           LayoutInflater li = LayoutInflater.from(context);
+           View vw = li.inflate(R.layout.frame_write, null);
+           eName=vw.findViewById(R.id.eName);
+           eNum = vw.findViewById(R.id.eNnm);
+           eSum = vw.findViewById(R.id.eSum);
+           h1 = vw.findViewById(R.id.pH1);
+           h2 = vw.findViewById(R.id.pH2);
+           m1 = vw.findViewById(R.id.pm1);
+           m2 = vw.findViewById(R.id.pm2);
 
-        LayoutInflater li= LayoutInflater.from(context);
-        View vw=li.inflate(R.layout.frame_write,null);
-        eName=(EditText)vw.findViewById(R.id.eName);
-        eNum=(EditText)vw.findViewById(R.id.eNnm);
-        eSum=(EditText)vw.findViewById(R.id.eSum);
-        h1=(NumberPicker)vw. findViewById(R.id.pH1);
-        h2=(NumberPicker)vw. findViewById(R.id.pH2);
-        m1=(NumberPicker)vw. findViewById(R.id.pm1);
-        m2=(NumberPicker)vw. findViewById(R.id.pm2);
+           final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
        /*дата и 2 времени*/
-        AlertDialog.Builder builder= new AlertDialog.Builder(context);
-        builder.setView(vw)
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                        new ExexDB().write_orders(context,date,
-                                formTime(h1.getValue(),m1.getValue()),
-                                formTime(h2.getValue(),+m2.getValue()),
+           builder.setView(vw)
+                   .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialogInterface, int i) {
 
-                                eSum.getText().toString(),
-                                eName.getText().toString(),
-                                eNum.getText().toString(),"clients","");
-                        refresh();
-                        dialogInterface.dismiss();
+                           new ExexDB().write_orders(context, date,
+                                   formTime(h1.getValue(), m1.getValue()),
+                                   formTime(h2.getValue(), +m2.getValue()),
 
-                    }
-                });
+                                   eSum.getText().toString(),
+                                   eName.getText().toString(),
+                                   eNum.getText().toString(), "clients", "");
 
-        try {
-            set_time_to_spiner(time1,time2);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        eName.setText(date);
-        alert = builder.create();
-        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
-        alert.show();
+                           refresh();
+                           dialogInterface.dismiss();
+                       }
+                   });
+
+           try {
+               set_time_to_spiner(time1, time2);
+           } catch (ParseException e) {
+               e.printStackTrace();
+           }
+
+
+           eName.setText("ann_TEST");
+           alert = builder.create();
+           alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
+           alert.show();
+
+
+
+
+
     }
 
     // если 23ч аходит в интервал свободных
     // то при пыставлении 23 59 в  дату начала позволяет  дату окончания сделать меньше
     // смог с 7:00 записать на 7.00 и слежд запись косячная
-    void set_time_to_spiner(String time,String time2)throws ParseException {
+    private void set_time_to_spiner(String time,String time2)throws ParseException {
 
 
-
-        // Log.i("time_to_spinner",String.valueOf());
+        @SuppressLint("SimpleDateFormat")
         final SimpleDateFormat e_time=new SimpleDateFormat("HH:mm");
-        final SimpleDateFormat s_time=new SimpleDateFormat("HH:mm");
-        //   String strTime = e_time.format(new Date());
+      //  final SimpleDateFormat s_time=new SimpleDateFormat("HH:mm");
+
         Date dt1= e_time.parse(time);
         final Date dt2= e_time.parse(time2);
+
+
         final int th1=dt1.getHours();
         final int th2=dt2.getHours();
         final int tm1=dt1.getMinutes();
         final int tm2=dt2.getMinutes();
-        Log.i("time_to_spinner",String.valueOf(th1)+"   "+String.valueOf(th2));
+
+        Log.i("Alert_time_to_spinner",String.valueOf(th1)+"   "+String.valueOf(th2));
         //  long minutes = dt2.getTime() - dt1.getTime();
         //   int deltaminutes = (int) (minutes / (60 * 1000));
-
         //   final String s1,s2;
         // установить минимальное значение равное часу t1 t2
 // api23 выебывается
@@ -293,13 +300,10 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 h2.setMaxValue(th2);
                 h2.setValue(h1.getValue()+1);
 
-
                 if(h1.getValue()==th1) {
                     m1.setMinValue(tm1);
                     m1.setMaxValue(59);
-
                 }
-
 
                 if(h1.getValue()==th2){
                     m2.setMinValue(0);
@@ -322,9 +326,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 sh1=h1.getValue();
                 sh2=h2.getValue();
-
             }
-
 
         });
 
@@ -369,13 +371,10 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         });
 
-
-
-
     }
 
-    public String formTime(int h,int m){
-        String t=String.format("%02d",h)+":"+String.format("%02d",m)+":00";
-        return t;
+    @SuppressLint("DefaultLocale")
+    private String formTime(int h, int m){
+        return format("%02d",h)+":"+ format("%02d",m)+":00";
     }
 }

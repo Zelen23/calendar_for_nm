@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -14,18 +13,19 @@ import java.util.List;
  * Created by azelinsky on 13.03.2018.
  */
 
-public class bild_mass_for_adapter {
-    public db mDbHelper;
-    public ArrayList<String> mn_;
-    public ArrayList<Integer> cl_;
+class Build_render_mass_grid_Cld {
+    private ArrayList<String> mn_;
+    private ArrayList<Integer> cl_;
 
 
 // прислан массив и дата c годом,
 // дату и год исп для получения массивов
-    void init_mass(Context context, int month, int y){
-    mn_ = new ArrayList<String>();
-    cl_ = new ArrayList<Integer>();
-    mDbHelper = new db(context);
+
+
+private void init_mass(Context context, int month, int y){
+    mn_ = new ArrayList<>();
+    cl_ = new ArrayList<>();
+        db mDbHelper = new db(context);
     //Application did not close the cursor or database object that was opened here
     mDbHelper.getWritableDatabase();
     SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
@@ -43,7 +43,7 @@ public class bild_mass_for_adapter {
 // Привести в проядок
         do {
 //распарсить дату до числа 2016-6-17
-            String d = c.getString(date).toString();
+            String d = c.getString(date);
             String[] pd = d.split("-", 3);
             //mn_ day in history_for_fender
             mn_.add(pd[2]);
@@ -54,13 +54,26 @@ public class bild_mass_for_adapter {
         c.close();
 
     }
-    Log.i("1_mn_", String.valueOf(mn_.size()));
-    Log.i("1_mn", String.valueOf(mn_));
-    Log.i("1_cl_", String.valueOf(cl_));
+    Log.i("Build_mn_", String.valueOf(mn_.size()));
+    Log.i("Build_mn", String.valueOf(mn_));
+    Log.i("Build_cl_", String.valueOf(cl_));
 
 }
 
-    public int[] convert_mass_for_render(Context context, List list_d,int month,int year){
+
+private void init_mass2(Context context, int month, int y){
+    List<Constructor_dayWeight> listDayWeight=new ExexDB().init_mass(context,month,y);
+    for(Constructor_dayWeight elt:listDayWeight){
+        mn_.add(elt.day);
+        cl_.add(elt.weight);
+    }
+    Log.i("Build_mn_", String.valueOf(mn_.size()));
+    Log.i("Build_mn", String.valueOf(mn_));
+    Log.i("Build_cl_", String.valueOf(cl_));
+
+}
+
+    int[] convert_mass_for_render(Context context, List list_d, int month, int year){
 
         init_mass(context,month,year);
         List<String> day_for_render=mn_;
@@ -69,8 +82,8 @@ public class bild_mass_for_adapter {
         int[] mass_pic=new int[list_d.size()];
 
         for(int i=0;i<day_for_render.size();i++){
-           // if()
-            Log.i("conv_mass_position",String.valueOf(list_d.indexOf(day_for_render.get(i))));
+
+            Log.i("Build_conv_mass_pos",String.valueOf(list_d.indexOf(day_for_render.get(i))));
 
             switch (weight_of_day.get(i)){
                 case 1:
@@ -147,9 +160,8 @@ public class bild_mass_for_adapter {
         return mass_pic;
     }
 
-    public List grv(final int month, int y) {
+     List grv(final int month, int y) {
 
-        final String[] name = {"пн", "вт", "ср", "чт", "пт", "сб", "вс"};
         GregorianCalendar cld = new GregorianCalendar();
         int d;
         int max;
@@ -191,19 +203,15 @@ public class bild_mass_for_adapter {
             }
         }
 
-
         return list_d;
     }
 
     void dat(){
-
-        String[] date =new MainActivity().day();
         boolean flags=false;
-
         //если год и месяц в массива соответствуют текущим то
         if(2018==MainActivity.year && 2==MainActivity.mns);
         flags=true;
-        Log.i("flag", String.valueOf(flags));
+        Log.i("Build_flag", String.valueOf(flags));
 
 
     }
