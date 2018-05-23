@@ -1,5 +1,6 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -54,44 +55,42 @@ public class RecycleWinActivity extends AppCompatActivity {
     public static String secondTime;
 
     public static  List<Object> data;
-    SharedPreferences sharedPreferences;
+    //SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycle_windows);
 
-        layout=(LinearLayout)findViewById(R.id.layout_rec_win_id);
+        layout=findViewById(R.id.layout_rec_win_id);
         layout.setBackgroundResource(new MainActivity().background_pref(this));
-        rv_date=(TextView)findViewById(R.id.recWin_date);
+        rv_date=findViewById(R.id.recWin_date);
         rv_date.setText(get_day_orders());
 
-        rv=(RecyclerView) findViewById(R.id.recycleView);
+        rv= findViewById(R.id.recycleView);
         LinearLayoutManager li=new LinearLayoutManager(this);
         rv.setLayoutManager(li);
 
 
-        List<String> dataDB=new ExexDB().l_clients_of_day(this,get_day_orders());
+        List<String> dataDB=new ExecDB().l_clients_of_day(this,get_day_orders());
         adapter=new Adapter_recycle(RecycleWinActivity.this);
         rv.setAdapter(adapter);
         adapter.setAdapter_recycle(set_test(dataDB,this),get_day_orders());
-
 
         settingsTime(this);
 
     }
 
     // создаю лайнер(для  бейсадаптера конвертирую строку с данныим)
+    // без ..ы, но работящая
     public List<Object> set_test(List<String> dataDB,Context context) {
 
         settingsTime(context);
-
-        Log.i("DataDB",dataDB.toString());
-
+        Log.i("RecycleWin_DataDB",dataDB.toString());
 
         data =new ArrayList<>();
-        ArrayList <Constructor_data> liner=new ArrayList<>();
-        ArrayList<String> input=new ArrayList<>();
+      //  ArrayList <Constructor_data> liner=new ArrayList<>();
+      //  ArrayList<String> input=new ArrayList<>();
         // если день пустой
         if (dataDB.size() <= 5) {
             data.add(new Constructor_data.Constructor_free_data(firstTime,secondTime));
@@ -178,8 +177,7 @@ public class RecycleWinActivity extends AppCompatActivity {
                         secondTime));
         }
 
-
-        Log.i("DATA",""+data.size());
+        Log.i("RecycleWin_DATA",""+data.size());
 
 return data;
     }
@@ -189,7 +187,7 @@ return data;
         Intent intent=getIntent();
 
         int idat[]=intent.getIntArrayExtra("date_for_db");
-        Log.i("RecWin_data",idat[0]+"-"+idat[1]+"-"+idat[2]);
+        Log.i("RecycleWin_data",idat[0]+"-"+idat[1]+"-"+idat[2]);
         return idat[0]+"-"+idat[1]+"-"+idat[2];
 
     }
@@ -212,14 +210,13 @@ return data;
 
     public  int getTimeInStr(String time1,String time2){
         // получаю сторку парсю из нее время
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
         int cmp = 0;
         try {
             Date sDate=sdf.parse(time1);
             Date s2Date=sdf.parse(time2);
              cmp=sDate.compareTo(s2Date);
-            Log.i("itime_comp",String.valueOf(cmp));
-
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -229,11 +226,14 @@ return data;
 
     // из строки получаю время
     public String convtoTime(String time, String t){
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
-        String stime=null;
+        String stime;
         try {
             Date sDate=sdf.parse(time);
+            @SuppressLint("DefaultLocale")
             String h=String.format("%02d",sDate.getHours());
+            @SuppressLint("DefaultLocale")
             String m=String.format("%02d",sDate.getMinutes());
             stime=h+":"+m;
             Log.i("this_time,",h+":"+m);
@@ -242,13 +242,14 @@ return data;
             stime=t;
             Log.i("this_noTime","fuck");
         }
-
     return stime;
     }
 
-    public void upd(){
-        adapter.notifyDataSetChanged();
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("RecycleWin","Destroy");
+
     }
-
-
 }

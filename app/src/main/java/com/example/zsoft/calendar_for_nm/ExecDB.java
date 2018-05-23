@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,14 +14,10 @@ import java.util.List;
  * Created by azelinsky on 03.05.2018.
  */
 
-public class ExexDB {
+ class ExecDB {
 
-
-
-    public  List<String> mn_ = new ArrayList<String>();
-    public List<Integer> cl_ = new ArrayList<Integer>();
     private db mDbHelper;
-
+    // по дате(месяц, год) создаю лист с парами(день, кол-во записей)
     List<Constructor_dayWeight> init_mass(Context context, int month, int y){
         mDbHelper = new db(context);
         //Application did not close the cursor or database object that was opened here
@@ -45,7 +40,7 @@ public class ExexDB {
 // Привести в проядок
             do {
 //распарсить дату до числа 2016-6-17
-                String d = c.getString(date).toString();
+                String d = c.getString(date);
                 String[] pd = d.split("-", 3);
                 dateWeight.add(new Constructor_dayWeight(pd[2],c.getInt(d_count)));
 
@@ -54,9 +49,7 @@ public class ExexDB {
             c.close();
 
         }
-        Log.i("1_mn_", String.valueOf(mn_.size()));
-        Log.i("1_mn", String.valueOf(mn_));
-        Log.i("1_cl_", String.valueOf(cl_));
+
 
 
     return dateWeight;
@@ -114,7 +107,7 @@ public class ExexDB {
     }
 
     // пишу в базу(дата/время1/время2/сумма/имя/Номер/таблица/ид)
-    public  void  write_orders(Context context, String dats, String times,
+    void  write_orders(Context context, String dats, String times,
                                String times2,String pays,String names,
                                String conts,String table,String id){
 

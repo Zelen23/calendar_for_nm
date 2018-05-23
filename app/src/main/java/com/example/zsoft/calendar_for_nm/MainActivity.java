@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewMain.setLayoutManager(li);
          adapter=new Adapter_recycle(MainActivity.this);
         List<Object>data=new RecycleWinActivity().set_test(
-                new ExexDB().l_clients_of_day(this,date),this);
+                new ExecDB().l_clients_of_day(this,date),this);
         adapter.setAdapter_recycle(data,date);
         recyclerViewMain.setAdapter(adapter);
 
@@ -268,6 +268,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        //  если нет празрешения на запуск
+        super.onResume();
+        grView_cld.setAdapter(adapterCalendar(mns, year));
+        setDataOrdersInDay(year + "-" + mns + "-" + today);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("Main","Pause");
+    }
+
     // слушатель жестов
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
         final Build_render_mass_grid_Cld creat_mass=new Build_render_mass_grid_Cld();
@@ -281,6 +296,8 @@ public class MainActivity extends AppCompatActivity {
                 idate[0]=year;
                 idate[1]=mns;
                 idate[2]=iday;
+
+                today=iday;
             }
             catch(NumberFormatException ex){
                 Log.i("Main_number_format",ex.getMessage());
@@ -301,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
                    if (date_db.length>1) {
                        final String s_date = date_db[0] + "-" + date_db[1] + "-" + date_db[2];
                        set_date_to_label(date_db[1], date_db[2], date_db[0]);
+
                        setDataOrdersInDay(s_date);
                        Log.i("Main_date", s_date);
                    }

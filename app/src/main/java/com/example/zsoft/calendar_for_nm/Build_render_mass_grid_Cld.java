@@ -1,8 +1,6 @@
 package com.example.zsoft.calendar_for_nm;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,76 +12,25 @@ import java.util.List;
  */
 
 class Build_render_mass_grid_Cld {
-    private ArrayList<String> mn_;
-    private ArrayList<Integer> cl_;
-
 
 // прислан массив и дата c годом,
 // дату и год исп для получения массивов
 
-
-private void init_mass(Context context, int month, int y){
-    mn_ = new ArrayList<>();
-    cl_ = new ArrayList<>();
-        db mDbHelper = new db(context);
-    //Application did not close the cursor or database object that was opened here
-    mDbHelper.getWritableDatabase();
-    SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
-// показывать только на выбранный месяц!!
-//*создать два массива записи в день и цвет дня */
-///*Запрос из истории*/
-
-    Cursor c = db1.rawQuery("SELECT * FROM history where date " +
-            "like '" + y + "-" + month + "-%'", null);
-
-    if (c.moveToFirst()) {
-        int id = c.getColumnIndex("id");
-        int date = c.getColumnIndex("date");
-        int d_count = c.getColumnIndex("d_count");
-// Привести в проядок
-        do {
-//распарсить дату до числа 2016-6-17
-            String d = c.getString(date);
-            String[] pd = d.split("-", 3);
-            //mn_ day in history_for_fender
-            mn_.add(pd[2]);
-            //cl_ weight of gay(color_weight)
-            cl_.add(c.getInt(d_count));
-        }
-        while (c.moveToNext());
-        c.close();
-
-    }
-    Log.i("Build_mn_", String.valueOf(mn_.size()));
-    Log.i("Build_mn", String.valueOf(mn_));
-    Log.i("Build_cl_", String.valueOf(cl_));
-
-}
-
-
-private void init_mass2(Context context, int month, int y){
-    List<Constructor_dayWeight> listDayWeight=new ExexDB().init_mass(context,month,y);
-    for(Constructor_dayWeight elt:listDayWeight){
-        mn_.add(elt.day);
-        cl_.add(elt.weight);
-    }
-    Log.i("Build_mn_", String.valueOf(mn_.size()));
-    Log.i("Build_mn", String.valueOf(mn_));
-    Log.i("Build_cl_", String.valueOf(cl_));
-
-}
-
     int[] convert_mass_for_render(Context context, List list_d, int month, int year){
+        List<String> day_for_render=new ArrayList<>();
+        List<Integer> weight_of_day=new ArrayList<>();
+        List<Constructor_dayWeight> listDayWeight=new ExecDB().init_mass(context,month,year);
+        for(Constructor_dayWeight elt:listDayWeight){
+            day_for_render.add(elt.day);
+            weight_of_day.add(elt.weight);
 
-        init_mass(context,month,year);
-        List<String> day_for_render=mn_;
-        List<Integer> weight_of_day=cl_;
+        }
 
         int[] mass_pic=new int[list_d.size()];
 
         for(int i=0;i<day_for_render.size();i++){
 
-            Log.i("Build_conv_mass_pos",String.valueOf(list_d.indexOf(day_for_render.get(i))));
+          //  Log.i("Build_conv_mass_pos",String.valueOf(list_d.indexOf(day_for_render.get(i))));
 
             switch (weight_of_day.get(i)){
                 case 1:
@@ -148,7 +95,6 @@ private void init_mass2(Context context, int month, int y){
                     break;
 
 
-
                 case -1:
                     mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.empty;
                     break;
@@ -206,7 +152,7 @@ private void init_mass2(Context context, int month, int y){
         return list_d;
     }
 
-    void dat(){
+     void dat(){
         boolean flags=false;
         //если год и месяц в массива соответствуют текущим то
         if(2018==MainActivity.year && 2==MainActivity.mns);

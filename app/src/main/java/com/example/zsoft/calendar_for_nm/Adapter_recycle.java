@@ -48,8 +48,8 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.date=date;
    }
 
-      private void refresh(){
-        List<String> dataDB=new ExexDB().l_clients_of_day(context,date);
+    void refresh(){
+        List<String> dataDB=new ExecDB().l_clients_of_day(context,date);
           this.data= new RecycleWinActivity().set_test(dataDB,context);
         notifyDataSetChanged();
     }
@@ -206,7 +206,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
                        @Override
                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                           new ExexDB().write_orders(context, date,
+                           new ExecDB().write_orders(context, date,
                                    formTime(h1.getValue(), m1.getValue()),
                                    formTime(h2.getValue(), +m2.getValue()),
 
