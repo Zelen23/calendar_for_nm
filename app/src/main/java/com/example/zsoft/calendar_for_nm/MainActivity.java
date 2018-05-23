@@ -64,7 +64,10 @@ public class MainActivity extends AppCompatActivity {
         b_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                    //Toast.makeText(MainActivity.this,"--",Toast.LENGTH_SHORT).show();
+                grView_cld.setAdapter(adapterCalendar(MainActivity.this,mns,year));
 
+// цветной массие
             }
         });
     // кнопка настроек
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 click_label(day);
 // показываю календарь
 
-                grView_cld.setAdapter(adapterCalendar(mns, year));
+                grView_cld.setAdapter(adapterCalendar(this,mns, year));
 //
                 grView_cld.setOnTouchListener(new View.OnTouchListener() {
                     @Override
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
 //  делать адаптер
     @NonNull
-    public Adapter_grid_Cld adapterCalendar(int mns, int year){
+    public Adapter_grid_Cld adapterCalendar(Context context,int mns, int year){
         Build_render_mass_grid_Cld creat_mass=new Build_render_mass_grid_Cld();
         final List list_date=creat_mass.grv(mns,year);
 // цветной массие
@@ -132,10 +135,13 @@ public class MainActivity extends AppCompatActivity {
                 creat_mass.grv(mns,year),mns,year);
         // готовые массивы 1-с датами и пробелами 2- с цветами
 
-        return new Adapter_grid_Cld(this, list_date
+
+        return new Adapter_grid_Cld(context, list_date
                 ,mass_pict);
 
     }
+
+
 
 // клик по лейблу даты возвращает на текущуу страницу
     private void click_label(final String []day){
@@ -153,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 year = Integer.parseInt(day[3]);
                 mns_name = day[4];
 
-                grView_cld.setAdapter(adapterCalendar(mns,year)
+                grView_cld.setAdapter(adapterCalendar(MainActivity.this,mns,year)
                 );
                 setDataOrdersInDay(year+"-"+mns+"-"+today);
             }
@@ -248,6 +254,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    void upd(Context context){
+        grView_cld.setAdapter(adapterCalendar(context,mns,year));
+    }
+
 //permission
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -272,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         //  если нет празрешения на запуск
         super.onResume();
-        grView_cld.setAdapter(adapterCalendar(mns, year));
+        grView_cld.setAdapter(adapterCalendar(this, mns, year));
         setDataOrdersInDay(year + "-" + mns + "-" + today);
 
     }
@@ -282,6 +292,9 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         Log.i("Main","Pause");
     }
+
+
+
 
     // слушатель жестов
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
@@ -393,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 set_date_to_label(mns,0,year);
-                grView_cld.setAdapter(adapterCalendar(mns,year));
+                grView_cld.setAdapter(adapterCalendar(MainActivity.this,mns,year));
                 return false;// справа налево
 
             }  else if (e2.getX() - e1.getX() >
@@ -405,7 +418,7 @@ public class MainActivity extends AppCompatActivity {
                     year--;
                 }
                 set_date_to_label(mns,0,year);
-                grView_cld.setAdapter(adapterCalendar(mns,year));
+                grView_cld.setAdapter(adapterCalendar(MainActivity.this,mns,year));
                 return false; // слева направо
             }
 

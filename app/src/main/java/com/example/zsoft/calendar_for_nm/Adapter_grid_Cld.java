@@ -19,18 +19,23 @@ import java.util.List;
 
 public class Adapter_grid_Cld extends BaseAdapter {
     private Context mContext;
+
     private List<String> string;
-    private final int[] Image_id;
+    private  int[] image_id;
+
     private String[]ms_day;
 
 
-     Adapter_grid_Cld(Context mContext, List<String> string, int[] image_id) {
+    Adapter_grid_Cld(Context mContext,List<String> string, int[] image_id) {
         this.mContext = mContext;
+
         this.string = string;
-        Image_id = image_id;
+        this.image_id = image_id;
         MainActivity main = new MainActivity();
         ms_day = main.day();
     }
+
+
 
     private class ViewHolder{
          TextView textView;
@@ -40,6 +45,15 @@ public class Adapter_grid_Cld extends BaseAdapter {
             textView=item.findViewById(R.id.textDay);
             imageView=item.findViewById(R.id.im_day_View);
         }
+    }
+
+    void refrash(){
+        this.image_id=new Build_render_mass_grid_Cld().convert_mass_for_render(mContext,
+                new Build_render_mass_grid_Cld().grv(MainActivity.mns,MainActivity.year),
+                MainActivity.mns,
+                MainActivity.year);
+        notifyDataSetChanged();
+
     }
 
     @Override
@@ -86,7 +100,7 @@ public class Adapter_grid_Cld extends BaseAdapter {
             holder = (ViewHolder)view.getTag();
         }
 
-        holder.imageView.setImageResource(Image_id[i]);
+        holder.imageView.setImageResource(image_id[i]);
         holder.textView.setText(string.get(i));
 
         if(holder.textView.getText().toString().equals(ms_day[0])&&

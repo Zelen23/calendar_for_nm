@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import java.text.ParseException;
@@ -213,7 +214,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                    eSum.getText().toString(),
                                    eName.getText().toString(),
                                    eNum.getText().toString(), "clients", "");
-
+                           //new MainActivity().upd(context);
                            refresh();
                            dialogInterface.dismiss();
                        }
