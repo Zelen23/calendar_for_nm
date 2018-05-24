@@ -37,6 +37,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private int sh1,sm1,sh2,sm2;
     private final static int TYPE_FULL=1,TYPE_EMPTY=2;
 
+
     private Context context;
 
 
@@ -49,7 +50,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.date=date;
    }
 
-    void refresh(){
+    private void refresh(){
         List<String> dataDB=new ExecDB().l_clients_of_day(context,date);
           this.data= new RecycleWinActivity().set_test(dataDB,context);
         notifyDataSetChanged();
@@ -214,7 +215,8 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                    eSum.getText().toString(),
                                    eName.getText().toString(),
                                    eNum.getText().toString(), "clients", "");
-                           //new MainActivity().upd(context);
+                           new MainActivity().updGridCld();
+
                            refresh();
                            dialogInterface.dismiss();
                        }
@@ -225,7 +227,6 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
            } catch (ParseException e) {
                e.printStackTrace();
            }
-
 
            eName.setText("ann_TEST");
            alert = builder.create();

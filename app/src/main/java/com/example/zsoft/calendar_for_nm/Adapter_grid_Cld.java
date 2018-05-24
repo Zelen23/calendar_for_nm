@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +23,19 @@ public class Adapter_grid_Cld extends BaseAdapter {
 
     private List<String> string;
     private  int[] image_id;
-
+    //24,4,GMT+03:00 2018,2018,May
     private String[]ms_day;
 
 
-    Adapter_grid_Cld(Context mContext,List<String> string, int[] image_id) {
+    Adapter_grid_Cld(Context mContext) {
         this.mContext = mContext;
 
+       // this.string = string;
+       // this.image_id = image_id;
+       // MainActivity main = new MainActivity();
+       // ms_day = main.day();
+    }
+    void setAdapter_grid_Cld(List<String> string, int[] image_id){
         this.string = string;
         this.image_id = image_id;
         MainActivity main = new MainActivity();
@@ -47,11 +54,12 @@ public class Adapter_grid_Cld extends BaseAdapter {
         }
     }
 
-    void refrash(){
-        this.image_id=new Build_render_mass_grid_Cld().convert_mass_for_render(mContext,
-                new Build_render_mass_grid_Cld().grv(MainActivity.mns,MainActivity.year),
-                MainActivity.mns,
-                MainActivity.year);
+    void refresh(int mns,int year){
+        List l_date=new Build_render_mass_grid_Cld().grv(mns,year);
+        this.string=l_date;
+        this.image_id=new  Build_render_mass_grid_Cld()
+                .convert_mass_for_render(mContext,l_date
+                ,mns,year);
         notifyDataSetChanged();
 
     }
@@ -108,10 +116,12 @@ public class Adapter_grid_Cld extends BaseAdapter {
                 MainActivity.year==Integer.parseInt(ms_day[3])){
             holder.textView.setTextColor(Color.parseColor("Gray"));
 
+
         }
         else
         holder.textView.setTextColor(Color.parseColor(color));
         holder.textView.setTextSize(size);
+
 
         if (grid != null) {
             grid.setTag(holder);
