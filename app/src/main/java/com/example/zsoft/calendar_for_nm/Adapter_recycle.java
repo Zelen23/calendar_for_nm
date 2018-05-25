@@ -27,6 +27,9 @@ import static java.lang.String.format;
 
 /**
  * Created by adolf on 14.04.2018.
+ * слайдомсдвигаю карточку-на ее месте появлеется карточка чс меню
+ * для пустой ктрточки: записать, вставить
+ * для полной: информация,вырезаьть,копировать,удалить
  */
 
 public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolder>{

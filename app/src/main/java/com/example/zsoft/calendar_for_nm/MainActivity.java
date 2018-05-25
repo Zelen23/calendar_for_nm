@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -64,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         grView_cld= findViewById(R.id.gridView);
 
         recyclerViewMain= findViewById(R.id.recycleMain);
+        SwipeController swipeController=new SwipeController();
+        ItemTouchHelper itemTouchHelper=new ItemTouchHelper(swipeController);
+        itemTouchHelper.attachToRecyclerView(recyclerViewMain);
 
         b_menu= findViewById(R.id.menu);
         b_menu.setOnClickListener(new View.OnClickListener() {
