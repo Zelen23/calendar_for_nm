@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
 // Прикутил слушатель на грид
         final GestureDetector gestureDetector=
-                //new GestureDetector(new GestureListener() );
         new GestureDetector(this, new GestureListener());
 
 //проверка разрешения нужно добавить обход для >23
@@ -296,7 +295,6 @@ public class MainActivity extends AppCompatActivity {
             updGridCld();
             setDataOrdersInDay(year + "-" + mns + "-" + today);
         }
-
 
         Log.i("Main","resume");
 

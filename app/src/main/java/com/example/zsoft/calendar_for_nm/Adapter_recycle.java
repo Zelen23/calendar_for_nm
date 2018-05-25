@@ -15,11 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,10 +35,8 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private EditText eName,eNum,eSum;
     private NumberPicker h1,h2,m1,m2;
-    private int sh1,sm1,sh2,sm2;
 
     private final static int TYPE_FULL=1,TYPE_EMPTY=2;
-
 
     private Context context;
 

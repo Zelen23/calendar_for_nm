@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,8 +115,6 @@ public class Adapter_grid_Cld extends BaseAdapter {
                 MainActivity.mns==Integer.parseInt(ms_day[1])&&
                 MainActivity.year==Integer.parseInt(ms_day[3])){
             holder.textView.setTextColor(Color.parseColor("Gray"));
-
-
         }
         else
         holder.textView.setTextColor(Color.parseColor(color));
