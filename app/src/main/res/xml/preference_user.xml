@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:defaultValue="07:00"
+        android:key="t1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Start Day" />
+    <EditTextPreference
+        android:defaultValue="23:59"
+        android:key="t2"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Finish Day" />
+</PreferenceScreen>
