@@ -23,7 +23,7 @@ public class db extends SQLiteOpenHelper implements BaseColumns {
 
     private static final String DATABASE_TABLE ="clients";
     public static final String ID_COLUMN="id";
-    public static final String NAME_COLUMN="name";
+    static final String NAME_COLUMN="name";
     public static final String TIME1_COLUMN="time1";
     public static final String TIME2_COLUMN="time2";
     public static final String CONTACT_COLUMN="sf_num";
@@ -476,7 +476,7 @@ CREATE TABLE [temp_user] (
                 " select date, count(*) from clients where  date like strftime('%Y-%m-%%')  group by date;" );
 
         db.execSQL("CREATE VIEW [main] AS\n" +
-                " select max(date) from clients max where sf_num = 904 order by _id desc;, ");
+                " select max(date) from clients max where sf_num = 904 order by _id desc; ");
 
         db.execSQL( "CREATE VIEW [new_users] AS\n" +
                 " select * from user where count<=1;" );
