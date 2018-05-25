@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,9 +34,11 @@ import static java.lang.String.format;
 public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<Object> data;
     private String date;
+
     private EditText eName,eNum,eSum;
     private NumberPicker h1,h2,m1,m2;
     private int sh1,sm1,sh2,sm2;
+
     private final static int TYPE_FULL=1,TYPE_EMPTY=2;
 
 
@@ -50,7 +54,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.date=date;
    }
 
-    private void refresh(){
+     void refresh(){
         List<String> dataDB=new ExecDB().l_clients_of_day(context,date);
           this.data= new RecycleWinActivity().set_test(dataDB,context);
         notifyDataSetChanged();
@@ -174,7 +178,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
             card_empt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                  Alert(context,date,
+                    Alert(context,date,
                             free.h1+":"+free.m1,
                             free.h2+":"+free.m2);
                 }
@@ -207,6 +211,12 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                        @Override
                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                           if(h1.getValue()==h2.getValue()&&m1.getValue()==m2.getValue()){
+
+                               Toast.makeText(context,"WTF&! time1==time2",Toast.LENGTH_SHORT)
+                                       .show();
+                           }else
 
                            new ExecDB().write_orders(context, date,
                                    formTime(h1.getValue(), m1.getValue()),
@@ -242,12 +252,13 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
     // если 23ч аходит в интервал свободных
     // то при пыставлении 23 59 в  дату начала позволяет  дату окончания сделать меньше
     // смог с 7:00 записать на 7.00 и слежд запись косячная
+
     private void set_time_to_spiner(String time,String time2)throws ParseException {
 
 
         @SuppressLint("SimpleDateFormat")
         final SimpleDateFormat e_time=new SimpleDateFormat("HH:mm");
-      //  final SimpleDateFormat s_time=new SimpleDateFormat("HH:mm");
+        //  final SimpleDateFormat s_time=new SimpleDateFormat("HH:mm");
 
         Date dt1= e_time.parse(time);
         final Date dt2= e_time.parse(time2);
@@ -264,70 +275,95 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         //   final String s1,s2;
         // установить минимальное значение равное часу t1 t2
 // api23 выебывается
+
         h1.setMinValue(th1);
         h1.setMaxValue(th2);
+        if(th1==th2){
+            m1.setMinValue(tm1);
+            m1.setMaxValue(tm2);
 
-        m1.setMinValue(tm1);
-        m1.setMaxValue(59);
+            m2.setMinValue(tm1);
+            m2.setMaxValue(tm2);
+            m2.setValue(tm2);
+        }else{
+            m1.setMinValue(tm1);
+            m1.setMaxValue(59);
 
-        sm1=m1.getValue();
-        sh1=h1.getValue();
+            m2.setMinValue(0);
+            m2.setMaxValue(tm2);
+        }
 
         h2.setMinValue(th1);
         h2.setMaxValue(th2);
         h2.setValue(th1+1);
 
-        //если значение часа окончания = максимальному то от нуля до минуты окончания
-        if(h2.getValue()<th2){
-            m2.setMinValue(0);
-            m2.setMaxValue(59);
-        }else{
-            m2.setMinValue(0);
-            m2.setMaxValue(tm2);
-        }
-
-
-        sm2=m2.getValue();
-        sh2=h2.getValue();
-
-
-        //   stime1=e_time.parse(String.valueOf(h1.getValue()+":"+m1.getValue()));
-        //  stime2=e_time.parse(String.valueOf(h2.getValue()+":"+m2.getValue()));
-
         h1.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-// если час окончания меньше или равен выбранному часу начала
-                h2.setMinValue(h1.getValue());
+                //Если установленное значение больше чем первый час
+                //
+                h2.setMinValue(newVal);
                 h2.setMaxValue(th2);
-                h2.setValue(h1.getValue()+1);
 
-                if(h1.getValue()==th1) {
+
+
+                if(newVal>oldVal&&newVal>th1){
+                    h2.setValue(newVal+1);
+                    m2.setMinValue(0);
+                    m2.setMaxValue(59);
+                    m2.setValue(0);
+
+                    m1.setMinValue(0);
+                    m1.setMaxValue(59);
+                    m1.setValue(0);
+
+                    if(newVal==th2&&th2>th1){
+                        m2.setMinValue(0);
+                        m2.setMaxValue(tm2);
+                        m2.setValue(tm2);
+
+                        m1.setMinValue(0);
+                        m1.setMaxValue(tm2);
+                        m1.setValue(0);
+                    }
+                    if(h2.getValue()==th2){
+                        m2.setMinValue(0);
+                        m2.setMaxValue(tm2);
+
+                    }
+                }
+                if(newVal<oldVal&&newVal>th1){
+                    h2.setValue(newVal+1);
+                    m2.setMinValue(0);
+                    m2.setMaxValue(59);
+                    m2.setValue(0);
+
+                    m1.setMinValue(0);
+                    m1.setMaxValue(59);
+
+                    if(newVal==th1){
+                        m2.setMinValue(0);
+                        m2.setMaxValue(tm2);
+                        m2.setValue(0);
+
+                        m1.setMinValue(tm1);
+                        m1.setMaxValue(59);
+                    }
+                    if(h2.getValue()==th2){
+                        m2.setMinValue(0);
+                        m2.setMaxValue(tm2);
+                    }
+                }
+                if(newVal<oldVal&&newVal==th1){
+                    h2.setValue(newVal+1);
+
+                    m2.setMinValue(0);
+                    m2.setMaxValue(59);
+                    m2.setValue(0);
+
                     m1.setMinValue(tm1);
                     m1.setMaxValue(59);
                 }
-
-                if(h1.getValue()==th2){
-                    m2.setMinValue(0);
-                    m2.setMaxValue(tm2);
-
-                    m1.setMinValue(0);
-                    m1.setMaxValue(tm2);
-
-                }else{
-                    m1.setMinValue(0);
-                    m1.setMaxValue(59);
-                }
-                if(h1.getValue()==th2-1) {
-                    m1.setMinValue(0);
-                    m1.setMaxValue(59);
-
-                    m2.setMinValue(0);
-                    m2.setMaxValue(tm2);
-                }
-
-                sh1=h1.getValue();
-                sh2=h2.getValue();
             }
 
         });
@@ -335,12 +371,22 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         m1.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                //не проверенно
-                if(h1.getValue()==h2.getValue()&&h1.getValue()!=th2){
-                    m2.setMinValue(m1.getValue());
-                    m2.setMaxValue(59);
+                // Если время1=крайней границе интервала и
+
+                if(h1.getValue()==th2){
+                    m2.setMinValue(i1);
+                    m2.setMaxValue(tm2);
+                }else{
+
+                    if(h1.getValue()==h2.getValue()){
+                        m2.setMinValue(i1);
+                        m2.setMaxValue(59);
+                    }else{
+                        m2.setMinValue(0);
+                        m2.setMaxValue(tm2);
+                    }
                 }
-                sm1=m1.getValue();
+
             }
         });
 
@@ -348,19 +394,32 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i1) {
 // если час последний то от нуля до последней минуты если нет от от0 до 50
-                if(h2.getValue()==th2){
+         /*если h2=th2 то m2=tm2
+         * и если th2=th1
+         * */
+                if(i1==th2){
                     m2.setMinValue(0);
                     m2.setMaxValue(tm2);
-                }else{
-                    m2.setMinValue(0);
-                    m2.setMaxValue(59);
                 }
-
-                if(h1.getValue()==h2.getValue()&&h1.getValue()!=th2){
+                if(i1==th1){
                     m2.setMinValue(m1.getValue());
                     m2.setMaxValue(59);
+                    if(th1==th2){
+                        m2.setMinValue(m1.getValue());
+                        m2.setMaxValue(tm2);
+                    }
+
                 }
-                sh2=h2.getValue();
+                if(i1==h1.getValue()){
+
+                    m2.setMinValue(m1.getValue());
+                    m2.setMaxValue(59);
+                    if(th1==th2){
+                        m2.setMinValue(m1.getValue());
+                        m2.setMaxValue(tm2);
+                    }
+                }
+
             }
 
         });
@@ -368,7 +427,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         m2.setOnValueChangedListener(new NumberPicker.OnValueChangeListener(){
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                sm2=m2.getValue();
+
             }
 
         });

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -39,10 +38,11 @@ public class MainActivity extends AppCompatActivity {
     GridView grView_cld;
     TextView l_date, l_year;
     ImageButton b_set,b_menu;
+    boolean flagperm;
 
     ConstraintLayout layout;
     RecyclerView recyclerViewMain;
-    Adapter_recycle adapter;
+    static Adapter_recycle adapter;
     static Adapter_grid_Cld adapterGridCld;
 
     public static int today;
@@ -104,12 +104,12 @@ public class MainActivity extends AppCompatActivity {
             int permission = ContextCompat.checkSelfPermission(this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (permission == PackageManager.PERMISSION_GRANTED) {
+                flagperm=true;
 // клик по лейблу
                 click_label(day);
 // показываю календарь
 
                 grView_cld.setAdapter(adapterCalendar(mns, year));
-//
                 grView_cld.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
         return adapterGridCld;
 
     }
-
 
 
 // клик по лейблу даты возвращает на текущуу страницу
@@ -277,10 +276,12 @@ public class MainActivity extends AppCompatActivity {
                     refreshMain(this);
                     Toast.makeText(this, "Permission granted "
                             , Toast.LENGTH_SHORT).show();
+                    flagperm=true;
                 }else{
                     Toast.makeText(this, "Permission denied to " +
                                     "read your External storage"
                             , Toast.LENGTH_SHORT).show();
+                    flagperm=false;
                 }
         }
 
@@ -291,8 +292,13 @@ public class MainActivity extends AppCompatActivity {
         //  если нет празрешения на запуск
         super.onResume();
        // grView_cld.setAdapter(adapterCalendar(this, mns, year));
-        updGridCld();
-        setDataOrdersInDay(year + "-" + mns + "-" + today);
+        if(flagperm==true){
+            updGridCld();
+            setDataOrdersInDay(year + "-" + mns + "-" + today);
+        }
+
+
+        Log.i("Main","resume");
 
     }
 
