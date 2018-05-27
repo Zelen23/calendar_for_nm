@@ -45,7 +45,7 @@ public class RecycleWinActivity extends AppCompatActivity {
     RecyclerView rv;
     TextView rv_date;
     LinearLayout layout;
-    Adapter_recycle adapter;
+    Adapter_recycle_swipe adapter;
 
 
     String sFt = "07:00";
@@ -73,7 +73,7 @@ public class RecycleWinActivity extends AppCompatActivity {
 
 
         List<String> dataDB=new ExecDB().l_clients_of_day(this,get_day_orders());
-        adapter=new Adapter_recycle(RecycleWinActivity.this);
+        adapter=new Adapter_recycle_swipe(RecycleWinActivity.this);
         rv.setAdapter(adapter);
         adapter.setAdapter_recycle(set_test(dataDB,this),get_day_orders());
 
