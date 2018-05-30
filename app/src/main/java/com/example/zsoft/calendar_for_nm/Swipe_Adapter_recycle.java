@@ -85,7 +85,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
             case  TYPE_EMPTY:
                 view=LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.card_empty,parent,false);
+                        .inflate(R.layout.swipe_card_empty,parent,false);
                 return new EmptyHolder(view);
         }
 
@@ -179,6 +179,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             m.setText(ful_data.m1);
             h2.setText(ful_data.h2);
             m2.setText(ful_data.m2);
+
             swipe.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
                 @Override
                 public void onOpened(SwipeRevealLayout view) {
@@ -210,6 +211,12 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         CardView card_empt;
         TextView h,m,h2,m2;
 
+        ImageButton bPase,bWrite;
+        SwipeRevealLayout swipeFree;
+
+        View firstFrameFree;
+        View secondFrameFree;
+
         EmptyHolder(View itemView) {
 
             super(itemView);
@@ -218,6 +225,12 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             m= itemView.findViewById(R.id.empty_m);
             h2= itemView.findViewById(R.id.empty_h2);
             m2= itemView.findViewById(R.id.empty_m2);
+
+            bPase=itemView.findViewById(R.id.bPaste);
+            bWrite=itemView.findViewById(R.id.bWrite);
+            firstFrameFree=itemView.findViewById(R.id.firstFrameFree);
+            secondFrameFree=itemView.findViewById(R.id.secondFrameFree);
+            swipeFree=itemView.findViewById(R.id.swipe_layoutFree);
         }
 
         void show_data(final Constructor_data.Constructor_free_data free){
@@ -225,6 +238,41 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             m.setText(free.m1);
             h2.setText(free.h2);
             m2.setText(free.m2);
+            binderHelper.bind(swipeFree,free.h1);
+            binderHelper.setOpenOnlyOne(true);
+
+            bWrite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Alert(context,date,
+                            free.h1+":"+free.m1,
+                            free.h2+":"+free.m2);
+                }
+            });
+
+            final boolean flg=true;
+
+            clicableBtn(true,bPase);
+            swipeFree.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
+
+                @Override
+                public void onClosed(SwipeRevealLayout view) {
+                    super.onClosed(view);
+                }
+
+                @Override
+                public void onOpened(SwipeRevealLayout view) {
+                    super.onOpened(view);
+                }
+
+                @Override
+                public void onSlide(SwipeRevealLayout view, float slideOffset) {
+                    super.onSlide(view, slideOffset);
+
+
+
+                }
+            });
 
             card_empt.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -236,11 +284,17 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             card_empt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Alert(context,date,
-                            free.h1+":"+free.m1,
-                            free.h2+":"+free.m2);
+
                 }
             });
+
+        }
+        void clicableBtn(Boolean flg,ImageButton btn){
+            if(flg==false) {
+                btn.setClickable(false);
+                btn.setVisibility(View.INVISIBLE);
+
+            }
 
         }
     }
