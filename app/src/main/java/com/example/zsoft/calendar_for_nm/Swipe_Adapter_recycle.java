@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,7 +87,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 view=LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.card_empty,parent,false);
                 return new EmptyHolder(view);
-
         }
 
         return null;
@@ -99,8 +99,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             case TYPE_FULL:
                 Constructor_data ful_data = (Constructor_data)
                         data.get(position);
-
-              //  binderHelper.bind(((FullHolder) holder).swipe, ful_data.toString());
                 ((FullHolder)holder).show_data(ful_data);
                 break;
 
@@ -140,6 +138,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         EditText editText;
         CheckBox checkBox;
         TextView h,m,h2,m2;
+        ImageButton bInf,bCut,bCopy,bDelete;
 
         View firstFrame;
         View secondFrame;
@@ -156,17 +155,21 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             h2=itemView.findViewById(R.id.h2);
             m2=itemView.findViewById(R.id.m2);
 
-            firstFrame=itemView.findViewById(R.id.firstFrame);
-            secondFrame=itemView.findViewById(R.id.secondFrame);
             swipe=itemView.findViewById(R.id.swipe_layout);
+            firstFrame=itemView.findViewById(R.id.firstFrame);
 
-
+            secondFrame=itemView.findViewById(R.id.secondFrame);
+            bInf=itemView.findViewById(R.id.bInfo);
+            bCut=itemView.findViewById(R.id.bCut);
+            bCopy=itemView.findViewById(R.id.bCopy);
+            bDelete=itemView.findViewById(R.id.bDelete);
 
         }
 
         void show_data(final Constructor_data ful_data){
 
             binderHelper.bind(swipe,ful_data.id );
+            binderHelper.setOpenOnlyOne(true);
 
             textView.setText(ful_data.name);
             editText.setText(String.valueOf(ful_data.sum));
@@ -176,14 +179,31 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             m.setText(ful_data.m1);
             h2.setText(ful_data.h2);
             m2.setText(ful_data.m2);
+            swipe.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
+                @Override
+                public void onOpened(SwipeRevealLayout view) {
+                    super.onOpened(view);
 
-            secondFrame.setOnClickListener(new View.OnClickListener() {
+                }
+
+                @Override
+                public void onSlide(SwipeRevealLayout view, float slideOffset) {
+                    super.onSlide(view, slideOffset);
+
+                }
+            });
+            bDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(context,ful_data.id,Toast.LENGTH_SHORT).show();
+                    data.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
+                    //refresh();
+
                 }
             });
         }
+
     }
 
     public class EmptyHolder extends RecyclerView.ViewHolder {

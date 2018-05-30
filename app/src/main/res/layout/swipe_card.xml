@@ -2,6 +2,7 @@
 <com.chauthai.swipereveallayout.SwipeRevealLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -12,7 +13,8 @@
         android:id="@+id/secondFrame"
         android:layout_width="wrap_content"
         android:layout_height="68dp"
-        android:background="#ffcc0000">
+        android:background="@color/colorSwipeMenu"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,34 +22,48 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/imageButton3"
+                android:id="@+id/bInfo"
+                style="@style/Widget.AppCompat.ImageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="2dp"
                 android:layout_weight="1"
-                app:srcCompat="@mipmap/ic_launcher" />
+                android:background="@drawable/empty"
+                android:backgroundTint="@color/cardview_shadow_start_color"
+                android:contentDescription="TODO"
+                android:elevation="0dp"
+                app:srcCompat="@android:drawable/ic_menu_info_details" />
 
             <ImageButton
-                android:id="@+id/imageButton4"
+                android:id="@+id/bCut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                app:srcCompat="@mipmap/ic_launcher" />
+                android:background="@drawable/empty"
+                android:foregroundGravity="center"
+                app:srcCompat="?attr/actionModeCutDrawable"
+                tools:srcCompat="?android:attr/actionModeCutDrawable" />
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/bCopy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                app:srcCompat="@mipmap/ic_launcher" />
+                android:background="@drawable/empty"
+                app:srcCompat="?attr/actionModeCopyDrawable" />
 
-            <TextView
-                android:layout_width="68dp"
-                android:layout_height="match_parent"
+            <ImageButton
+                android:id="@+id/bDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@android:color/holo_red_dark"
-                android:gravity="center"
-                android:text="Delete"
-                android:textColor="@android:color/white" />
+                android:background="@drawable/empty"
+                app:srcCompat="@android:drawable/ic_menu_delete" />
+
         </LinearLayout>
 
     </FrameLayout>
