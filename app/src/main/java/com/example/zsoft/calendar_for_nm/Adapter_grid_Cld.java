@@ -79,7 +79,7 @@ public class Adapter_grid_Cld extends BaseAdapter {
         return 0;
     }
 
-    @SuppressLint("InflateParams")
+    @SuppressLint({"InflateParams", "ResourceAsColor"})
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         SharedPreferences sharedPreferences=PreferenceManager
@@ -114,7 +114,8 @@ public class Adapter_grid_Cld extends BaseAdapter {
         if(holder.textView.getText().toString().equals(ms_day[0])&&
                 MainActivity.mns==Integer.parseInt(ms_day[1])&&
                 MainActivity.year==Integer.parseInt(ms_day[3])){
-            holder.textView.setTextColor(Color.parseColor("Gray"));
+            holder.textView.setTextColor(Color.parseColor("White"));
+            holder.imageView.setBackgroundColor(Color.parseColor("#bdcecaca"));
         }
         else
         holder.textView.setTextColor(Color.parseColor(color));

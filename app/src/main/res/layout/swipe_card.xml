@@ -27,12 +27,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="2dp"
+                android:layout_marginStart="7dp"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/empty"
-                android:backgroundTint="@color/cardview_shadow_start_color"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="TODO"
                 android:elevation="0dp"
+
                 app:srcCompat="@android:drawable/ic_menu_info_details" />
 
             <ImageButton
@@ -41,10 +42,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@drawable/empty"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:foregroundGravity="center"
                 app:srcCompat="?attr/actionModeCutDrawable"
-                tools:srcCompat="?android:attr/actionModeCutDrawable" />
+                tools:srcCompat="?android:attr/actionModeCutDrawable"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="8dp"/>
 
             <ImageButton
                 android:id="@+id/bCopy"
@@ -52,8 +55,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@drawable/empty"
-                app:srcCompat="?attr/actionModeCopyDrawable" />
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="?attr/actionModeCopyDrawable"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="8dp"/>
 
             <ImageButton
                 android:id="@+id/bDelete"
@@ -61,8 +66,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@drawable/empty"
-                app:srcCompat="@android:drawable/ic_menu_delete" />
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@android:drawable/ic_menu_delete"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="8dp"/>
 
         </LinearLayout>
 
