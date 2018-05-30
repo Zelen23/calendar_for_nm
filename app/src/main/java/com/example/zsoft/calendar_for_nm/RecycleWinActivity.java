@@ -45,7 +45,7 @@ public class RecycleWinActivity extends AppCompatActivity {
     RecyclerView rv;
     TextView rv_date;
     LinearLayout layout;
-    Adapter_recycle adapter;
+    Swipe_Adapter_recycle adapter;
 
 
     String sFt = "07:00";
@@ -73,9 +73,9 @@ public class RecycleWinActivity extends AppCompatActivity {
 
 
         List<String> dataDB=new ExecDB().l_clients_of_day(this,get_day_orders());
-        adapter=new Adapter_recycle(RecycleWinActivity.this);
-        rv.setAdapter(adapter);
+        adapter=new Swipe_Adapter_recycle(RecycleWinActivity.this);
         adapter.setAdapter_recycle(set_test(dataDB,this),get_day_orders());
+        rv.setAdapter(adapter);
 
         settingsTime(this);
 
@@ -251,5 +251,27 @@ return data;
         super.onDestroy();
         Log.i("RecycleWin","Destroy");
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Only if you need to restore open/close state when
+        // the orientation is changed
+        if (adapter != null) {
+            adapter.saveStates(outState);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Only if you need to restore open/close state when
+        // the orientation is changed
+        if (adapter != null) {
+            adapter.restoreStates(savedInstanceState);
+        }
     }
 }
