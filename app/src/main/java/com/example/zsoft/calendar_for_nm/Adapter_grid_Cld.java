@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 
+import android.support.v7.widget.ContentFrameLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,10 +48,12 @@ public class Adapter_grid_Cld extends BaseAdapter {
     private class ViewHolder{
          TextView textView;
          ImageView imageView;
+         ContentFrameLayout contentFrameLayout;
+
 
          ViewHolder(View item ){
             textView=item.findViewById(R.id.textDay);
-            imageView=item.findViewById(R.id.im_day_View);
+            imageView=item.findViewById(R.id.im_day_View);contentFrameLayout =item.findViewById(R.id.contentFrameLayout);
         }
     }
 
@@ -115,7 +118,8 @@ public class Adapter_grid_Cld extends BaseAdapter {
                 MainActivity.mns==Integer.parseInt(ms_day[1])&&
                 MainActivity.year==Integer.parseInt(ms_day[3])){
             holder.textView.setTextColor(Color.parseColor("White"));
-            holder.imageView.setBackgroundColor(Color.parseColor("#bdcecaca"));
+           // holder.imageView.setBackgroundResource(R.drawable.rectangle_corners);
+            holder.contentFrameLayout.setBackgroundResource(R.drawable.rectangle_corners);
         }
         else
         holder.textView.setTextColor(Color.parseColor(color));

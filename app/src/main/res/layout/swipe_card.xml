@@ -13,7 +13,8 @@
         android:id="@+id/secondFrame"
         android:layout_width="wrap_content"
         android:layout_height="68dp"
-        android:background="@color/colorSwipeMenu"
+        android:background="@drawable/rectangle_corners"
+
         >
 
         <LinearLayout
