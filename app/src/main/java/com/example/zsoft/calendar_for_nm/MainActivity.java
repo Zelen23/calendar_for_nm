@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     ConstraintLayout layout;
     RecyclerView recyclerViewMain;
-    static Adapter_recycle adapter;
+    static Swipe_Adapter_recycle adapter;
     static Adapter_grid_Cld adapterGridCld;
 
     public static int today;
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
     public void setDataOrdersInDay(String date){
         LinearLayoutManager li=new LinearLayoutManager(this);
         recyclerViewMain.setLayoutManager(li);
-         adapter=new Adapter_recycle(MainActivity.this);
+         adapter=new Swipe_Adapter_recycle(MainActivity.this);
         List<Object>data=new RecycleWinActivity().set_test(
                 new ExecDB().l_clients_of_day(this,date),this);
         adapter.setAdapter_recycle(data,date);
