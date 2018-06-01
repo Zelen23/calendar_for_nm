@@ -17,13 +17,14 @@ import java.util.List;
  class ExecDB {
 
     private db mDbHelper;
+
     // по дате(месяц, год) создаю лист с парами(день, кол-во записей)
-    List<Constructor_dayWeight> init_mass(Context context, int month, int y){
+    List<Constructor_dayWeight> init_mass(Context context, int month, int y) {
         mDbHelper = new db(context);
         //Application did not close the cursor or database object that was opened here
         mDbHelper.getWritableDatabase();
         SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
-        List<Constructor_dayWeight> dateWeight=new ArrayList<Constructor_dayWeight>() {
+        List<Constructor_dayWeight> dateWeight = new ArrayList<Constructor_dayWeight>() {
         };
 // показывать только на выбранный месяц!!
 //*создать два массива записи в день и цвет дня */
@@ -42,7 +43,7 @@ import java.util.List;
 //распарсить дату до числа 2016-6-17
                 String d = c.getString(date);
                 String[] pd = d.split("-", 3);
-                dateWeight.add(new Constructor_dayWeight(pd[2],c.getInt(d_count)));
+                dateWeight.add(new Constructor_dayWeight(pd[2], c.getInt(d_count)));
 
             }
             while (c.moveToNext());
@@ -51,8 +52,7 @@ import java.util.List;
         }
 
 
-
-    return dateWeight;
+        return dateWeight;
     }
 
     // получаю по дате массив
@@ -102,14 +102,14 @@ import java.util.List;
             c.close();
             db1.close();
         }
-      // Log.i("2_read", String.valueOf(sqldat));
+        // Log.i("2_read", String.valueOf(sqldat));
         return sqldat;
     }
 
     // пишу в базу(дата/время1/время2/сумма/имя/Номер/таблица/ид)
-    void  write_orders(Context context, String dats, String times,
-                               String times2,String pays,String names,
-                               String conts,String table,String id){
+    void write_orders(Context context, String dats, String times,
+                      String times2, String pays, String names,
+                      String conts, String table, String id) {
 
         Date now = Calendar.getInstance().getTime();
         String nowDate;
@@ -119,12 +119,12 @@ import java.util.List;
         SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
         ContentValues val = new ContentValues();
 
-        switch(table){
+        switch (table) {
             case "clients":
                 val.put(db.DATE1_COLUMN, nowDate);
                 val.put(db.CONTACT_COLUMN, conts);
                 val.put(db.NAME_COLUMN, names);
-                val.put(db.PAY_COLUMN,pays);
+                val.put(db.PAY_COLUMN, pays);
                 val.put(db.TIME1_COLUMN, times);
                 val.put(db.TIME2_COLUMN, times2);
                 val.put(db.DATE_COLUMN, dats);
@@ -134,7 +134,7 @@ import java.util.List;
                 val.put(db.DATE1_TEMP, nowDate);
                 val.put(db.CONTACT_TEMP, conts);
                 val.put(db.NAME_TEMP, names);
-                val.put(db.PAY_TEMP,pays);
+                val.put(db.PAY_TEMP, pays);
                 val.put(db.TIME1_TEMP, times);
                 val.put(db.TIME2_TEMP, times2);
                 val.put(db.DATE_TEMP, dats);
@@ -146,5 +146,110 @@ import java.util.List;
         Log.i("time_ord", "*********" + nowDate);
         db1.close();
     }
+
+
+    // удаляю строку по _id
+    public boolean deleterow(Context context, String table, String id) {
+        mDbHelper = new db(context);
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+        Log.i("2_delete_row", id);
+        return db1.delete(table, "_id = " + id, null) > 0;
+        //return db1.delete(table, "date like'"+date+"' "+time1, null) > 0;
+
+    }
+
+    //получаю по id инфо
+    public ArrayList<String> getLine_(Context context, String table, String ids) {
+       /*вывод диалогового окна с деталями по клиенту
+       * для теста номер*/
+        ArrayList<String> line = new ArrayList<>();
+// контекст из метода
+        mDbHelper = new db(context);
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+        Cursor c;
+
+        switch (table) {
+            case "user":
+                c = db1.rawQuery("SELECT * FROM user where id= " + ids, null);
+                if (c.moveToFirst()) {
+                    int id = c.getColumnIndex("id");
+                    int pk_num = c.getColumnIndex("pk_num");
+                    int name = c.getColumnIndex("name");
+                    int family = c.getColumnIndex("family");
+                    int url = c.getColumnIndex("url");
+                    int count = c.getColumnIndex("count");
+                    int last = c.getColumnIndex("last");
+
+                    do {
+                        line.add(c.getString(id));
+                        line.add(c.getString(name));
+                        line.add(c.getString(family));
+                        line.add(c.getString(pk_num));
+                        line.add(c.getString(url));
+                        line.add(c.getString(last));
+                        line.add(c.getString(count));
+                    }
+                    while (c.moveToNext());
+                    c.close();
+                }
+                break;
+
+            case "clients":
+                c = db1.rawQuery("SELECT * FROM clients where _id= " + ids, null);
+                if (c.moveToFirst()) {
+                    // int id = c.getColumnIndex("id");
+                    int pk_num = c.getColumnIndex("sf_num");
+                    int name = c.getColumnIndex("name");
+                    int time1 = c.getColumnIndex("time1");
+                    int time2 = c.getColumnIndex("time2");
+                    int date = c.getColumnIndex("date");
+                    int date1 = c.getColumnIndex("date1");
+                    int pay = c.getColumnIndex("pay");
+
+                    do {
+                        line.add(c.getString(name));
+                        line.add(c.getString(pk_num));
+                        line.add(c.getString(time1));
+                        line.add(c.getString(time2));
+                        line.add(c.getString(date));
+                        line.add(c.getString(date1));
+                        line.add(c.getString(pay));
+                    }
+                    while (c.moveToNext());
+                    c.close();
+                    break;
+                }
+        }
+        Log.i("execute_getLine", line.toString());
+        return line;
+    }
+
+
+    public  void flag_visitOrPay(Context ct, String flag, String id,String coloumn){
+
+
+        ContentValues val = new ContentValues();
+        mDbHelper = new db(ct);
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+        switch(coloumn){
+            case "visit":
+                val.put(db.VISIT_COLUMN,flag);
+                break;
+            case "pay":
+                val.put(db.PAY_COLUMN,flag);
+                break;
+        }
+
+        db1.update("clients",val,"_id = '"+id+"'",null);
+
+        Log.i("execute_visit",val.toString());
+
+        db1.close();
+    }
+
+
+    /*Копировать- ложу в базу строчку   */
+
+
 
 }

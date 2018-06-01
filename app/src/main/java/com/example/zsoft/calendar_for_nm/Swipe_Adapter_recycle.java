@@ -26,6 +26,7 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,7 @@ import static java.lang.String.format;
 public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<Object> data;
     private String date;
+
 
     private EditText eName,eNum,eSum;
     private NumberPicker h1,h2,m1,m2;
@@ -173,7 +175,26 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
             textView.setText(ful_data.name);
             editText.setText(String.valueOf(ful_data.sum));
+
             checkBox.setChecked(ful_data.flag);
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (checkBox.isChecked()) {
+                        ExecDB vis = new ExecDB();
+                        vis.flag_visitOrPay(context, "true",
+                                ful_data.id, "visit");
+                        refresh();
+                    } else {
+                        ExecDB vis = new ExecDB();
+                        vis.flag_visitOrPay(context, "false",
+                                ful_data.id, "visit");
+                        refresh();
+                    }
+                }
+            });
+
 
             h.setText(ful_data.h1);
             m.setText(ful_data.m1);
@@ -196,10 +217,46 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             bDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context,ful_data.id,Toast.LENGTH_SHORT).show();
-                    data.remove(getAdapterPosition());
-                    notifyItemRemoved(getAdapterPosition());
-                    //refresh();
+                    final AlertDialog.Builder adb=new AlertDialog.Builder(context);
+                    ArrayList data=new ExecDB().getLine_(context,"clients",ful_data.id);
+                    adb.setTitle("Удалить запись "+data.get(0));
+                    adb.setMessage("Номер:"+data.get(1)+
+                    "\nC:"+data.get(2)+
+                    "\nПо:"+data.get(3));
+
+                    adb.setPositiveButton("Удалить",new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            new ExecDB().deleterow(context,"clients",ful_data.id);
+                            //data.remove(getAdapterPosition());
+                            //notifyItemRemoved(getAdapterPosition());
+                            new MainActivity().updGridCld();
+                            refresh();
+                            dialog.dismiss();
+                        }
+                    });
+
+                    adb.setNegativeButton("Oтменить", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    adb.show();
+
+
+
+                }
+            });
+            bCopy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> data=new ExecDB().getLine_(context,"clients",ful_data.id);
+                    // пишу в базу(дата/время1/время2/сумма/имя/Номер/таблица/ид)
+                    new ExecDB().write_orders(context,data.get(4),data.get(2),data.get(3),data.get(6)
+                           ,data.get(0),data.get(1),"temp",ful_data.id);
+
+
 
                 }
             });
@@ -247,10 +304,29 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     Alert(context,date,
                             free.h1+":"+free.m1,
                             free.h2+":"+free.m2);
+
                 }
             });
 
             final boolean flg=true;
+
+            bPase.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   // ArrayList<String> data=new ExecDB().getLine_(context,"clients","15");
+                    //еслт Temp не пуст то
+                    //
+                    if(copy.size()>0) {
+                        Alert(context, date,
+                                free.h1 + ":" + free.m1,
+                                free.h2 + ":" + free.m2);
+                        eName.setText(copy.get(0));
+                        eNum.setText(copy.get(1));
+                        eSum.setText(copy.get(6));
+
+                    }
+                }
+            });
 
             clicableBtn(true,bPase);
             swipeFree.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
@@ -339,6 +415,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                    eNum.getText().toString(), "clients", "");
                            new MainActivity().updGridCld();
 
+
                            refresh();
                            dialogInterface.dismiss();
                        }
@@ -349,8 +426,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
            } catch (ParseException e) {
                e.printStackTrace();
            }
-
-           eName.setText("ann_TEST");
            alert = builder.create();
            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
            alert.show();
