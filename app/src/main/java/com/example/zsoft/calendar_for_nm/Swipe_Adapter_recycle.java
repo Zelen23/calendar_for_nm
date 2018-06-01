@@ -253,6 +253,8 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 public void onClick(View v) {
                     ArrayList<String> data=new ExecDB().getLine_(context,"clients",ful_data.id);
                     // пишу в базу(дата/время1/время2/сумма/имя/Номер/таблица/ид)
+
+                    new ExecDB().deleterow(context,"temp","'' or _id>0");
                     new ExecDB().write_orders(context,data.get(4),data.get(2),data.get(3),data.get(6)
                            ,data.get(0),data.get(1),"temp",ful_data.id);
 
@@ -313,16 +315,16 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             bPase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   // ArrayList<String> data=new ExecDB().getLine_(context,"clients","15");
+                    ArrayList<String> data=new ExecDB().getLine_(context,"temp"," ' ' or _id>0");
                     //еслт Temp не пуст то
-                    //
-                    if(copy.size()>0) {
+                    if(data.size()>0) {
+
                         Alert(context, date,
                                 free.h1 + ":" + free.m1,
                                 free.h2 + ":" + free.m2);
-                        eName.setText(copy.get(0));
-                        eNum.setText(copy.get(1));
-                        eSum.setText(copy.get(6));
+                        eName.setText(data.get(0));
+                        eNum.setText(data.get(3));
+                        eSum.setText(data.get(4));
 
                     }
                 }
@@ -413,8 +415,9 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                    eSum.getText().toString(),
                                    eName.getText().toString(),
                                    eNum.getText().toString(), "clients", "");
-                           new MainActivity().updGridCld();
 
+                           new MainActivity().updGridCld();
+                           new ExecDB().deleterow(context,"temp","'' or _id>0");
 
                            refresh();
                            dialogInterface.dismiss();

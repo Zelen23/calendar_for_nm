@@ -218,6 +218,37 @@ import java.util.List;
                     while (c.moveToNext());
                     c.close();
                     break;
+
+                }
+            case "temp" :
+                c = db1.rawQuery("SELECT * FROM temp where _id= " + ids, null);
+                if (c.moveToFirst()) {
+                    // int id = c.getColumnIndex("_id");
+                    int name = c.getColumnIndex("name");
+                    int time1 = c.getColumnIndex("time1");
+                    int time2 = c.getColumnIndex("time2");
+                    int sf_num = c.getColumnIndex("sf_num");
+                    int pay = c.getColumnIndex("pay");
+                    int date = c.getColumnIndex("date");
+                    int date1 = c.getColumnIndex("date1");
+                    int visit = c.getColumnIndex("visit");
+
+                    do {
+                        //  sqldat.add(  c.getString(id).toString() );
+                        line.add(c.getString(name));
+                        line.add(c.getString(time1));
+                        line.add(c.getString(time2));
+                        line.add(c.getString(sf_num));
+                        line.add(c.getString(pay));
+                        line.add(c.getString(date));
+                        line.add(c.getString(date1));
+                        line.add(c.getString(visit));
+                        // + c.getString(date).toString());
+                    }
+
+                    while (c.moveToNext());
+                    c.close();
+                    break;
                 }
         }
         Log.i("execute_getLine", line.toString());
@@ -248,7 +279,11 @@ import java.util.List;
     }
 
 
-    /*Копировать- ложу в базу строчку   */
+    /*Копировать- ложу в базу строчку
+     *  если нажать копировать еще раз то строчка в базе затирается
+     *  where _id='' or _id>0
+     *  и ложится новая
+     *  что перед копированием что пер*/
 
 
 
