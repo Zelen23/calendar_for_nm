@@ -5,10 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by azelinsky on 03.05.2018.
@@ -112,6 +116,8 @@ import java.util.List;
                       String conts, String table, String id) {
 
         Date now = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+        String day=sdf.format(now);
         String nowDate;
         nowDate = String.valueOf(now);
 
@@ -121,7 +127,7 @@ import java.util.List;
 
         switch (table) {
             case "clients":
-                val.put(db.DATE1_COLUMN, nowDate);
+                val.put(db.DATE1_COLUMN, day);
                 val.put(db.CONTACT_COLUMN, conts);
                 val.put(db.NAME_COLUMN, names);
                 val.put(db.PAY_COLUMN, pays);
@@ -170,7 +176,7 @@ import java.util.List;
 
         switch (table) {
             case "user":
-                c = db1.rawQuery("SELECT * FROM user where id= " + ids, null);
+                c = db1.rawQuery("SELECT * FROM user where pk_num= '" + ids+"'", null);
                 if (c.moveToFirst()) {
                     int id = c.getColumnIndex("id");
                     int pk_num = c.getColumnIndex("pk_num");
@@ -223,7 +229,7 @@ import java.util.List;
             case "temp" :
                 c = db1.rawQuery("SELECT * FROM temp where _id= " + ids, null);
                 if (c.moveToFirst()) {
-                    // int id = c.getColumnIndex("_id");
+                    // ;
                     int name = c.getColumnIndex("name");
                     int time1 = c.getColumnIndex("time1");
                     int time2 = c.getColumnIndex("time2");
@@ -232,17 +238,19 @@ import java.util.List;
                     int date = c.getColumnIndex("date");
                     int date1 = c.getColumnIndex("date1");
                     int visit = c.getColumnIndex("visit");
+                    int id = c.getColumnIndex("_id");
 
                     do {
                         //  sqldat.add(  c.getString(id).toString() );
                         line.add(c.getString(name));
+                        line.add(c.getString(sf_num));
                         line.add(c.getString(time1));
                         line.add(c.getString(time2));
-                        line.add(c.getString(sf_num));
-                        line.add(c.getString(pay));
                         line.add(c.getString(date));
                         line.add(c.getString(date1));
+                        line.add(c.getString(pay));
                         line.add(c.getString(visit));
+                        line.add(c.getString(id));
                         // + c.getString(date).toString());
                     }
 
@@ -256,7 +264,7 @@ import java.util.List;
     }
 
 
-    public  void flag_visitOrPay(Context ct, String flag, String id,String coloumn){
+    public  void flag_visitOrPay(Context ct, String flag, String id,String table,String coloumn){
 
 
         ContentValues val = new ContentValues();
@@ -271,7 +279,7 @@ import java.util.List;
                 break;
         }
 
-        db1.update("clients",val,"_id = '"+id+"'",null);
+        db1.update(table,val,"_id = '"+id+"'",null);
 
         Log.i("execute_visit",val.toString());
 
@@ -279,11 +287,108 @@ import java.util.List;
     }
 
 
+        /*из таймштампа получаю дату
+        * делаю по ней селект с датой и номером
+        * если есть возвращаю время записи если нет null
+        *
+        * */
+    ArrayList<String>   beWrite(Context context,String num,String timeShtamp) {
+        //вт, 5 июня 2018 11:52:28
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
+                new Locale("ru"));
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
+
+        try {
+            Date day = sdf.parse(timeShtamp);
+            String dateOfShtamp = format.format(day);
+            String [] am=dateOfShtamp.split("-");
+            int mns=Integer.parseInt(am[1])-1;
+            String fuckedDate=am[0]+"-"+mns+"-"+am[2];
+
+          //  Log.i("ExecDB_", dateOfShtamp);
+
+           String dat="SELECT * FROM clients where date= '"
+                    + fuckedDate+"' and sf_num='"
+                    +num+"'";
+
+            ArrayList<String> queue = new ArrayList<String>();
+
+            mDbHelper = new db(context);
+            mDbHelper.getWritableDatabase();
+            SQLiteDatabase db2 = mDbHelper.getWritableDatabase();
+            Cursor c = db2.rawQuery(dat, null);
+
+            if (c.moveToFirst()) {
+
+                int name = c.getColumnIndex("name");
+                int time = c.getColumnIndex("time1");
+                int time2 = c.getColumnIndex("time2");
+
+                do {
+                    queue.add(c.getString(name));
+                    queue.add(c.getString(time));
+                    queue.add(c.getString(time2));
+                }
+
+                while (c.moveToNext());
+                c.close();
+            }
+            return queue;
+        } catch (ParseException e) {
+            e.printStackTrace();
+
+        }
+        return null;
+
+    }
+
+    // поиск (приходит запрос целиком)
+    public List<String> search(Context ct, String dat){
+
+        List<String> queue = new ArrayList<String>();
+
+        mDbHelper = new db(ct);
+        mDbHelper.getWritableDatabase();
+        SQLiteDatabase db2 = mDbHelper.getWritableDatabase();
+        Cursor c = db2.rawQuery(dat, null);
+
+        if (c.moveToFirst()) {
+
+            int name = c.getColumnIndex("name");
+            int time = c.getColumnIndex("time1");
+            int date = c.getColumnIndex("date");
+            int date1 = c.getColumnIndex("date1");
+            // int pay = c.getColumnIndex("pay");
+
+            do {
+                queue.add(c.getString(name));
+                queue.add(c.getString(time));
+                queue.add(c.getString(date));
+                // queue.add(c.getString(date1));
+                //  queue.add(c.getString(pay).toString());
+            }
+
+            while (c.moveToNext());
+            c.close();
+        }
+        Log.i("4_",dat);
+        Log.i("4_",String.valueOf(queue));
+        return queue;
+    }
+
     /*Копировать- ложу в базу строчку
      *  если нажать копировать еще раз то строчка в базе затирается
      *  where _id='' or _id>0
      *  и ложится новая
-     *  что перед копированием что пер*/
+     *
+     *  вырезать,проверяю наличие строчки с флагом false
+     *  если нет то переписываю строчку в темp, в clients- удаляю
+     *
+     *   если в базе есть строчка с флаглм false
+     *   то перед затиранием предлагать ее восстановить в clients
+     *
+     *  */
 
 
 
