@@ -328,8 +328,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         new MainActivity().updGridCld();
                         refresh();
 
-
-// если темп пустой
                     }
 
                 }
@@ -340,17 +338,13 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 public void onClick(View v) {
                     ExecDB exec= new ExecDB();
                     ArrayList<String> data=exec.getLine_(context,"clients",ful_data.id);
-
                     ArrayList<String> user=exec.getLine_(context,"user",data.get(1));
 
-                    AlertDialog.Builder adb=new AlertDialog.Builder(context);
-                    adb.setTitle(user.get(1)+" "+user.get(2));
-
-                    String  mess="Номер: "+user.get(3)+
+                    String  mess=
+                            "Номер: "+user.get(3)+
                             "\nВсего записей: "+user.get(6)+
-                            "\nЗаписана: "+ getTimeStamp(data.get(5));
-
-
+                            "\nЗаписана: "+ getTimeStamp(data.get(5))+
+                            "\n";
                     if(exec.beWrite(context,data.get(1),data.get(5))!=null
                             && exec.beWrite(context,data.get(1),data.get(5)).size()>0){
                         mess=mess
@@ -361,11 +355,9 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         mess=mess
                                 +"\nБыла в момент записи: НЕТ";
                     }
-
-
-
+                    AlertDialog.Builder adb=new AlertDialog.Builder(context);
+                    adb.setTitle(user.get(1)+" "+user.get(2));
                     adb.setMessage(mess);
-
                     adb.setNeutralButton("OK",new  DialogInterface.OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -373,27 +365,21 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         }
                     });
                     adb.show();
-
-
                 }
             });
         }
 //Дата на русском
         String getTimeStamp(String s){
-            SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
-                    new Locale("ru"));
+            SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+            );
+              //      ,new Locale("ru"));
 
-           //Locale locale=new Locale("ru");
-           // Locale.setDefault(locale);
-
+           Locale locale=new Locale("ru");
+           Locale.setDefault(locale);
             String ss;
             try {
                 Date day=sdf.parse(s);
                 ss=sdf.format(day);
-
-               // Date day=sdf.parse(timeShtamp);
-               // int d=day.getDate();
-               // ss=day.toString();
 
             } catch (ParseException e) {
                 e.printStackTrace();

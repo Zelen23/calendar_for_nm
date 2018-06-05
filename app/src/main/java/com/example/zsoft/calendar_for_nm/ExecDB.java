@@ -1,5 +1,6 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -297,6 +298,7 @@ import java.util.Locale;
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
                 new Locale("ru"));
 
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
 
         try {
