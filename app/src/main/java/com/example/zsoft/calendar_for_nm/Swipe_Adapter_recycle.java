@@ -26,12 +26,16 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import static java.lang.String.format;
 
@@ -339,18 +343,19 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     ExecDB exec= new ExecDB();
                     ArrayList<String> data=exec.getLine_(context,"clients",ful_data.id);
                     ArrayList<String> user=exec.getLine_(context,"user",data.get(1));
+                    ArrayList<String> infoTimeShtamp=exec.beWrite(context,data.get(1)
+                            ,getTimeStamp(data.get(5)));
 
-                    String  mess=
-                            "Номер: "+user.get(3)+
-                            "\nВсего записей: "+user.get(6)+
-                            "\nЗаписана: "+ getTimeStamp(data.get(5))+
-                            "\n";
-                    if(exec.beWrite(context,data.get(1),data.get(5))!=null
-                            && exec.beWrite(context,data.get(1),data.get(5)).size()>0){
+                    String mess;
+                        mess = "Номер: "+user.get(3)+
+                        "\nВсего записей: "+user.get(6)+
+                        "\nЗаписана: "+ getTimeStamp(data.get(5))+
+                        "\n";
+                    if(infoTimeShtamp!=null && infoTimeShtamp.size()>0){
                         mess=mess
                                 +"\nБыла в момент записи: ДА"
-                                +"\nC: "+exec.beWrite(context,data.get(1),data.get(5)).get(1)
-                                +"\nПо: "+exec.beWrite(context,data.get(1),data.get(5)).get(2);
+                                +"\nC: "+infoTimeShtamp.get(1)
+                                +"\nПо: "+infoTimeShtamp.get(2);
                     }else{
                         mess=mess
                                 +"\nБыла в момент записи: НЕТ";
@@ -370,24 +375,86 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         }
 //Дата на русском
         String getTimeStamp(String s){
-            SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
-            );
-              //      ,new Locale("ru"));
 
-           Locale locale=new Locale("ru");
-           Locale.setDefault(locale);
+            //Locale.setDefault(Locale.US);
+
+            SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+            ,new Locale("ru"));
+            //Locale.setDefault(locale);
+
             String ss;
             try {
                 Date day=sdf.parse(s);
                 ss=sdf.format(day);
+                Log.i("1eeeSwipeAd_s",ss+"loc "+Locale.getDefault());
 
             } catch (ParseException e) {
-                e.printStackTrace();
-                ss=s;
+                /* в гетлайне Thu May 10 10:05:00 EAT 2018-  в таком формате приходит
+                * */
+                                                                //Thu May 10 10:05:00 EAT 2018 loc en_US
+                                                                //Thu May 10 11:05:00 GMT+04:00 2018 loc en_US
+                /*4.4 -z хавает EAT */
+
+                SimpleDateFormat sdf2=new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy"
+                       ,Locale.US );
+               // sdf.setTimeZone(TimeZone.getTimeZone("GMT+3"));
+               // String sss=s.replace("EAT","");
+                String [] splt=s.split(" ");
+
+
+                Date day= null;
+                try {
+                    day = sdf2.parse(splt[0]+" "+splt[1]+" "+splt[2]+" "+splt[3]+" "+splt[5]);
+                    ss=sdf.format(day);
+
+                } catch (ParseException e1) {
+                    SimpleDateFormat sdf3=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+                            ,new Locale("en"));
+                    day = null;
+                    try {
+                         day = sdf3.parse(s);
+                         ss=sdf.format(day);
+                        Log.i("3eeeSwipeAd_s",ss+" loc "+Locale.getDefault());
+                    } catch (ParseException e2) {
+                        e2.printStackTrace();
+                        String [] ssssss=s.split(" ");
+                        ss="^"+s;
+                    }
+
+                    e1.printStackTrace();
+                }
+
             }
 
             return ss;
         }
+
+        String getTime2(String s) {
+            // Thu May 10 10:05:00 EAT 2018
+            // Thu May 10 11:05:00 GMT+04:00 2018
+            //
+            SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+                    ,new Locale("ru"));
+            SimpleDateFormat sdf2=new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy"
+                    ,Locale.US);
+            sdf2.setTimeZone(TimeZone.getTimeZone("EAT"));
+            //sdf.setTimeZone(TimeZone.getTimeZone("GMT+04:00"));
+
+
+            Date dates;
+            try {
+                 dates=sdf2.parse(s);
+                return sdf2.format(dates)+"__"+TimeZone.getDefault().getID();
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+
+                return "----"+s+"__"+TimeZone.getDefault().getID();
+            }
+
+        }
+
+
 
         // если в базе есть вырезанная запись
         void alertTemp(final ArrayList<String> data, final ArrayList<String> temp, final String id){

@@ -107,7 +107,7 @@ import java.util.Locale;
             c.close();
             db1.close();
         }
-        // Log.i("2_read", String.valueOf(sqldat));
+         Log.i("ExecDB_l_clients_of_day", String.valueOf(sqldat));
         return sqldat;
     }
 
@@ -117,7 +117,11 @@ import java.util.Locale;
                       String conts, String table, String id) {
 
         Date now = Calendar.getInstance().getTime();
-        SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+        SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+                ,new Locale("ru"));
+        //Locale locale=new Locale("ru");
+        //Locale.setDefault(locale);
+
         String day=sdf.format(now);
         String nowDate;
         nowDate = String.valueOf(now);
@@ -149,8 +153,7 @@ import java.util.Locale;
                 break;
         }
         db1.insert(table, null, val);
-        Log.i("insert", "selectedDate_ord" + table);
-        Log.i("time_ord", "*********" + nowDate);
+        Log.i("ExecDB_insert", "selectedDate_ord" + table);
         db1.close();
     }
 
@@ -159,7 +162,7 @@ import java.util.Locale;
     public boolean deleterow(Context context, String table, String id) {
         mDbHelper = new db(context);
         SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
-        Log.i("2_delete_row", id);
+        Log.i("ExecDB_delete_row", id);
         return db1.delete(table, "_id = " + id, null) > 0;
         //return db1.delete(table, "date like'"+date+"' "+time1, null) > 0;
 
@@ -260,7 +263,7 @@ import java.util.Locale;
                     break;
                 }
         }
-        Log.i("execute_getLine", line.toString());
+        Log.i("ExecDB__getLine", line.toString());
         return line;
     }
 
@@ -282,8 +285,7 @@ import java.util.Locale;
 
         db1.update(table,val,"_id = '"+id+"'",null);
 
-        Log.i("execute_visit",val.toString());
-
+        Log.i("ExecDB_flag_visitOrPay",val.toString());
         db1.close();
     }
 
@@ -308,13 +310,13 @@ import java.util.Locale;
             int mns=Integer.parseInt(am[1])-1;
             String fuckedDate=am[0]+"-"+mns+"-"+am[2];
 
-          //  Log.i("ExecDB_", dateOfShtamp);
+            Log.i("ExecDB_beWrite", dateOfShtamp);
 
            String dat="SELECT * FROM clients where date= '"
                     + fuckedDate+"' and sf_num='"
                     +num+"'";
 
-            ArrayList<String> queue = new ArrayList<String>();
+            ArrayList<String> queue = new ArrayList<>();
 
             mDbHelper = new db(context);
             mDbHelper.getWritableDatabase();
