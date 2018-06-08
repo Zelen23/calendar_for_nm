@@ -32,6 +32,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    //
+    // https://material.io/tools/icons/?icon=settings&style=sharp
     // переписать на фрагменты
     /*при пролистывании месяца остается открытым денл на котором поледний раз кликнули
     * нужно блочить возм клика по recycleView при скроле и давать при клике*/

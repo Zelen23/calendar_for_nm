@@ -595,16 +595,13 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 if(!hasFocus && eNum.getText().toString().isEmpty()){
                     textInpLayoutNum.setErrorEnabled(true);
                     textInpLayoutNum.setError("noNumber");
-
                 }else {
                     textInpLayoutNum.setErrorEnabled(false);
-
                 }
             }
         });
 
-
-       eNum.addTextChangedListener(new PhoneNumberFormattingTextWatcher(
+        eNum.addTextChangedListener(new PhoneNumberFormattingTextWatcher(
                Locale.getDefault().getCountry()){
            @Override
            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -625,14 +622,12 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
            }
        });
 
-
         eSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(v!= eSum &&eSum.getText().toString().isEmpty()){
+                if(!hasFocus &&eSum.getText().toString().isEmpty()){
                     textInpLayoutPay.setErrorEnabled(true);
                     textInpLayoutPay.setError("noPay");
-
                 } else{
                 textInpLayoutPay.setErrorEnabled(false);
                 }
@@ -640,9 +635,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         });
 
            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-       /*дата и 2 времени*/
-
+            /*дата и 2 времени*/
            builder.setView(vw)
                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                        @Override
@@ -683,10 +676,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
            alert = builder.create();
           // alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
            alert.show();
-
-
-
-
 
     }
 
