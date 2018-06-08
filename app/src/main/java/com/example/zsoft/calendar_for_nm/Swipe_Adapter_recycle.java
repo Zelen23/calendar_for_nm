@@ -26,8 +26,16 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import static java.lang.String.format;
 
@@ -39,12 +47,14 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
     private List<Object> data;
     private String date;
 
+
     private EditText eName,eNum,eSum;
     private NumberPicker h1,h2,m1,m2;
 
     private final static int TYPE_FULL=1,TYPE_EMPTY=2;
 
     private Context context;
+    boolean flagpaste=false;
     private final ViewBinderHelper binderHelper = new ViewBinderHelper();
 
 
@@ -173,7 +183,25 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
             textView.setText(ful_data.name);
             editText.setText(String.valueOf(ful_data.sum));
+
             checkBox.setChecked(ful_data.flag);
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (checkBox.isChecked()) {
+                        ExecDB vis = new ExecDB();
+                        vis.flag_visitOrPay(context, "true",
+                                ful_data.id, "clients","visit");
+                        refresh();
+                    } else {
+                        ExecDB vis = new ExecDB();
+                        vis.flag_visitOrPay(context, "false",
+                                ful_data.id, "clients","visit");
+                        refresh();
+                    }
+                }
+            });
 
             h.setText(ful_data.h1);
             m.setText(ful_data.m1);
@@ -184,25 +212,253 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 @Override
                 public void onOpened(SwipeRevealLayout view) {
                     super.onOpened(view);
-
                 }
 
                 @Override
                 public void onSlide(SwipeRevealLayout view, float slideOffset) {
                     super.onSlide(view, slideOffset);
-
                 }
             });
+
             bDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context,ful_data.id,Toast.LENGTH_SHORT).show();
-                    data.remove(getAdapterPosition());
-                    notifyItemRemoved(getAdapterPosition());
-                    //refresh();
+                    final AlertDialog.Builder adb=new AlertDialog.Builder(context);
+                    ArrayList data=new ExecDB().getLine_(context,"clients",ful_data.id);
+                    adb.setTitle("Удалить запись "+data.get(0));
+                    adb.setMessage("Номер:"+data.get(1)+
+                    "\nC:"+data.get(2)+
+                    "\nПо:"+data.get(3));
+
+                    adb.setPositiveButton("Удалить",new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            new ExecDB().deleterow(context,"clients",ful_data.id);
+                            //data.remove(getAdapterPosition());
+                            //notifyItemRemoved(getAdapterPosition());
+                            new MainActivity().updGridCld();
+                            refresh();
+                            dialog.dismiss();
+                        }
+                    });
+
+                    adb.setNegativeButton("Oтменить", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    adb.show();
+                }
+            });
+
+            bCopy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+    //  проверка на наличие вырезанной записи
+                    ExecDB exec= new ExecDB();
+                    ArrayList<String> data=exec.getLine_(context,"clients",ful_data.id);
+                     final ArrayList<String> temp=exec.getLine_(context,"temp"
+                           ,"'' or _id>0");
+                    if(temp.size()>0&&Boolean.parseBoolean(temp.get(7))==true){
+                        //возвращаю из темп в клиенты
+                        exec.write_orders(context,temp.get(4),temp.get(2),temp.get(3)
+                                ,temp.get(6),temp.get(0),temp.get(1),"clients",temp.get(8));
+
+                        // чищу темп
+                        exec.deleterow(context,"temp","'' or _id>0");
+
+                        //пишу в темп  новую запись
+                        exec.write_orders(context,data.get(4),data.get(2),data.get(3)
+                                ,data.get(6),data.get(0),data.get(1),"temp",ful_data.id);
+                        refresh();
+                    }else{
+                        // если темп пустой
+                        exec.deleterow(context, "temp", "'' or _id>0");
+                        exec.write_orders(context, data.get(4), data.get(2), data.get(3), data.get(6)
+                                , data.get(0), data.get(1), "temp", ful_data.id);
+
+                    }
 
                 }
             });
+
+            bCut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExecDB exec= new ExecDB();
+                    ArrayList<String> data=exec.getLine_(context,"clients",ful_data.id);
+                    ArrayList<String> temp=exec.getLine_(context,"temp"
+                          ,"'' or _id>0");
+                    if(temp.size()>0&&Boolean.parseBoolean(temp.get(7))==true){
+                       // Toast.makeText(context,"true",Toast.LENGTH_SHORT).show();
+                        /*Если в базе уже есть вырезанная запись
+                        * Возвращаю старую на место
+                        * чищу темп
+                        * Пишу новую в темп
+                        *
+                        * ставлю флаг в темпе
+                        * удаляю в клиентах*/
+                        alertTemp(data,temp,ful_data.id);
+
+                    }else{
+                        // чищу темп
+                        exec.deleterow(context,"temp","'' or _id>0");
+
+                        //пишу в темп  новую запись
+                        exec.write_orders(context,data.get(4),data.get(2),data.get(3)
+                                ,data.get(6),data.get(0),data.get(1),"temp",ful_data.id);
+                        // ставлю влаг
+                        exec.flag_visitOrPay(context, "true",
+                                ful_data.id, "temp","visit");
+                        // удаляю в клиентах
+                        exec.deleterow(context,"clients",ful_data.id);
+
+                        new MainActivity().updGridCld();
+                        refresh();
+
+                    }
+
+                }
+            });
+
+            bInf.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExecDB exec= new ExecDB();
+                    ArrayList<String> data=exec.getLine_(context,"clients",ful_data.id);
+                    ArrayList<String> user=exec.getLine_(context,"user",data.get(1));
+                    ArrayList<String> infoTimeShtamp=exec.beWrite(context,data.get(1)
+                            ,getTimeStamp(data.get(5)));
+
+                    String mess;
+                        mess = "Номер: "+user.get(3)+
+                        "\nВсего записей: "+user.get(6)+
+                        "\nЗаписана: "+ getTimeStamp(data.get(5))+
+                        "\n";
+                    if(infoTimeShtamp!=null && infoTimeShtamp.size()>0){
+                        mess=mess
+                                +"\nБыла в момент записи: ДА"
+                                +"\nC: "+infoTimeShtamp.get(1)
+                                +"\nПо: "+infoTimeShtamp.get(2);
+                    }else{
+                        mess=mess
+                                +"\nБыла в момент записи: НЕТ";
+                    }
+                    AlertDialog.Builder adb=new AlertDialog.Builder(context);
+                    adb.setTitle(user.get(1)+" "+user.get(2));
+                    adb.setMessage(mess);
+                    adb.setNeutralButton("OK",new  DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    adb.show();
+                }
+            });
+        }
+    //Дата на русском
+        String getTimeStamp(String s){
+
+            SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+            ,new Locale("ru"));
+            String ss = null;
+            try {
+                Date day=sdf.parse(s);
+                ss=sdf.format(day);
+                Log.i("1eeeSwipeAd_s",ss+"loc "+Locale.getDefault());
+
+            } catch (ParseException e) {
+                /* в гетлайне Thu May 10 10:05:00 EAT 2018-  в таком формате приходит
+                * //Thu May 10 10:05:00 EAT 2018 loc en_US
+                 //Thu May 10 11:05:00 GMT+04:00 2018 loc en_US
+                * */
+                /*4.4 -z хавает EAT */
+                SimpleDateFormat sdf3=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+                        ,new Locale("en"));
+                Date day;
+                try {
+                    day = sdf3.parse(s);
+                    ss=sdf.format(day);
+                    Log.i("3eeeSwipeAd_s",ss+" loc "+Locale.getDefault());
+                } catch (ParseException e1) {
+
+                    SimpleDateFormat sdf2=new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy"
+                            ,Locale.US );
+                    // sdf.setTimeZone(TimeZone.getTimeZone("GMT+3"));
+                    // String sss=s.replace("EAT","");
+                    String [] splt=s.split(" ");
+
+                    try {
+                        if(splt.length>5){
+                            day = sdf2.parse(splt[0]+" "+splt[1]+" "+splt[2]+" "+splt[3]+" "+splt[5]);
+                            ss=sdf.format(day);
+                        }
+
+                    } catch (ParseException e2) {
+                        e2.printStackTrace();
+                        ss="^"+s;
+                    }
+                    e1.printStackTrace();
+                }
+            }
+            return ss;
+        }
+
+        // если в базе есть вырезанная запись
+        void alertTemp(final ArrayList<String> data, final ArrayList<String> temp, final String id){
+            String flagcut=temp.get(7);
+            Log.i("flagcut",flagcut);
+
+                AlertDialog.Builder adb= new AlertDialog.Builder(context);
+                adb.setTitle("В буфере уже есть вырезанная запись");
+                adb.setMessage("Имя: "+temp.get(0) +
+                        "\nМоб:"+temp.get(1)+
+                        "\nC: "+temp.get(2)+" По: "+temp.get(3)+
+                        "\nДата: "+temp.get(4)+
+                        "\n"+
+                        "\nЗакрыть диалог или вернуть запись на место " +
+                        "и записать в буфер новую ");
+                adb.setNegativeButton(" Закрыть", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                    }
+                });
+
+                adb.setPositiveButton("Перезаписать", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ExecDB exec= new ExecDB();
+
+
+                        //возвращаю из темп в клиенты
+                        exec.write_orders(context,temp.get(4),temp.get(2),temp.get(3)
+                                ,temp.get(6),temp.get(0),temp.get(1),"clients",temp.get(8));
+                        // чищу темп
+                        exec.deleterow(context,"temp","'' or _id>0");
+
+                        //пишу в темп  новую запись
+                        exec.write_orders(context,data.get(4),data.get(2),data.get(3)
+                                ,data.get(6),data.get(0),data.get(1),"temp",id);
+                        // ставлю влаг
+                        exec.flag_visitOrPay(context, "true",
+                                id, "temp","visit");
+                        exec.deleterow(context,"clients",id);
+
+                        refresh();
+                        new MainActivity().updGridCld();
+                        dialog.dismiss();
+                    }
+                });
+                adb.show();
+                //диалог затереть или нет
+                //пишу в базу(дата/время1/время2/сумма/имя/Номер/таблица/ид)
+                //
+
+
         }
 
     }
@@ -247,11 +503,30 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     Alert(context,date,
                             free.h1+":"+free.m1,
                             free.h2+":"+free.m2);
+
                 }
             });
 
-            final boolean flg=true;
 
+
+            bPase.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> data=new ExecDB().getLine_(context,"temp"," ' ' or _id>0");
+                    //еслт Temp не пуст то
+                    if(data.size()>0) {
+
+                        Alert(context, date,
+                                free.h1 + ":" + free.m1,
+                                free.h2 + ":" + free.m2);
+                        eName.setText(data.get(0));
+                        eNum.setText(data.get(1));
+                        eSum.setText(data.get(6));
+                        flagpaste=true;
+
+                    }
+                }
+            });
             clicableBtn(true,bPase);
             swipeFree.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
 
@@ -270,20 +545,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     super.onSlide(view, slideOffset);
 
 
-
-                }
-            });
-
-            card_empt.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    return false;
-                }
-            });
-
-            card_empt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
                 }
             });
@@ -337,7 +598,13 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                    eSum.getText().toString(),
                                    eName.getText().toString(),
                                    eNum.getText().toString(), "clients", "");
+
                            new MainActivity().updGridCld();
+           //Чистит темп если вставил
+                           if(flagpaste == true){
+                               new ExecDB().deleterow(context,"temp","'' or _id>0");
+                               flagpaste=false;
+                           }
 
                            refresh();
                            dialogInterface.dismiss();
@@ -349,8 +616,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
            } catch (ParseException e) {
                e.printStackTrace();
            }
-
-           eName.setText("ann_TEST");
            alert = builder.create();
            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
            alert.show();

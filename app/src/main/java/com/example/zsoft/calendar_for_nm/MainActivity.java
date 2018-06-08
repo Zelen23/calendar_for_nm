@@ -125,6 +125,18 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
                         , 1);
             }
+        }else{
+            flagperm=true;
+            click_label(day);
+            grView_cld.setAdapter(adapterCalendar(mns, year));
+            grView_cld.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    gestureDetector.onTouchEvent(event);
+                    return event.getAction() == MotionEvent.ACTION_MOVE;
+                }
+            });
+            setDataOrdersInDay(year + "-" + mns + "-" + today);
         }
     }
 
@@ -259,8 +271,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void updGridCld(){
+//for 4/4
+
+
         MainActivity.adapterGridCld.refresh(mns,year);
         MainActivity.adapterGridCld.notifyDataSetChanged();
+
         Log.i("Main","refrash");
     }
 
@@ -295,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
             updGridCld();
             setDataOrdersInDay(year + "-" + mns + "-" + today);
         }
-
+        layout.setBackgroundResource(background_pref(this));
         Log.i("Main","resume");
 
     }
@@ -304,6 +320,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.i("Main","Pause");
+
+
     }
 
 
