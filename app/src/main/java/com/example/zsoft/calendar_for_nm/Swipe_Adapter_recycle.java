@@ -54,6 +54,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
     private final static int TYPE_FULL=1,TYPE_EMPTY=2;
 
     private Context context;
+    boolean flagpaste=false;
     private final ViewBinderHelper binderHelper = new ViewBinderHelper();
 
 
@@ -207,21 +208,15 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             h2.setText(ful_data.h2);
             m2.setText(ful_data.m2);
 
-
             swipe.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
                 @Override
                 public void onOpened(SwipeRevealLayout view) {
                     super.onOpened(view);
-
-
-
                 }
 
                 @Override
                 public void onSlide(SwipeRevealLayout view, float slideOffset) {
                     super.onSlide(view, slideOffset);
-
-
                 }
             });
 
@@ -266,18 +261,10 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                      final ArrayList<String> temp=exec.getLine_(context,"temp"
                            ,"'' or _id>0");
                     if(temp.size()>0&&Boolean.parseBoolean(temp.get(7))==true){
-
-                       // Toast.makeText(context,"true",Toast.LENGTH_SHORT).show();
-                        /*
-                        Если в буффере находится вырезанная запись
-                        * то  сначала возвращаю старую запись
-                        * чищу темп
-                        * копирую новую
-                        * */
-
                         //возвращаю из темп в клиенты
                         exec.write_orders(context,temp.get(4),temp.get(2),temp.get(3)
                                 ,temp.get(6),temp.get(0),temp.get(1),"clients",temp.get(8));
+
                         // чищу темп
                         exec.deleterow(context,"temp","'' or _id>0");
 
@@ -286,7 +273,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                 ,data.get(6),data.get(0),data.get(1),"temp",ful_data.id);
                         refresh();
                     }else{
-// если темп пустой
+                        // если темп пустой
                         exec.deleterow(context, "temp", "'' or _id>0");
                         exec.write_orders(context, data.get(4), data.get(2), data.get(3), data.get(6)
                                 , data.get(0), data.get(1), "temp", ful_data.id);
@@ -313,22 +300,20 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         * ставлю флаг в темпе
                         * удаляю в клиентах*/
                         alertTemp(data,temp,ful_data.id);
-                        // удаляю в клиентах
-
 
                     }else{
-                        //возвращаю из темп в клиенты
                         // чищу темп
                         exec.deleterow(context,"temp","'' or _id>0");
 
                         //пишу в темп  новую запись
                         exec.write_orders(context,data.get(4),data.get(2),data.get(3)
                                 ,data.get(6),data.get(0),data.get(1),"temp",ful_data.id);
-                        // удаляю в клиентах
-                        exec.deleterow(context,"clients",ful_data.id);
                         // ставлю влаг
                         exec.flag_visitOrPay(context, "true",
                                 ful_data.id, "temp","visit");
+                        // удаляю в клиентах
+                        exec.deleterow(context,"clients",ful_data.id);
+
                         new MainActivity().updGridCld();
                         refresh();
 
@@ -373,16 +358,12 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 }
             });
         }
-//Дата на русском
+    //Дата на русском
         String getTimeStamp(String s){
-
-            //Locale.setDefault(Locale.US);
 
             SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
             ,new Locale("ru"));
-            //Locale.setDefault(locale);
-
-            String ss;
+            String ss = null;
             try {
                 Date day=sdf.parse(s);
                 ss=sdf.format(day);
@@ -390,71 +371,40 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
             } catch (ParseException e) {
                 /* в гетлайне Thu May 10 10:05:00 EAT 2018-  в таком формате приходит
+                * //Thu May 10 10:05:00 EAT 2018 loc en_US
+                 //Thu May 10 11:05:00 GMT+04:00 2018 loc en_US
                 * */
-                                                                //Thu May 10 10:05:00 EAT 2018 loc en_US
-                                                                //Thu May 10 11:05:00 GMT+04:00 2018 loc en_US
                 /*4.4 -z хавает EAT */
-
-                SimpleDateFormat sdf2=new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy"
-                       ,Locale.US );
-               // sdf.setTimeZone(TimeZone.getTimeZone("GMT+3"));
-               // String sss=s.replace("EAT","");
-                String [] splt=s.split(" ");
-
-
-                Date day= null;
+                SimpleDateFormat sdf3=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+                        ,new Locale("en"));
+                Date day;
                 try {
-                    day = sdf2.parse(splt[0]+" "+splt[1]+" "+splt[2]+" "+splt[3]+" "+splt[5]);
+                    day = sdf3.parse(s);
                     ss=sdf.format(day);
-
+                    Log.i("3eeeSwipeAd_s",ss+" loc "+Locale.getDefault());
                 } catch (ParseException e1) {
-                    SimpleDateFormat sdf3=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
-                            ,new Locale("en"));
-                    day = null;
+
+                    SimpleDateFormat sdf2=new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy"
+                            ,Locale.US );
+                    // sdf.setTimeZone(TimeZone.getTimeZone("GMT+3"));
+                    // String sss=s.replace("EAT","");
+                    String [] splt=s.split(" ");
+
                     try {
-                         day = sdf3.parse(s);
-                         ss=sdf.format(day);
-                        Log.i("3eeeSwipeAd_s",ss+" loc "+Locale.getDefault());
+                        if(splt.length>5){
+                            day = sdf2.parse(splt[0]+" "+splt[1]+" "+splt[2]+" "+splt[3]+" "+splt[5]);
+                            ss=sdf.format(day);
+                        }
+
                     } catch (ParseException e2) {
                         e2.printStackTrace();
-                        String [] ssssss=s.split(" ");
                         ss="^"+s;
                     }
-
                     e1.printStackTrace();
                 }
-
             }
-
             return ss;
         }
-
-        String getTime2(String s) {
-            // Thu May 10 10:05:00 EAT 2018
-            // Thu May 10 11:05:00 GMT+04:00 2018
-            //
-            SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
-                    ,new Locale("ru"));
-            SimpleDateFormat sdf2=new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy"
-                    ,Locale.US);
-            sdf2.setTimeZone(TimeZone.getTimeZone("EAT"));
-            //sdf.setTimeZone(TimeZone.getTimeZone("GMT+04:00"));
-
-
-            Date dates;
-            try {
-                 dates=sdf2.parse(s);
-                return sdf2.format(dates)+"__"+TimeZone.getDefault().getID();
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-
-                return "----"+s+"__"+TimeZone.getDefault().getID();
-            }
-
-        }
-
-
 
         // если в базе есть вырезанная запись
         void alertTemp(final ArrayList<String> data, final ArrayList<String> temp, final String id){
@@ -493,10 +443,10 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         //пишу в темп  новую запись
                         exec.write_orders(context,data.get(4),data.get(2),data.get(3)
                                 ,data.get(6),data.get(0),data.get(1),"temp",id);
-                        exec.deleterow(context,"clients",id);
                         // ставлю влаг
                         exec.flag_visitOrPay(context, "true",
                                 id, "temp","visit");
+                        exec.deleterow(context,"clients",id);
 
                         refresh();
                         new MainActivity().updGridCld();
@@ -557,7 +507,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 }
             });
 
-            final boolean flg=true;
+
 
             bPase.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -572,11 +522,11 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         eName.setText(data.get(0));
                         eNum.setText(data.get(1));
                         eSum.setText(data.get(6));
+                        flagpaste=true;
 
                     }
                 }
             });
-
             clicableBtn(true,bPase);
             swipeFree.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
 
@@ -595,20 +545,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     super.onSlide(view, slideOffset);
 
 
-
-                }
-            });
-
-            card_empt.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    return false;
-                }
-            });
-
-            card_empt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
                 }
             });
@@ -664,7 +600,11 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                    eNum.getText().toString(), "clients", "");
 
                            new MainActivity().updGridCld();
-                           new ExecDB().deleterow(context,"temp","'' or _id>0");
+           //Чистит темп если вставил
+                           if(flagpaste == true){
+                               new ExecDB().deleterow(context,"temp","'' or _id>0");
+                               flagpaste=false;
+                           }
 
                            refresh();
                            dialogInterface.dismiss();

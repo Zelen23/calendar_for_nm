@@ -153,10 +153,9 @@ import java.util.Locale;
                 break;
         }
         db1.insert(table, null, val);
-        Log.i("ExecDB_insert", "selectedDate_ord" + table);
+        Log.i("ExecDB_write_orders", "tab " + table);
         db1.close();
     }
-
 
     // удаляю строку по _id
     public boolean deleterow(Context context, String table, String id) {
@@ -288,7 +287,6 @@ import java.util.Locale;
         Log.i("ExecDB_flag_visitOrPay",val.toString());
         db1.close();
     }
-
 
         /*из таймштампа получаю дату
         * делаю по ней селект с датой и номером
