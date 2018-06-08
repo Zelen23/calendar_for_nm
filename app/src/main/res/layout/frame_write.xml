@@ -9,7 +9,7 @@
     android:background="@color/cardview_shadow_start_color"
     android:minHeight="40dp"
     android:orientation="vertical"
-    android:layout_marginLeft="10dp"
+    android:layout_marginStart="10dp"
     >
 
     <LinearLayout
@@ -20,61 +20,45 @@
         android:layout_marginBottom="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-
         >
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Name:" />
 
         <EditText
             android:id="@+id/eName"
             android:layout_width="400dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
-
+            android:hint="@string/Name"
             android:ems="10"
             android:inputType="textPersonName"
             android:singleLine="false"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="56dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Number:" />
 
         <EditText
             android:id="@+id/eNnm"
             android:layout_width="400dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
-            android:contentDescription="Number"
             android:ems="10"
-            android:inputType="number"
-
+            android:inputType="phone"
+            android:hint="@string/Number"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="331dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sum:" />
 
         <EditText
             android:id="@+id/eSum"
             android:layout_width="100dp"
             android:layout_height="match_parent"
-
-            android:contentDescription="Sum" />
+            android:hint="@string/Pay"
+            android:inputType="number"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="100"
@@ -86,31 +70,31 @@
 
         <NumberPicker
             android:id="@+id/pH1"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />
 
         <NumberPicker
             android:id="@+id/pm1"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginStart="10dp"/>
 
         <NumberPicker
             android:id="@+id/pH2"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginLeft="40dp"/>
+            android:layout_marginStart="30dp"/>
 
         <NumberPicker
             android:id="@+id/pm2"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginStart="10dp"/>
     </LinearLayout>
 
 </LinearLayout>

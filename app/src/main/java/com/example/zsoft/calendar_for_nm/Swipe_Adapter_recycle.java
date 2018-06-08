@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -182,6 +184,8 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             binderHelper.setOpenOnlyOne(true);
 
             textView.setText(ful_data.name);
+            textView.setMaxLines(1);
+
             editText.setText(String.valueOf(ful_data.sum));
 
             checkBox.setChecked(ful_data.flag);
@@ -617,7 +621,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                e.printStackTrace();
            }
            alert = builder.create();
-           alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
+          // alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
            alert.show();
 
 
