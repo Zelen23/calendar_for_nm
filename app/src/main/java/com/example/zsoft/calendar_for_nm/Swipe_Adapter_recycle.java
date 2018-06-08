@@ -9,6 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.telephony.PhoneNumberUtils;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -599,6 +602,29 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 }
             }
         });
+
+
+       eNum.addTextChangedListener(new PhoneNumberFormattingTextWatcher(
+               Locale.getDefault().getCountry()){
+           @Override
+           public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+               super.beforeTextChanged(s, start, count, after);
+           }
+
+           @Override
+           public void onTextChanged(CharSequence s, int start, int before, int count) {
+               super.onTextChanged(s, start, before, count);
+
+           }
+
+           @Override
+           public synchronized void afterTextChanged(Editable s) {
+               super.afterTextChanged(s);
+              // String format=PhoneNumberUtils.formatNumber(eNum.getText().toString());
+              // Log.i("Wath_after",format);
+           }
+       });
+
 
         eSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
