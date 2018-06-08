@@ -4,13 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +17,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
-import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,16 +25,10 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import static java.lang.String.format;
 
@@ -580,6 +571,48 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
            m1 = vw.findViewById(R.id.pm1);
            m2 = vw.findViewById(R.id.pm2);
 
+          final TextInputLayout textInpLayout=vw.findViewById(R.id.textInpLayName);
+          final TextInputLayout textInpLayoutNum=vw.findViewById(R.id.textInpLayNum);
+          final TextInputLayout textInpLayoutPay=vw.findViewById(R.id.textInpLayPay);
+
+        eName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus  && eName.getText().toString().isEmpty()) {
+                    textInpLayout.setErrorEnabled(true);
+                    textInpLayout.setError("noName");
+                } else {
+                    textInpLayout.setErrorEnabled(false);
+                }
+            }
+        });
+        eNum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus && eNum.getText().toString().isEmpty()){
+                    textInpLayoutNum.setErrorEnabled(true);
+                    textInpLayoutNum.setError("noNumber");
+
+                }else {
+                    textInpLayoutNum.setErrorEnabled(false);
+
+                }
+            }
+        });
+
+        eSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(v!= eSum &&eSum.getText().toString().isEmpty()){
+                    textInpLayoutPay.setErrorEnabled(true);
+                    textInpLayoutPay.setError("noPay");
+
+                } else{
+                textInpLayoutPay.setErrorEnabled(false);
+                }
+            }
+        });
+
            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
        /*дата и 2 времени*/
@@ -620,6 +653,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
            } catch (ParseException e) {
                e.printStackTrace();
            }
+
            alert = builder.create();
           // alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
            alert.show();
