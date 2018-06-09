@@ -34,7 +34,7 @@
                 android:contentDescription="TODO"
                 android:elevation="0dp"
 
-                app:srcCompat="@android:drawable/ic_menu_edit" />
+                app:srcCompat="@drawable/ic_create_black_24dp" />
 
             <ImageButton
                 android:id="@+id/bPaste"
@@ -46,7 +46,7 @@
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:foregroundGravity="center"
-                app:srcCompat="?attr/actionModePasteDrawable"
+                app:srcCompat="@drawable/ic_content_paste_black_24dp"
                 tools:srcCompat="?android:attr/actionModeCutDrawable" />
 
 
