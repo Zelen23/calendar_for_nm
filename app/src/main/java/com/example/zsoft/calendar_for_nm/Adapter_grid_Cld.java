@@ -119,7 +119,7 @@ public class Adapter_grid_Cld extends BaseAdapter {
                 MainActivity.year==Integer.parseInt(ms_day[3])){
             holder.textView.setTextColor(Color.parseColor("White"));
            // holder.imageView.setBackgroundResource(R.drawable.rectangle_corners);
-            holder.contentFrameLayout.setBackgroundResource(R.drawable.rectangle_corners);
+            holder.imageView.setBackgroundResource(R.drawable.ic_nowday);
         }
         else
         holder.textView.setTextColor(Color.parseColor(color));
