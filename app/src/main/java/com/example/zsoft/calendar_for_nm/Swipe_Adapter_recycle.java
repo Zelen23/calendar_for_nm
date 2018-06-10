@@ -564,6 +564,8 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
     public void Alert(final Context context, final String date, String time1, String time2){
            AlertDialog alert;
+
+
            LayoutInflater li = LayoutInflater.from(context);
            View vw = li.inflate(R.layout.frame_write, null);
            eName=vw.findViewById(R.id.eName);
@@ -622,6 +624,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
            }
        });
 
+        //String parseNum=PhoneNumberUtils.convertKeypadLettersToDigits(eNum.getText().toString());
         eSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -647,13 +650,16 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                        .show();
                            }else
 
+
                            new ExecDB().write_orders(context, date,
                                    formTime(h1.getValue(), m1.getValue()),
                                    formTime(h2.getValue(), +m2.getValue()),
 
                                    eSum.getText().toString(),
                                    eName.getText().toString(),
-                                   eNum.getText().toString(), "clients", "");
+                                   new String(
+                                           eNum.getText().toString().replaceAll("\\D+",""))
+                                           , "clients", "");
 
                            new MainActivity().updGridCld();
            //Чистит темп если вставил

@@ -89,7 +89,7 @@ public class preference  extends PreferenceActivity{
         public void onPause() {
             super.onPause();
             //startActivity(refresh);
-            refrash();
+           // refrash();
             Log.i("pref__psuse","" +
                     "Pause");
 
@@ -124,7 +124,7 @@ public class preference  extends PreferenceActivity{
         public void onPause() {
             super.onPause();
             //startActivity(refresh);
-            refrash();
+          //  refrash();
             Log.i("prefusr__psuse","" +
                     "Pause");
 
