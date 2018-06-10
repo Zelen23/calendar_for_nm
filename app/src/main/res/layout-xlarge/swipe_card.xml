@@ -86,7 +86,9 @@
     <FrameLayout
         android:id="@+id/firstFrame"
         android:layout_width="wrap_content"
-        android:layout_height="80dp">
+        android:layout_height="80dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -149,21 +151,19 @@
                     android:layout_alignEnd="@+id/checkBox2"
                     android:layout_alignParentBottom="true"
                     android:layout_toEndOf="@+id/h"
-                    android:focusable="true"
                     android:fontFamily="sans-serif-condensed"
                     android:text="111111"
                     android:textSize="20sp"
                     android:typeface="sans" />
 
                 <EditText
-                    android:id="@+id/editText2"
+                    android:id="@+id/editSum"
                     style="@style/Widget.AppCompat.EditText"
                     android:layout_width="55dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_toStartOf="@+id/checkBox2"
                     android:ems="10"
-                    android:focusable="false"
                     android:inputType="number"
                     android:labelFor="@+id/textView"
                     android:singleLine="true"

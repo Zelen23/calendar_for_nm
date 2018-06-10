@@ -4,14 +4,17 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +28,8 @@ import android.widget.Toast;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
+
+import junit.framework.Assert;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -141,7 +146,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
     public class FullHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView textView;
-        EditText editText;
+        EditText editSum;
         CheckBox checkBox;
         TextView h,m,h2,m2;
         ImageButton bInf,bCut,bCopy,bDelete;
@@ -154,7 +159,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             super(itemView);
             cardView=itemView.findViewById(R.id.card);
             textView=itemView.findViewById(R.id.textView12);
-            editText=itemView.findViewById(R.id.editText2);
+            editSum =itemView.findViewById(R.id.editSum);
             checkBox= itemView.findViewById(R.id.checkBox2);
             h=itemView.findViewById(R.id.h);
             m=itemView.findViewById(R.id.m);
@@ -170,6 +175,14 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             bCopy=itemView.findViewById(R.id.bCopy);
             bDelete=itemView.findViewById(R.id.bDelete);
 
+            SharedPreferences sharedPreferences= PreferenceManager
+                    .getDefaultSharedPreferences(context);
+            Boolean flgHideSum= sharedPreferences.getBoolean("hideSum",false);
+            if(!flgHideSum){
+                editSum.setInputType(InputType.TYPE_CLASS_NUMBER);
+            }
+/*InputType.TYPE_CLASS_TEXT |
+    InputType.TYPE_TEXT_VARIATION_PASSWORD*/
         }
 
         void show_data(final Constructor_data ful_data){
@@ -180,7 +193,21 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             textView.setText(ful_data.name);
             textView.setMaxLines(1);
 
-            editText.setText(String.valueOf(ful_data.sum));
+
+
+            editSum.setText(String.valueOf(ful_data.sum));
+            editSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if(!hasFocus&&!ful_data.sum.toString().equals(editSum.getText().toString())){
+
+                       new ExecDB().flag_visitOrPay(context,editSum.getText().toString(),
+                               ful_data.id,"clients","pay");
+                       refresh();
+                    }
+                }
+            });
+
 
             checkBox.setChecked(ful_data.flag);
             checkBox.setOnClickListener(new View.OnClickListener() {
@@ -205,6 +232,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             m.setText(ful_data.m1);
             h2.setText(ful_data.h2);
             m2.setText(ful_data.m2);
+
 
             swipe.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
                 @Override
@@ -277,7 +305,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                 , data.get(0), data.get(1), "temp", ful_data.id);
 
                     }
-
                 }
             });
 
@@ -289,14 +316,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     ArrayList<String> temp=exec.getLine_(context,"temp"
                           ,"'' or _id>0");
                     if(temp.size()>0&&Boolean.parseBoolean(temp.get(7))==true){
-                       // Toast.makeText(context,"true",Toast.LENGTH_SHORT).show();
-                        /*Если в базе уже есть вырезанная запись
-                        * Возвращаю старую на место
-                        * чищу темп
-                        * Пишу новую в темп
-                        *
-                        * ставлю флаг в темпе
-                        * удаляю в клиентах*/
+
                         alertTemp(data,temp,ful_data.id);
 
                     }else{
@@ -314,9 +334,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
                         new MainActivity().updGridCld();
                         refresh();
-
                     }
-
                 }
             });
 
