@@ -68,7 +68,10 @@
             android:layout_gravity="center"
             android:gravity="center"
             app:cardBackgroundColor="@color/cardview_shadow_end_color"
-            app:cardCornerRadius="5dp">
+            app:cardCornerRadius="5dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,7 +84,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="50"
-
                     android:gravity="right"
                     android:text="11"
                     android:textSize="32sp" />
@@ -97,7 +99,6 @@
                     android:id="@+id/empty_h2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:text="18"
                     android:textSize="32sp" />
 
@@ -106,7 +107,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="50"
-
                     android:text="200" />
 
 

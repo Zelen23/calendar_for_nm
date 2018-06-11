@@ -67,14 +67,12 @@
         android:layout_marginEnd="1dp"
         android:layout_marginTop="4dp"
         android:background="@drawable/menu_back"
-
         android:contentDescription="@string/app_name"
+
         app:layout_constraintBottom_toTopOf="@+id/gestures"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-
         app:layout_constraintVertical_bias="0.0"
-
         app:srcCompat="@drawable/ic_outline_settings_24px" />
 
     <android.gesture.GestureOverlayView
@@ -100,11 +98,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
-            android:focusable="true"
             android:numColumns="7"
             android:overScrollMode="never"
             android:scrollbars="none"
-            android:scrollingCache="false" />
+            android:scrollingCache="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
     </android.gesture.GestureOverlayView>
 
     <android.support.v7.widget.RecyclerView

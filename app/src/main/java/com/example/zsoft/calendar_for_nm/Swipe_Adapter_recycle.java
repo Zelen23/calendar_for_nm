@@ -15,10 +15,15 @@ import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -181,8 +186,11 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             if(!flgHideSum){
                 editSum.setInputType(InputType.TYPE_CLASS_NUMBER);
             }
-/*InputType.TYPE_CLASS_TEXT |
-    InputType.TYPE_TEXT_VARIATION_PASSWORD*/
+
+        /*
+        InputType.TYPE_CLASS_TEXT |
+        InputType.TYPE_TEXT_VARIATION_PASSWORD
+        */
         }
 
         void show_data(final Constructor_data ful_data){
@@ -193,38 +201,67 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             textView.setText(ful_data.name);
             textView.setMaxLines(1);
 
-
-
             editSum.setText(String.valueOf(ful_data.sum));
-            editSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if(!hasFocus&&!ful_data.sum.toString().equals(editSum.getText().toString())){
+            //editSum.setImeOptions(EditorInfo.TYPE_NUMBER_FLAG_SIGNED);
 
-                       new ExecDB().flag_visitOrPay(context,editSum.getText().toString(),
-                               ful_data.id,"clients","pay");
-                       refresh();
-                    }
-                }
-            });
+
+/*
+                    editSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if(v==editSum&&!ful_data.sum.toString().equals(editSum.getText().toString())){
+
+                                new ExecDB().flag_visitOrPay(context,editSum.getText().toString(),
+                                        ful_data.id,"clients","pay");
+                                refresh();
+                            }
+                        }
+                    });
+
+   */             // editSum.setOnEditorActionListener(new DoneOnEditorActionListener());
+                   editSum.setOnKeyListener(new View.OnKeyListener() {
+                       @Override
+                       public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    Log.i("key",""+keyCode);
+                           if(keyCode==66&&
+                                   !ful_data.sum.toString().equals(editSum.getText().toString())){
+
+                               new ExecDB().flag_visitOrPay(context,editSum.getText().toString(),
+                                       ful_data.id,"clients","pay");
+
+                               InputMethodManager imm = (InputMethodManager) v.getContext()
+                                      .getSystemService(Context.INPUT_METHOD_SERVICE);
+                               imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                               refresh();
+                           }
+
+                           return false;
+                       }
+                   });
+
 
 
             checkBox.setChecked(ful_data.flag);
             checkBox.setOnClickListener(new View.OnClickListener() {
+
+
                 @Override
                 public void onClick(View v) {
+                    InputMethodManager imm = (InputMethodManager) v.getContext()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
 
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                    ExecDB vis = new ExecDB();
                     if (checkBox.isChecked()) {
-                        ExecDB vis = new ExecDB();
                         vis.flag_visitOrPay(context, "true",
                                 ful_data.id, "clients","visit");
-                        refresh();
                     } else {
-                        ExecDB vis = new ExecDB();
                         vis.flag_visitOrPay(context, "false",
                                 ful_data.id, "clients","visit");
-                        refresh();
                     }
+
+                    refresh();
                 }
             });
 
@@ -667,8 +704,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                Toast.makeText(context,"WTF&! time1==time2",Toast.LENGTH_SHORT)
                                        .show();
                            }else
-
-
                            new ExecDB().write_orders(context, date,
                                    formTime(h1.getValue(), m1.getValue()),
                                    formTime(h2.getValue(), +m2.getValue()),
