@@ -59,18 +59,22 @@
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
                 android:layout_alignEnd="@+id/checkBox2"
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@+id/h"
+                android:autoText="false"
+                android:elegantTextHeight="false"
                 android:focusable="true"
                 android:fontFamily="sans-serif-condensed"
                 android:text="111111"
                 android:textSize="20sp"
-                android:typeface="sans" />
+                android:typeface="sans"
+
+                />
 
             <EditText
-                android:id="@+id/editText2"
+                android:id="@+id/editSum"
                 style="@style/Widget.AppCompat.EditText"
                 android:layout_width="55dp"
                 android:layout_height="wrap_content"

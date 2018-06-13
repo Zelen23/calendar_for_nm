@@ -122,7 +122,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
             cardView=itemView.findViewById(R.id.card);
             textView=itemView.findViewById(R.id.textView12);
-            editText=itemView.findViewById(R.id.editText2);
+            editText=itemView.findViewById(R.id.editSum);
             checkBox= itemView.findViewById(R.id.checkBox2);
             h=itemView.findViewById(R.id.h);
             m=itemView.findViewById(R.id.m);

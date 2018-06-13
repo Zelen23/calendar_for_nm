@@ -34,66 +34,99 @@ class Build_render_mass_grid_Cld {
 
             switch (weight_of_day.get(i)){
                 case 1:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.minday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_10;
                 break;
                 case 2:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.minday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_10;
                     break;
                 case 3:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.minday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_10;
                     break;
+     //----
                 case 4:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.minday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_25;
                     break;
                 case 5:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.minday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_25;
                     break;
                 case 6:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.minday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_25;
                     break;
+    //----
 
                 case 7:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_50;
                     break;
 
                 case 8:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_50;
                     break;
                 case 9:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_50;
                     break;
+    //----
                 case 10:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_75;
                     break;
                 case 11:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_75;
                     break;
                 case 12:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_75;
                     break;
                 case 13:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.midday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_75;
                     break;
-
+    //----
                 case 14:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.maxday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_100;
                     break;
                 case 15:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.maxday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_100;
                     break;
                 case 16:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.maxday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_100;
                     break;
                 case 17:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.maxday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_100;
                     break;
                 case 18:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.maxday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_100;
                     break;
                 case 19:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.maxday;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_100;
                     break;
 
+                case 20:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_services;
+                    break;
+                case 21:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_services;
+                    break;
+                case 22:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_services;
+                    break;
+                case 23:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_services;
+                    break;
+                case 24:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_services;
+                    break;
+                case 25:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_services;
+                    break;
+                case 26:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_services;
+                    break;
+                case 27:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_services;
+                    break;
+                case 28:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_services;
+                    break;
+                case 29:
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_services;
+                    break;
 
                 case -1:
                     mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.empty;

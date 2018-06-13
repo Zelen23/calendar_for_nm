@@ -4,16 +4,26 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,18 +34,14 @@ import android.widget.Toast;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 
+import junit.framework.Assert;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import static java.lang.String.format;
 
@@ -145,7 +151,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
     public class FullHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView textView;
-        EditText editText;
+        EditText editSum;
         CheckBox checkBox;
         TextView h,m,h2,m2;
         ImageButton bInf,bCut,bCopy,bDelete;
@@ -158,7 +164,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             super(itemView);
             cardView=itemView.findViewById(R.id.card);
             textView=itemView.findViewById(R.id.textView12);
-            editText=itemView.findViewById(R.id.editText2);
+            editSum =itemView.findViewById(R.id.editSum);
             checkBox= itemView.findViewById(R.id.checkBox2);
             h=itemView.findViewById(R.id.h);
             m=itemView.findViewById(R.id.m);
@@ -174,6 +180,17 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             bCopy=itemView.findViewById(R.id.bCopy);
             bDelete=itemView.findViewById(R.id.bDelete);
 
+            SharedPreferences sharedPreferences= PreferenceManager
+                    .getDefaultSharedPreferences(context);
+            Boolean flgHideSum= sharedPreferences.getBoolean("hideSum",false);
+            if(!flgHideSum){
+                editSum.setInputType(InputType.TYPE_CLASS_NUMBER);
+            }
+
+        /*
+        InputType.TYPE_CLASS_TEXT |
+        InputType.TYPE_TEXT_VARIATION_PASSWORD
+        */
         }
 
         void show_data(final Constructor_data ful_data){
@@ -182,24 +199,69 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             binderHelper.setOpenOnlyOne(true);
 
             textView.setText(ful_data.name);
-            editText.setText(String.valueOf(ful_data.sum));
+            textView.setMaxLines(1);
+
+            editSum.setText(String.valueOf(ful_data.sum));
+            //editSum.setImeOptions(EditorInfo.TYPE_NUMBER_FLAG_SIGNED);
+
+
+/*
+                    editSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if(v==editSum&&!ful_data.sum.toString().equals(editSum.getText().toString())){
+
+                                new ExecDB().flag_visitOrPay(context,editSum.getText().toString(),
+                                        ful_data.id,"clients","pay");
+                                refresh();
+                            }
+                        }
+                    });
+
+   */             // editSum.setOnEditorActionListener(new DoneOnEditorActionListener());
+                   editSum.setOnKeyListener(new View.OnKeyListener() {
+                       @Override
+                       public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    Log.i("key",""+keyCode);
+                           if(keyCode==66&&
+                                   !ful_data.sum.toString().equals(editSum.getText().toString())){
+
+                               new ExecDB().flag_visitOrPay(context,editSum.getText().toString(),
+                                       ful_data.id,"clients","pay");
+
+                               InputMethodManager imm = (InputMethodManager) v.getContext()
+                                      .getSystemService(Context.INPUT_METHOD_SERVICE);
+                               imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                               refresh();
+                           }
+
+                           return false;
+                       }
+                   });
+
+
 
             checkBox.setChecked(ful_data.flag);
             checkBox.setOnClickListener(new View.OnClickListener() {
+
+
                 @Override
                 public void onClick(View v) {
+                    InputMethodManager imm = (InputMethodManager) v.getContext()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
 
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                    ExecDB vis = new ExecDB();
                     if (checkBox.isChecked()) {
-                        ExecDB vis = new ExecDB();
                         vis.flag_visitOrPay(context, "true",
                                 ful_data.id, "clients","visit");
-                        refresh();
                     } else {
-                        ExecDB vis = new ExecDB();
                         vis.flag_visitOrPay(context, "false",
                                 ful_data.id, "clients","visit");
-                        refresh();
                     }
+
+                    refresh();
                 }
             });
 
@@ -207,6 +269,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             m.setText(ful_data.m1);
             h2.setText(ful_data.h2);
             m2.setText(ful_data.m2);
+
 
             swipe.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
                 @Override
@@ -279,7 +342,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                 , data.get(0), data.get(1), "temp", ful_data.id);
 
                     }
-
                 }
             });
 
@@ -291,14 +353,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     ArrayList<String> temp=exec.getLine_(context,"temp"
                           ,"'' or _id>0");
                     if(temp.size()>0&&Boolean.parseBoolean(temp.get(7))==true){
-                       // Toast.makeText(context,"true",Toast.LENGTH_SHORT).show();
-                        /*Если в базе уже есть вырезанная запись
-                        * Возвращаю старую на место
-                        * чищу темп
-                        * Пишу новую в темп
-                        *
-                        * ставлю флаг в темпе
-                        * удаляю в клиентах*/
+
                         alertTemp(data,temp,ful_data.id);
 
                     }else{
@@ -316,9 +371,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
                         new MainActivity().updGridCld();
                         refresh();
-
                     }
-
                 }
             });
 
@@ -566,6 +619,8 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
     public void Alert(final Context context, final String date, String time1, String time2){
            AlertDialog alert;
+
+
            LayoutInflater li = LayoutInflater.from(context);
            View vw = li.inflate(R.layout.frame_write, null);
            eName=vw.findViewById(R.id.eName);
@@ -576,10 +631,69 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
            m1 = vw.findViewById(R.id.pm1);
            m2 = vw.findViewById(R.id.pm2);
 
+          final TextInputLayout textInpLayout=vw.findViewById(R.id.textInpLayName);
+          final TextInputLayout textInpLayoutNum=vw.findViewById(R.id.textInpLayNum);
+          final TextInputLayout textInpLayoutPay=vw.findViewById(R.id.textInpLayPay);
+
+        eName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus  && eName.getText().toString().isEmpty()) {
+                    textInpLayout.setErrorEnabled(true);
+                    textInpLayout.setError("noName");
+                } else {
+                    textInpLayout.setErrorEnabled(false);
+                }
+            }
+        });
+        eNum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus && eNum.getText().toString().isEmpty()){
+                    textInpLayoutNum.setErrorEnabled(true);
+                    textInpLayoutNum.setError("noNumber");
+                }else {
+                    textInpLayoutNum.setErrorEnabled(false);
+                }
+            }
+        });
+
+        eNum.addTextChangedListener(new PhoneNumberFormattingTextWatcher(
+               Locale.getDefault().getCountry()){
+           @Override
+           public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+               super.beforeTextChanged(s, start, count, after);
+           }
+
+           @Override
+           public void onTextChanged(CharSequence s, int start, int before, int count) {
+               super.onTextChanged(s, start, before, count);
+
+           }
+
+           @Override
+           public synchronized void afterTextChanged(Editable s) {
+               super.afterTextChanged(s);
+              // String format=PhoneNumberUtils.formatNumber(eNum.getText().toString());
+              // Log.i("Wath_after",format);
+           }
+       });
+
+        //String parseNum=PhoneNumberUtils.convertKeypadLettersToDigits(eNum.getText().toString());
+        eSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus &&eSum.getText().toString().isEmpty()){
+                    textInpLayoutPay.setErrorEnabled(true);
+                    textInpLayoutPay.setError("noPay");
+                } else{
+                textInpLayoutPay.setErrorEnabled(false);
+                }
+            }
+        });
+
            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-       /*дата и 2 времени*/
-
+            /*дата и 2 времени*/
            builder.setView(vw)
                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                        @Override
@@ -590,14 +704,15 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                Toast.makeText(context,"WTF&! time1==time2",Toast.LENGTH_SHORT)
                                        .show();
                            }else
-
                            new ExecDB().write_orders(context, date,
                                    formTime(h1.getValue(), m1.getValue()),
                                    formTime(h2.getValue(), +m2.getValue()),
 
                                    eSum.getText().toString(),
                                    eName.getText().toString(),
-                                   eNum.getText().toString(), "clients", "");
+                                   new String(
+                                           eNum.getText().toString().replaceAll("\\D+",""))
+                                           , "clients", "");
 
                            new MainActivity().updGridCld();
            //Чистит темп если вставил
@@ -616,13 +731,10 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
            } catch (ParseException e) {
                e.printStackTrace();
            }
+
            alert = builder.create();
-           alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
+          // alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
            alert.show();
-
-
-
-
 
     }
 

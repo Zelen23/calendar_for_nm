@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Calendar_for_NM</string>
+    <string name="Number">Number</string>
+    <string name="Name">Name</string>
+    <string name="Pay">Pay</string>
 
 </resources>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.preference.PreferenceManager;
 
 import android.support.v7.widget.ContentFrameLayout;
@@ -118,8 +119,12 @@ public class Adapter_grid_Cld extends BaseAdapter {
                 MainActivity.mns==Integer.parseInt(ms_day[1])&&
                 MainActivity.year==Integer.parseInt(ms_day[3])){
             holder.textView.setTextColor(Color.parseColor("White"));
-           // holder.imageView.setBackgroundResource(R.drawable.rectangle_corners);
-            holder.contentFrameLayout.setBackgroundResource(R.drawable.rectangle_corners);
+            if(Build.VERSION.SDK_INT<21){
+                holder.imageView.setBackgroundResource(R.drawable.rectangle_corners);
+            }else{
+                holder.imageView.setBackgroundResource(R.drawable.ic_nowday);
+            }
+
         }
         else
         holder.textView.setTextColor(Color.parseColor(color));

@@ -29,18 +29,7 @@ import java.util.List;
  */
 
 public class preference  extends PreferenceActivity{
-//activity pref
-/*
-    @Override
-    protected void onCreate(@Nullable final Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction().
-               replace(android.R.id.content,new PrefFragment()).commit();
-
-    }
-
-*/
 
     @Override
     protected void onPause() {
@@ -50,11 +39,6 @@ public class preference  extends PreferenceActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        /*
-        Intent intent= new Intent(preference.this,MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        */
     }
 
     @Override
@@ -84,33 +68,13 @@ public class preference  extends PreferenceActivity{
 
         }
 
-
         @Override
         public void onPause() {
             super.onPause();
-            //startActivity(refresh);
-            refrash();
             Log.i("pref__psuse","" +
                     "Pause");
 
         }
-// 4.4  refrash
-        public  void refrash(){
-            Intent intent= null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                intent = new Intent(getContext(),MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-            else{
-
-            }
-
-
-        }
-
-
-
     }
 
     public static class PrefUserSettingsFragment extends PreferenceFragment{
@@ -123,24 +87,11 @@ public class preference  extends PreferenceActivity{
         @Override
         public void onPause() {
             super.onPause();
-            //startActivity(refresh);
-            refrash();
             Log.i("prefusr__psuse","" +
                     "Pause");
 
         }
-        public  void refrash(){
-            Intent intent= null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                intent = new Intent(getContext(),MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            } else{
 
-            }
-
-
-        }
     }
 
 
