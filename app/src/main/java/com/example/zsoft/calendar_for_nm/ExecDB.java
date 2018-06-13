@@ -357,6 +357,7 @@ import java.util.Locale;
 
         if (c.moveToFirst()) {
 
+            int sf_num = c.getColumnIndex("sf_num");
             int name = c.getColumnIndex("name");
             int time = c.getColumnIndex("time1");
             int date = c.getColumnIndex("date");
@@ -364,10 +365,11 @@ import java.util.Locale;
             // int pay = c.getColumnIndex("pay");
 
             do {
+                queue.add(c.getString(sf_num));
                 queue.add(c.getString(name));
                 queue.add(c.getString(time));
                 queue.add(c.getString(date));
-                // queue.add(c.getString(date1));
+                queue.add(c.getString(date1));
                 //  queue.add(c.getString(pay).toString());
             }
 
@@ -379,18 +381,8 @@ import java.util.Locale;
         return queue;
     }
 
-    /*Копировать- ложу в базу строчку
-     *  если нажать копировать еще раз то строчка в базе затирается
-     *  where _id='' or _id>0
-     *  и ложится новая
-     *
-     *  вырезать,проверяю наличие строчки с флагом false
-     *  если нет то переписываю строчку в темp, в clients- удаляю
-     *
-     *   если в базе есть строчка с флаглм false
-     *   то перед затиранием предлагать ее восстановить в clients
-     *
-     *  */
+
+
 
 
 
