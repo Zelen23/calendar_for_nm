@@ -11,15 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.GridView;
-import android.widget.ListAdapter;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by AZelinskiy on 13.06.2018.
@@ -87,9 +84,10 @@ public class Fragment_search extends Fragment {
                 ExecDB search_cl=new ExecDB();
 
                 final ArrayAdapter res_search = new ArrayAdapter(getContext(), android.R.layout.
-                        simple_list_item_1,search_cl.search(getContext(),qu_searsh));
+                        simple_list_item_1, creatListForMap(search_cl.search(getContext(),qu_searsh)));
                 gridView.setAdapter(res_search);
-                creatListForMap(search_cl.search(getContext(),qu_searsh));
+
+                creatMap(creatListForMap(search_cl.search(getContext(),qu_searsh)));
 
             }
         });
@@ -97,7 +95,7 @@ public class Fragment_search extends Fragment {
         return view;
     }
 
-    void creatListForMap(List<String> search){
+    List<Constructor_search> creatListForMap(List<String> search){
         List<Constructor_search> listreqestSearch=new ArrayList<>();
         for(int i=0;i<search.size();i++){
             if(i%5==0)
@@ -109,18 +107,44 @@ public class Fragment_search extends Fragment {
                    search.get(i+4))
                    );
         }
-
+        return listreqestSearch;
     }
 
-    void creatMap(List reqest){
+    void creatMap(List<Constructor_search> reqest){
 
         HashMap<String,List<String>> search=new HashMap<>();
 
-        for(Object elt:reqest){
+
+        for(int i=0;i<reqest.size();i++){
+
+            if(search.containsKey(reqest.get(i).sf_num)){
+
+                List<String> val=new ArrayList<>();
+                val=search.get(reqest.get(i).sf_num);
+                //val.add(reqest.get(i).name);
+                val.add(reqest.get(i).time1);
+                val.add(reqest.get(i).date);
+                search.put(reqest.get(i).sf_num,val);
+            }else{
+
+                List<String> val=new ArrayList<>();
+               // val.add(reqest.get(i).name);
+                val.add(reqest.get(i).time1);
+                val.add(reqest.get(i).date);
+                search.put(reqest.get(i).sf_num,val);
+            }
 
 
 
-        }
+            }
+
+        Log.i("MapKey",""+search.get("#89045217857"));
+
+           // for(List elt: search.values()){
+
+           // Log.i("MapKey",elt.toString());
+           // }
+
 
     }
 }
