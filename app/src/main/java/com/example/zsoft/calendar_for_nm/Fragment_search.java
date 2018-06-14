@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
+import android.widget.ExpandableListView;
+import android.widget.SimpleExpandableListAdapter;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class Fragment_search extends Fragment {
 
         final Spinner spinner= view.findViewById(R.id.spinner);
         final EditText editText=view.findViewById(R.id.editText3);
-        final GridView gridView=view.findViewById(R.id.gridSearch);
+        final ExpandableListView expandableListView=view.findViewById(R.id.expandData);
         Button button=view.findViewById(R.id.button);
 
         String[]param={"Номер","Имя"};
@@ -83,11 +84,11 @@ public class Fragment_search extends Fragment {
 
                 ExecDB search_cl=new ExecDB();
 
-                final ArrayAdapter res_search = new ArrayAdapter(getContext(), android.R.layout.
-                        simple_list_item_1, creatListForMap(search_cl.search(getContext(),qu_searsh)));
-                gridView.setAdapter(res_search);
 
                 creatMap(creatListForMap(search_cl.search(getContext(),qu_searsh)));
+
+
+expandableListView.setAdapter(new Adapter_Expandable(getContext(),creatMap(creatListForMap(search_cl.search(getContext(),qu_searsh)))));
 
             }
         });
@@ -110,7 +111,7 @@ public class Fragment_search extends Fragment {
         return listreqestSearch;
     }
 
-    void creatMap(List<Constructor_search> reqest){
+    HashMap<String, List<String>> creatMap(List<Constructor_search> reqest){
 
         HashMap<String,List<String>> search=new HashMap<>();
 
@@ -144,7 +145,7 @@ public class Fragment_search extends Fragment {
 
            // Log.i("MapKey",elt.toString());
            // }
-
+return search;
 
     }
 }
