@@ -1,0 +1,143 @@
+package com.example.zsoft.calendar_for_nm;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ * Created by AZelinskiy on 15.06.2018.
+ */
+
+public class Testt  extends AppCompatActivity{
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.search);
+
+        final Spinner spinner = findViewById(R.id.spinner);
+        final EditText editText = findViewById(R.id.editText3);
+        final ExpandableListView expandableListView = findViewById(R.id.expandData);
+        Button button = findViewById(R.id.button);
+
+        String[] param = {"Номер", "Имя"};
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, param);
+        spinner.setAdapter(adapter);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int attr = (int) spinner.getSelectedItemId();
+                String coloumn = null;
+
+                switch (attr) {
+                    case 0:
+                        coloumn = "sf_num";
+                        break;
+
+                    case 1:
+                        coloumn = "name";
+                        break;
+                }
+
+                String qu_searsh = "select \n" +
+                        "       name,    \n" +
+                        "       time1,   \n" +
+                        "       sf_num,  \n" +
+                        "       pay,     \n" +
+                        "       date,    \n" +
+                        "       date1    \n" +
+                        "                \n" +
+                        "from clients where " + coloumn + " like '%" + editText.getText() +
+                        "%' order by date DESC limit 200";
+
+                ExecDB search_cl = new ExecDB();
+
+
+                creatMap(creatListForMap(search_cl.search(Testt.this, qu_searsh)));
+                BaseExpandableListAdapter adapter=new Adapter_Expandable(Testt.this,
+                        creatMap(creatListForMap(search_cl.search(Testt.this, qu_searsh))));
+
+                expandableListView.setAdapter(adapter );
+               // Log.i("clk",""+position);
+                expandableListView.expandGroup(0);
+
+            }
+
+        });
+    }
+        List<Constructor_search> creatListForMap (List < String > search) {
+            List<Constructor_search> listreqestSearch = new ArrayList<>();
+            for (int i = 0; i < search.size(); i++) {
+                if (i % 5 == 0)
+                    listreqestSearch.add(new Constructor_search(
+                            search.get(i),
+                            search.get(i + 1),
+                            search.get(i + 2),
+                            search.get(i + 3),
+                            search.get(i + 4))
+                    );
+            }
+            return listreqestSearch;
+        }
+
+        HashMap<String, List<Constructor_search>> creatMap (List < Constructor_search > reqest) {
+
+            HashMap<String, List<Constructor_search>> search = new HashMap<>();
+
+
+            for (int i = 0; i < reqest.size(); i++) {
+
+                if (search.containsKey(reqest.get(i).sf_num)) {
+
+                    List<Constructor_search> val = new ArrayList<>();
+                    val = search.get(reqest.get(i).sf_num);
+                    //val.add(reqest.get(i).name);
+                    val.add(new Constructor_search(
+                            reqest.get(i).sf_num,
+                            reqest.get(i).name,
+                            reqest.get(i).time1,
+                            reqest.get(i).date,
+                            reqest.get(i).date1
+                    ));
+
+                    search.put(reqest.get(i).sf_num, val);
+                } else {
+
+                    List<Constructor_search> val = new ArrayList<>();
+                    val.add(new Constructor_search(
+                            reqest.get(i).sf_num,
+                            reqest.get(i).name,
+                            reqest.get(i).time1,
+                            reqest.get(i).date,
+                            reqest.get(i).date1
+                    ));
+                    search.put(reqest.get(i).sf_num, val);
+                }
+
+
+            }
+
+
+            // for(List elt: search.values()){
+
+            // Log.i("MapKey",elt.toString());
+            // }
+            return search;
+
+        }
+
+    }

@@ -1,13 +1,19 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
@@ -20,63 +26,48 @@ import java.util.Map;
  * Created by AZelinskiy on 14.06.2018.
  */
 
-public class Adapter_Expandable implements ExpandableListAdapter {
+public class Adapter_Expandable extends BaseExpandableListAdapter {
 
     Context mContext;
-    HashMap<String,List<String>> search;
+    HashMap<String,List<Constructor_search>> search;
+    List<String> groupName=new ArrayList<>();
+    List<Constructor_search> child=new ArrayList<>();
 
 
-    public Adapter_Expandable(Context mContext, HashMap<String, List<String>> search) {
+
+    public Adapter_Expandable(Context mContext, HashMap<String, List<Constructor_search>> search) {
         this.mContext = mContext;
         this.search = search;
+
+        for (String elt: search.keySet()){
+            groupName.add(search.get(elt).get(0).name);
+        }
+
+        for (List<Constructor_search> elt:search.values()){
+            child=elt;
+        }
+
     }
 
-    @Override
-    public void registerDataSetObserver(DataSetObserver observer) {
-
-    }
-
-    @Override
-    public void unregisterDataSetObserver(DataSetObserver observer) {
-
-    }
 
     @Override
     public int getGroupCount() {
-        return search.keySet().size();
+        return groupName.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        List<String> gr=new ArrayList<String>();
-        for(String eit:search.keySet()){
-            gr.add(eit);
-        }
-        String group=gr.get(groupPosition);
-        List<String> childInfoList = search.get(group);
-        return childInfoList.size();
+        return search.get(child.get(groupPosition).sf_num).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        List<String> gr=new ArrayList<String>();
-        for(String eit:search.keySet()){
-            gr.add(eit);
-        }
-
-        return  gr.get(groupPosition);
+        return  groupName.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        List<String> gr=new ArrayList<String>();
-        for(String eit:search.keySet()){
-            gr.add(eit);
-        }
-
-        String group=gr.get(groupPosition);
-        List<String> childInfoList = search.get(group);
-        return childInfoList.get(childPosition);
+        return  child.get(childPosition);
     }
 
     @Override
@@ -91,50 +82,50 @@ public class Adapter_Expandable implements ExpandableListAdapter {
 
     @Override
     public boolean hasStableIds() {
-        return true;
+        return false;
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        LinearLayout groupLayoutView = new LinearLayout(mContext);
-        groupLayoutView.setOrientation(LinearLayout.HORIZONTAL);
+    public View getGroupView(int groupPosition, boolean isExpanded,
+                             View convertView, ViewGroup parent) {
 
-        // Create and add an imageview in returned group view.
+        if(convertView==null) {
 
-
-        // Create and add a textview in returned group view.
-        List<String> gr=new ArrayList<String>();
-        for(String eit:search.keySet()){
-            gr.add(eit);
+            LayoutInflater layoutInflater = (LayoutInflater)
+                    mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = layoutInflater.inflate(R.layout.exp_parent, parent,false);
         }
 
 
-        String group=gr.get(groupPosition);
-        TextView groupTextView = new TextView(mContext);
-        groupTextView.setText(group);
-        groupTextView.setTextSize(30);
-        groupLayoutView.addView(groupTextView);
+        TextView nameClient=(TextView)convertView.findViewById(R.id.nameClient);
+        ImageButton imageClient=(ImageButton)convertView.findViewById(R.id.imageClient);
 
-        return groupLayoutView;
+        nameClient.setText(groupName.get(groupPosition));
+
+        return convertView;
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        Object childObj = this.getChild(groupPosition, childPosition);
-        String childText = (String)childObj;
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
+                             View convertView, ViewGroup parent) {
 
-        // Create a TextView to display child text.
-        TextView childTextView = new TextView(mContext);
-        childTextView.setText(childText);
-        childTextView.setTextSize(20);
-       // childTextView.setBackgroundColor(Color.GREEN);
+if(convertView==null) {
 
-        // Get group image width.
-
-        // Set child textview offset left. Then it will align to the right of the group image.
+   LayoutInflater layoutInflater=(LayoutInflater)
+            mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
+    convertView = layoutInflater.inflate(R.layout.exp_item, null);
+}
 
 
-        return childTextView;
+
+        TextView expItemTime=convertView.findViewById(R.id.expItemTime);
+        TextView expItemDate=convertView.findViewById(R.id.expItemDate);
+        ImageButton expItemInfo=convertView.findViewById(R.id.expItemInfo);
+
+        expItemTime.setText(child.get(childPosition).time1);
+        expItemDate.setText(child.get(childPosition).date);
+
+        return convertView;
     }
 
     @Override
@@ -142,33 +133,9 @@ public class Adapter_Expandable implements ExpandableListAdapter {
         return false;
     }
 
-    @Override
-    public boolean areAllItemsEnabled() {
-        return false;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
 
     @Override
     public void onGroupExpanded(int groupPosition) {
-
-    }
-
-    @Override
-    public void onGroupCollapsed(int groupPosition) {
-
-    }
-
-    @Override
-    public long getCombinedChildId(long groupId, long childId) {
-        return 0;
-    }
-
-    @Override
-    public long getCombinedGroupId(long groupId) {
-        return 0;
+        super.onGroupExpanded(groupPosition);
     }
 }

@@ -25,6 +25,8 @@
             />
        <activity android:name=".Menu"
            />
+        <activity android:name=".Testt"
+            />
     </application>
 
 </manifest>
