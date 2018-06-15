@@ -53,9 +53,10 @@
                 android:id="@+id/expandData"
                 style="@android:style/Widget.DeviceDefault.ExpandableListView"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:clickable="true"
-                android:focusable="false"/>
+                android:layout_height="match_parent"
+                android:groupIndicator="@null"
+
+                />
         </LinearLayout>
 
     </LinearLayout>

@@ -94,28 +94,6 @@ public class Fragment_search extends Fragment {
                         creatMap(creatListForMap(search_cl.search(getContext(), qu_searsh))));
                 expandableListView.setAdapter(adapter );
                 // Log.i("clk",""+position);
-                expandableListView.expandGroup(0);
-
-
-
-                expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-                    @Override
-                    public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                        Log.d("onGroupClick:", "worked");
-                        parent.expandGroup(groupPosition);
-                        return false;
-
-                    }
-                });
-                expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-                    @Override
-                    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                        Toast.makeText(getContext(),"--",Toast.LENGTH_SHORT)
-                                .show();
-
-                        return false;
-                    }
-                });
 
 
             }

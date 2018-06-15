@@ -18,6 +18,7 @@ import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +40,14 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
         this.mContext = mContext;
         this.search = search;
 
-        for (String elt: search.keySet()){
-            groupName.add(search.get(elt).get(0).name);
+
+        for( List<Constructor_search>elt:search.values()){
+            child.add(elt.iterator().next());
         }
 
-        for (List<Constructor_search> elt:search.values()){
-            child=elt;
+        for (String elt: search.keySet()){
+            //search.get(elt).iterator().next().name
+            groupName.add(elt);
         }
 
     }
@@ -52,12 +55,14 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-        return groupName.size();
+        //return groupName.size();
+        return search.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return search.get(child.get(groupPosition).sf_num).size();
+        return search.get(groupName.get(groupPosition)).size();
+        //return  search.get("").size();
     }
 
     @Override
@@ -67,7 +72,7 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return  child.get(childPosition);
+        return  search.get(child.get(groupPosition)).get(childPosition);
     }
 
     @Override
@@ -98,9 +103,9 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
 
 
         TextView nameClient=(TextView)convertView.findViewById(R.id.nameClient);
-        ImageButton imageClient=(ImageButton)convertView.findViewById(R.id.imageClient);
+       // ImageButton imageClient=(ImageButton)convertView.findViewById(R.id.imageClient);
 
-        nameClient.setText(groupName.get(groupPosition));
+        nameClient.setText(child.get(groupPosition).name);
 
         return convertView;
     }
@@ -122,8 +127,9 @@ if(convertView==null) {
         TextView expItemDate=convertView.findViewById(R.id.expItemDate);
         ImageButton expItemInfo=convertView.findViewById(R.id.expItemInfo);
 
-        expItemTime.setText(child.get(childPosition).time1);
-        expItemDate.setText(child.get(childPosition).date);
+
+        expItemTime.setText(search.get(child.get(groupPosition).sf_num).get(childPosition).time1);
+        expItemDate.setText(search.get(child.get(groupPosition).sf_num).get(childPosition).date);
 
         return convertView;
     }
