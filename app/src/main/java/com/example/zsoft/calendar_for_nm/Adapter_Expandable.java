@@ -122,14 +122,14 @@ if(convertView==null) {
 }
 
 
-
         TextView expItemTime=convertView.findViewById(R.id.expItemTime);
         TextView expItemDate=convertView.findViewById(R.id.expItemDate);
         ImageButton expItemInfo=convertView.findViewById(R.id.expItemInfo);
 
 
         expItemTime.setText(search.get(child.get(groupPosition).sf_num).get(childPosition).time1);
-        expItemDate.setText(search.get(child.get(groupPosition).sf_num).get(childPosition).date);
+        expItemDate.setText(new HelperData().ConvertDateFromDB(
+                search.get(child.get(groupPosition).sf_num).get(childPosition).date));
 
         return convertView;
     }
