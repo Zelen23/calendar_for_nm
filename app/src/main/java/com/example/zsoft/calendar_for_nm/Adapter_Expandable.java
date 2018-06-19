@@ -17,10 +17,14 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -125,7 +129,7 @@ if(convertView==null) {
 
         TextView expItemTime=convertView.findViewById(R.id.expItemTime);
         TextView expItemDate=convertView.findViewById(R.id.expItemDate);
-        ImageButton expItemInfo=convertView.findViewById(R.id.expItemInfo);
+     //   ImageButton expItemInfo=convertView.findViewById(R.id.expItemInfo);
 
 
         expItemTime.setText(search.get(child.get(groupPosition).sf_num).get(childPosition).time1);
@@ -144,4 +148,6 @@ if(convertView==null) {
     public void onGroupExpanded(int groupPosition) {
         super.onGroupExpanded(groupPosition);
     }
+
+
 }
