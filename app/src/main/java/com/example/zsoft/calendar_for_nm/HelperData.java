@@ -88,6 +88,7 @@ public class HelperData {
         String ss;
         try {
             Date dat=sdf.parse(data);
+            dat.setMonth(dat.getMonth()+1);
             ss=sdf2.format(dat);
 
         } catch (ParseException e) {
@@ -96,6 +97,27 @@ public class HelperData {
         }
         return ss;
     }
+public  String cutTimeShtamp(String timeShtamp){
+    SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
+            new Locale("ru"));
 
+    @SuppressLint("SimpleDateFormat")
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
+
+    try {
+        Date day = sdf.parse(timeShtamp);
+        String dateOfShtamp = format.format(day);
+        String [] am=dateOfShtamp.split("-");
+        int mns=Integer.parseInt(am[1])-1;
+        String fuckedDate=am[0]+"-"+mns+"-"+am[2];
+
+        return fuckedDate;
+
+
+    } catch (ParseException e) {
+        e.printStackTrace();
+    }
+    return null;
+    }
 
 }

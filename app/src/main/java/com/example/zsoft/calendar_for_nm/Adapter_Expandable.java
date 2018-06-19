@@ -1,5 +1,6 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -38,7 +39,8 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
     HashMap<String,List<Constructor_search>> search;
     List<String> groupName=new ArrayList<>();
     List<Constructor_search> child=new ArrayList<>();
-
+    ExecDB execDB=new ExecDB();
+    HelperData helperData=new HelperData();
 
 
     public Adapter_Expandable(Context mContext, HashMap<String, List<Constructor_search>> search) {
@@ -78,7 +80,12 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         //return  search.get(child.get(groupPosition)).get(childPosition);
-        return  search.get(groupName.get(groupPosition)).get(childPosition);
+        Log.i("child",""+childPosition);
+        return helperData.cutTimeShtamp(helperData
+                .TimeShtampTranslater(
+                        search.get(groupName.get(groupPosition)).get(childPosition).date1));
+        //search.get(groupName.get(groupPosition)).get(childPosition);
+
     }
 
     @Override
@@ -115,9 +122,12 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                              View convertView, ViewGroup parent) {
+
+
         if(convertView==null) {
 
         LayoutInflater layoutInflater=(LayoutInflater)
@@ -125,14 +135,19 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
         convertView = layoutInflater.inflate(R.layout.exp_item, null);
 }
 
-
+        RelativeLayout childItemRow=convertView.findViewById(R.id.childItemRow);
         TextView expItemTime=convertView.findViewById(R.id.expItemTime);
         TextView expItemDate=convertView.findViewById(R.id.expItemDate);
         ImageView expItemInfo=convertView.findViewById(R.id.expItemInfo);
 
+        String ii=(String)getChild(groupPosition,childPosition);
+
+        //если тайм штамп == пердыдудуш времени
+
         expItemTime.setText(search.get(child.get(groupPosition).sf_num).get(childPosition).time1);
         expItemDate.setText(new HelperData().ConvertDateFromDB(
                 search.get(child.get(groupPosition).sf_num).get(childPosition).date));
+
 
         return convertView;
     }

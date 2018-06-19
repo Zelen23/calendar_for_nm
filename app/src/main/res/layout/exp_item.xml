@@ -6,6 +6,7 @@
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
     android:background="@color/cardview_shadow_end_color"
+    android:id="@+id/childItemRow"
     >
 
     <TextView
