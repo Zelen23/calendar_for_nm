@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SimpleExpandableListAdapter;
@@ -76,7 +77,8 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return  search.get(child.get(groupPosition)).get(childPosition);
+        //return  search.get(child.get(groupPosition)).get(childPosition);
+        return  search.get(groupName.get(groupPosition)).get(childPosition);
     }
 
     @Override
@@ -99,15 +101,14 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
                              View convertView, ViewGroup parent) {
 
         if(convertView==null) {
-
             LayoutInflater layoutInflater = (LayoutInflater)
                     mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.exp_parent, parent,false);
+            convertView = layoutInflater.inflate(R.layout.exp_parent,null);
         }
 
 
         TextView nameClient=(TextView)convertView.findViewById(R.id.nameClient);
-       // ImageButton imageClient=(ImageButton)convertView.findViewById(R.id.imageClient);
+        ImageView imageClient=(ImageView) convertView.findViewById(R.id.imageView);
 
         nameClient.setText(child.get(groupPosition).name);
 
@@ -117,23 +118,21 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                              View convertView, ViewGroup parent) {
+        if(convertView==null) {
 
-if(convertView==null) {
-
-   LayoutInflater layoutInflater=(LayoutInflater)
+        LayoutInflater layoutInflater=(LayoutInflater)
             mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
-    convertView = layoutInflater.inflate(R.layout.exp_item, null);
+        convertView = layoutInflater.inflate(R.layout.exp_item, null);
 }
-
 
 
         TextView expItemTime=convertView.findViewById(R.id.expItemTime);
         TextView expItemDate=convertView.findViewById(R.id.expItemDate);
-     //   ImageButton expItemInfo=convertView.findViewById(R.id.expItemInfo);
-
+        ImageView expItemInfo=convertView.findViewById(R.id.expItemInfo);
 
         expItemTime.setText(search.get(child.get(groupPosition).sf_num).get(childPosition).time1);
-        expItemDate.setText(search.get(child.get(groupPosition).sf_num).get(childPosition).date);
+        expItemDate.setText(new HelperData().ConvertDateFromDB(
+                search.get(child.get(groupPosition).sf_num).get(childPosition).date));
 
         return convertView;
     }

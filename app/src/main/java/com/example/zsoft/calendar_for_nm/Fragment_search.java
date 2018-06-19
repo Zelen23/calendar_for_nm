@@ -1,13 +1,19 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
@@ -22,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by AZelinskiy on 13.06.2018.
@@ -44,7 +51,7 @@ group by sf_num having count(sf_num)>10*/
 
 public class Fragment_search extends Fragment {
 
-
+    String value;
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,7 +64,34 @@ public class Fragment_search extends Fragment {
 
         String[]param={"Номер","Имя"};
         ArrayAdapter adapter =new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,param);
+
         spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 1:
+                        editText.getText().clear();
+                        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+                        editText.removeTextChangedListener(new PhoneNumberFormattingTextWatcher());
+                        break;
+
+                    case 0:
+                        editText.getText().clear();
+                        editText.setInputType(InputType.TYPE_CLASS_PHONE);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher(
+                                    Locale.getDefault().getCountry()));
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,13 +102,15 @@ public class Fragment_search extends Fragment {
                 switch (attr) {
                     case 0:
                         coloumn="sf_num";
+                        value=editText.getText()
+                                .toString().replaceAll("\\D+","");
                         break;
 
                     case 1:
                         coloumn="name";
+                        value=editText.getText().toString();
                         break;
                 }
-
                 String qu_searsh="select \n" +
                         "       name,    \n" +
                         "       time1,   \n" +
@@ -83,23 +119,37 @@ public class Fragment_search extends Fragment {
                         "       date,    \n" +
                         "       date1    \n" +
                         "                \n" +
-                        "from clients where "+coloumn+" like '%"+editText.getText()+
-                        "%' order by date DESC limit 200";
+                        "from clients where "+coloumn+" like '%"+value+
+                        "%' order by date DESC limit 400";
 
                 ExecDB search_cl=new ExecDB();
-
-
                 creatMap(creatListForMap(search_cl.search(getContext(),qu_searsh)));
-                BaseExpandableListAdapter adapter=new Adapter_Expandable(getContext(),
+                final BaseExpandableListAdapter adapter=new Adapter_Expandable(getContext(),
                         creatMap(creatListForMap(search_cl.search(getContext(), qu_searsh))));
+
                 expandableListView.setAdapter(adapter );
-                // Log.i("clk",""+position);
+                expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                    @Override
+                    public boolean onGroupClick(ExpandableListView parent, View v,
+                                                int groupPosition, long id) {
+                        new HelperData().HideKeyboeard(v);
+                        editText.setText(adapter.getGroup(groupPosition).toString());
+                        return false;
+                    }
+                });
+                expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+                    int previousGroup = -1;
 
-
+                    @Override
+                    public void onGroupExpand(int groupPosition) {
+                        if(groupPosition != previousGroup)
+                            expandableListView.collapseGroup(previousGroup);
+                        previousGroup = groupPosition;
+                    }
+                });
             }
         });
-
-        return view;
+    return view;
     }
 
     List<Constructor_search> creatListForMap(List<String> search){
@@ -121,7 +171,6 @@ public class Fragment_search extends Fragment {
 
         HashMap<String,List<Constructor_search>> search=new HashMap<>();
 
-
         for(int i=0;i<reqest.size();i++){
 
             if(search.containsKey(reqest.get(i).sf_num)){
@@ -141,7 +190,7 @@ public class Fragment_search extends Fragment {
             }else{
 
                 List<Constructor_search> val=new ArrayList<>();
-               val.add(new Constructor_search(
+                val.add(new Constructor_search(
                         reqest.get(i).sf_num,
                         reqest.get(i).name,
                         reqest.get(i).time1,
@@ -151,16 +200,7 @@ public class Fragment_search extends Fragment {
                 search.put(reqest.get(i).sf_num,val);
             }
 
-
-
-            }
-
-
-
-           // for(List elt: search.values()){
-
-           // Log.i("MapKey",elt.toString());
-           // }
+        }
 return search;
 
     }
