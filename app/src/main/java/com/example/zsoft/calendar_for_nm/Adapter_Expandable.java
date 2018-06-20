@@ -80,13 +80,7 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        //return  search.get(child.get(groupPosition)).get(childPosition);
-        Log.i("child",""+childPosition);
-        return helperData.cutTimeShtamp(helperData
-                .TimeShtampTranslater(
-                        search.get(groupName.get(groupPosition)).get(childPosition).date1));
-        //search.get(groupName.get(groupPosition)).get(childPosition);
-
+        return null;
     }
 
     @Override
@@ -116,7 +110,7 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
 
         }
 
-        Log.i("",""+groupPosition);
+        //Log.i("",""+groupPosition);
 
 
         TextView nameClient=(TextView)convertView.findViewById(R.id.nameClient);
@@ -144,11 +138,6 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
         TextView expItemTime=convertView.findViewById(R.id.expItemTime);
         TextView expItemDate=convertView.findViewById(R.id.expItemDate);
         ImageView expItemInfo=convertView.findViewById(R.id.expItemInfo);
-
-        String ii=(String)getChild(groupPosition,childPosition);
-
-
-        //если тайм штамп == пердыдудуш времени
 
         expItemTime.setText(search.get(child.get(groupPosition).sf_num).get(childPosition).time1);
         expItemDate.setText(new HelperData().ConvertDateFromDB(

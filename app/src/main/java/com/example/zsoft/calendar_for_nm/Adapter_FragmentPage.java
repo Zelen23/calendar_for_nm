@@ -19,12 +19,20 @@ public class Adapter_FragmentPage extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        switch (position) {
+            case 0:
+                return new Fragment_search();
+
+            case 1:
+                return new Fragment_Top();
+        }
+
         return new Fragment_search();
     }
 
     @Override
     public int getCount() {
-        return 1;
+        return 2;
     }
 
     @Nullable

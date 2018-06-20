@@ -68,4 +68,18 @@ class Constructor_search{
         this.date = date;
         this.date1 = date1;
     }
+
+
+}
+
+class Constructor_top{
+    String _id,pk_num,name,count,last;
+
+    public Constructor_top(String _id, String pk_num, String name, String count, String last) {
+        this._id = _id;
+        this.pk_num = pk_num;
+        this.name = name;
+        this.count = count;
+        this.last = last;
+    }
 }

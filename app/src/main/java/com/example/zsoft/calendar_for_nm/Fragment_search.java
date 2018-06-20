@@ -90,8 +90,6 @@ public class Fragment_search extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
-
-
             }
         });
 
