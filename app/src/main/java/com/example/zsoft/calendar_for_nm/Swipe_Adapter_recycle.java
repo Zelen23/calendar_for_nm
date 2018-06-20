@@ -412,52 +412,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             });
         }
     //Дата на русском
-        String getTimeStamp(String s){
 
-            SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
-            ,new Locale("ru"));
-            String ss = null;
-            try {
-                Date day=sdf.parse(s);
-                ss=sdf.format(day);
-                Log.i("1eeeSwipeAd_s",ss+"loc "+Locale.getDefault());
-
-            } catch (ParseException e) {
-                /* в гетлайне Thu May 10 10:05:00 EAT 2018-  в таком формате приходит
-                * //Thu May 10 10:05:00 EAT 2018 loc en_US
-                 //Thu May 10 11:05:00 GMT+04:00 2018 loc en_US
-                * */
-                /*4.4 -z хавает EAT */
-                SimpleDateFormat sdf3=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
-                        ,new Locale("en"));
-                Date day;
-                try {
-                    day = sdf3.parse(s);
-                    ss=sdf.format(day);
-                    Log.i("3eeeSwipeAd_s",ss+" loc "+Locale.getDefault());
-                } catch (ParseException e1) {
-
-                    SimpleDateFormat sdf2=new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy"
-                            ,Locale.US );
-                    // sdf.setTimeZone(TimeZone.getTimeZone("GMT+3"));
-                    // String sss=s.replace("EAT","");
-                    String [] splt=s.split(" ");
-
-                    try {
-                        if(splt.length>5){
-                            day = sdf2.parse(splt[0]+" "+splt[1]+" "+splt[2]+" "+splt[3]+" "+splt[5]);
-                            ss=sdf.format(day);
-                        }
-
-                    } catch (ParseException e2) {
-                        e2.printStackTrace();
-                        ss="^"+s;
-                    }
-                    e1.printStackTrace();
-                }
-            }
-            return ss;
-        }
 
         // если в базе есть вырезанная запись
         void alertTemp(final ArrayList<String> data, final ArrayList<String> temp, final String id){
@@ -923,5 +878,52 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
     @SuppressLint("DefaultLocale")
     private String formTime(int h, int m){
         return format("%02d",h)+":"+ format("%02d",m)+":00";
+    }
+
+    public String getTimeStamp(String s){
+
+        SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+                ,new Locale("ru"));
+        String ss = null;
+        try {
+            Date day=sdf.parse(s);
+            ss=sdf.format(day);
+            Log.i("1eeeSwipeAd_s",ss+"loc "+Locale.getDefault());
+
+        } catch (ParseException e) {
+                /* в гетлайне Thu May 10 10:05:00 EAT 2018-  в таком формате приходит
+                * //Thu May 10 10:05:00 EAT 2018 loc en_US
+                 //Thu May 10 11:05:00 GMT+04:00 2018 loc en_US
+                * */
+                /*4.4 -z хавает EAT */
+            SimpleDateFormat sdf3=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+                    ,new Locale("en"));
+            Date day;
+            try {
+                day = sdf3.parse(s);
+                ss=sdf.format(day);
+                Log.i("3eeeSwipeAd_s",ss+" loc "+Locale.getDefault());
+            } catch (ParseException e1) {
+
+                SimpleDateFormat sdf2=new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy"
+                        ,Locale.US );
+                // sdf.setTimeZone(TimeZone.getTimeZone("GMT+3"));
+                // String sss=s.replace("EAT","");
+                String [] splt=s.split(" ");
+
+                try {
+                    if(splt.length>5){
+                        day = sdf2.parse(splt[0]+" "+splt[1]+" "+splt[2]+" "+splt[3]+" "+splt[5]);
+                        ss=sdf.format(day);
+                    }
+
+                } catch (ParseException e2) {
+                    e2.printStackTrace();
+                    ss="^"+s;
+                }
+                e1.printStackTrace();
+            }
+        }
+        return ss;
     }
 }

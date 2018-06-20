@@ -25,7 +25,6 @@ public class HelperData {
     }
 
 
-
     public  String TimeShtampTranslater(String s){
 
         SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
@@ -75,7 +74,6 @@ public class HelperData {
         return ss;
     }
 
-
     @SuppressLint("DefaultLocale")
     private String FormatToHHmm(int h, int m){
         return format("%02d",h)+":"+ format("%02d",m)+":00";
@@ -83,7 +81,6 @@ public class HelperData {
 
     //2018-1-21
     public String ConvertDateFromDB(String data){
-
 
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdf2=new SimpleDateFormat("dd-MMM-yyyy",new Locale("ru"));
@@ -99,25 +96,29 @@ public class HelperData {
         }
         return ss;
     }
-    public String ConvertDateFromDB2(String data) {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
-                new Locale("ru"));
+    public  String cutTimeShtamp(String timeShtamp){
+    SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
+            new Locale("ru"));
 
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
-        String fuckedDate;
-        try {
-            Date day = sdf.parse(data);
-            String dateOfShtamp = format.format(day);
-            String[] am = dateOfShtamp.split("-");
-            int mns = Integer.parseInt(am[1]) - 1;
-            fuckedDate = am[0] + "-" + mns + "-" + am[2];
+    @SuppressLint("SimpleDateFormat")
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
 
-        } catch (ParseException e) {
-            e.printStackTrace();
-            fuckedDate=data;
-        }
+    try {
+        Date day = sdf.parse(timeShtamp);
+        String dateOfShtamp = format.format(day);
+        String [] am=dateOfShtamp.split("-");
+        int mns=Integer.parseInt(am[1])-1;
+        String fuckedDate=am[0]+"-"+mns+"-"+am[2];
+
         return fuckedDate;
+
+
+    } catch (ParseException e) {
+        e.printStackTrace();
     }
+    return null;
+    }
+
+
     }

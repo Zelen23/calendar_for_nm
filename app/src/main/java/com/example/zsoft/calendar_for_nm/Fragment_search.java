@@ -134,8 +134,6 @@ public class Fragment_search extends Fragment {
                     @Override
                     public boolean onGroupClick(ExpandableListView parent, View v,
                                                 int groupPosition, long id) {
-
-                       // spinner.setSelection(0);
                         new HelperData().HideKeyboeard(v);
                         editText.setText(adapter.getGroup(groupPosition).toString());
                         return false;
@@ -143,15 +141,14 @@ public class Fragment_search extends Fragment {
                 });
 
                 expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-                    private int lastPosition = -1;
+                    int previousGroup = -1;
 
                     @Override
                     public void onGroupExpand(int groupPosition) {
-                        if (lastPosition != -1
-                                && groupPosition != lastPosition) {
-                            expandableListView.collapseGroup(lastPosition);
-                        }
-                        lastPosition = groupPosition;
+                        if(groupPosition != previousGroup)
+                            expandableListView.collapseGroup(previousGroup);
+                        previousGroup = groupPosition;
+
                     }
                 });
             }
