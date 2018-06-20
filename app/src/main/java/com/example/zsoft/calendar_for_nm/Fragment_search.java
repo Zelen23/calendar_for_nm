@@ -90,6 +90,8 @@ public class Fragment_search extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+
+
             }
         });
 
@@ -120,7 +122,7 @@ public class Fragment_search extends Fragment {
                         "       date1    \n" +
                         "                \n" +
                         "from clients where "+coloumn+" like '%"+value+
-                        "%' order by date DESC limit 200";
+                        "%' order by date DESC limit 400";
 
                 ExecDB search_cl=new ExecDB();
                 creatMap(creatListForMap(search_cl.search(getContext(),qu_searsh)));
@@ -137,6 +139,19 @@ public class Fragment_search extends Fragment {
                         new HelperData().HideKeyboeard(v);
                         editText.setText(adapter.getGroup(groupPosition).toString());
                         return false;
+                    }
+                });
+
+                expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+                    private int lastPosition = -1;
+
+                    @Override
+                    public void onGroupExpand(int groupPosition) {
+                        if (lastPosition != -1
+                                && groupPosition != lastPosition) {
+                            expandableListView.collapseGroup(lastPosition);
+                        }
+                        lastPosition = groupPosition;
                     }
                 });
             }

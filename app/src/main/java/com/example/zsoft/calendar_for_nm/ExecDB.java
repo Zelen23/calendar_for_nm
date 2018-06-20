@@ -308,12 +308,12 @@ import java.util.Locale;
             int mns=Integer.parseInt(am[1])-1;
             String fuckedDate=am[0]+"-"+mns+"-"+am[2];
 
-            Log.i("ExecDB_beWrite", dateOfShtamp);
 
-           String dat="SELECT * FROM clients where date= '"
-                    + fuckedDate+"' and sf_num='"
-                    +num+"'";
 
+           String dat="SELECT * FROM clients where sf_num like '%"
+                    +num+"%' and date='"+fuckedDate+"'";
+
+            Log.i("ExecDB_beWrite", "in "+timeShtamp+" out "+dateOfShtamp+" qq "+dat);
             ArrayList<String> queue = new ArrayList<>();
 
             mDbHelper = new db(context);

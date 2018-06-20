@@ -5,8 +5,6 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.SimpleExpandableListAdapter;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -69,9 +67,11 @@ public class HelperData {
                     e2.printStackTrace();
                     ss="^"+s;
                 }
-                e1.printStackTrace();
+               // e1.printStackTrace();
             }
         }
+
+        Log .i("HelperData_TimeShtamp",s+"  "+ss);
         return ss;
     }
 
@@ -83,11 +83,14 @@ public class HelperData {
 
     //2018-1-21
     public String ConvertDateFromDB(String data){
+
+
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdf2=new SimpleDateFormat("dd-MMM-yyyy",new Locale("ru"));
         String ss;
         try {
             Date dat=sdf.parse(data);
+            dat.setMonth(dat.getMonth()+1);
             ss=sdf2.format(dat);
 
         } catch (ParseException e) {
@@ -96,6 +99,25 @@ public class HelperData {
         }
         return ss;
     }
+    public String ConvertDateFromDB2(String data) {
 
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
+                new Locale("ru"));
 
-}
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
+        String fuckedDate;
+        try {
+            Date day = sdf.parse(data);
+            String dateOfShtamp = format.format(day);
+            String[] am = dateOfShtamp.split("-");
+            int mns = Integer.parseInt(am[1]) - 1;
+            fuckedDate = am[0] + "-" + mns + "-" + am[2];
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fuckedDate=data;
+        }
+        return fuckedDate;
+    }
+    }
