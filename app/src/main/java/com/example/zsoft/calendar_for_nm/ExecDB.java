@@ -415,7 +415,7 @@ import java.util.Locale;
 
             c.close();
         }
-        Log.i("ExecDB__userlist",uslist.get(0).pk_num );
+
         return uslist;
 
 

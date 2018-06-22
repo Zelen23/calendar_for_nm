@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,12 +36,14 @@ public class Adapter_TopUser extends BaseAdapter {
         TextView itemTopName;
         TextView itemTopCount;
         TextView itemTopNumber;
+        ImageView imageArrow;
 
 
         ViewHolder(View view){
            itemTopName=view.findViewById(R.id.itemTopName);
              itemTopCount=view.findViewById(R.id.itemTopCount);
              itemTopNumber=view.findViewById(R.id.itemTopNum);
+             imageArrow=view.findViewById(R.id.imageArrow);
 
 
 
@@ -79,21 +82,22 @@ public class Adapter_TopUser extends BaseAdapter {
                 row.setTag(holder);
             }
 
-
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
         holder.itemTopName.setText(
-              constructorTop.get(position).name.toString());
+              constructorTop.get(position).name);
 
         holder.itemTopCount.setText(
-                constructorTop.get(position).count.toString());
+                constructorTop.get(position).count);
 
         holder.itemTopNumber.setText(
-                constructorTop.get(position).pk_num.toString());
-
-
-
+                constructorTop.get(position).pk_num);
+        if(new HelperData().comparateDate(constructorTop.get(position).last)){
+            holder.imageArrow.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
+        }else{
+            holder.imageArrow.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+        }
 
         return row;
     }

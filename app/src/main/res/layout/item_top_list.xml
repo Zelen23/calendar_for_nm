@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/imageView2"
+        android:layout_alignTop="@+id/imageArrow"
         android:layout_weight="1"
         android:text="TextView"
         android:textSize="18dp"
@@ -23,11 +23,11 @@
         android:textSize="18dp"
         android:layout_alignParentTop="true"
         android:layout_marginEnd="24dp"
-        android:layout_toStartOf="@+id/imageView2"
+        android:layout_toStartOf="@+id/imageArrow"
         android:text="TextView" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageArrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

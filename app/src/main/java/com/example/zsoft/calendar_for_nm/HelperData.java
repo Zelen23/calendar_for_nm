@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -119,6 +120,30 @@ public class HelperData {
     }
     return null;
     }
+
+    public boolean comparateDate(String data) {
+        //приходит дата сравниваю ее с текушей, если больше текущей
+        // возвпащаю true
+        boolean status = false;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = sdf.parse(data);
+            date.setMonth(date.getMonth() + 1);
+            Date nowDate = new Date();
+            if (date.compareTo(nowDate) > 0) {
+                status = true;
+            } else {
+                status = false;
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return status;
+
+    }
+    
 
 
     }
