@@ -5,10 +5,9 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.SimpleExpandableListAdapter;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -25,7 +24,6 @@ public class HelperData {
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
-
 
 
     public  String TimeShtampTranslater(String s){
@@ -69,12 +67,13 @@ public class HelperData {
                     e2.printStackTrace();
                     ss="^"+s;
                 }
-                e1.printStackTrace();
+               // e1.printStackTrace();
             }
         }
+
+        Log .i("HelperData_TimeShtamp",s+"  "+ss);
         return ss;
     }
-
 
     @SuppressLint("DefaultLocale")
     private String FormatToHHmm(int h, int m){
@@ -83,6 +82,7 @@ public class HelperData {
 
     //2018-1-21
     public String ConvertDateFromDB(String data){
+
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdf2=new SimpleDateFormat("dd-MMM-yyyy",new Locale("ru"));
         String ss;
@@ -97,7 +97,8 @@ public class HelperData {
         }
         return ss;
     }
-public  String cutTimeShtamp(String timeShtamp){
+
+    public  String cutTimeShtamp(String timeShtamp){
     SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
             new Locale("ru"));
 
@@ -120,4 +121,29 @@ public  String cutTimeShtamp(String timeShtamp){
     return null;
     }
 
-}
+    public boolean comparateDate(String data) {
+        //приходит дата сравниваю ее с текушей, если больше текущей
+        // возвпащаю true
+        boolean status = false;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = sdf.parse(data);
+            date.setMonth(date.getMonth() + 1);
+            Date nowDate = new Date();
+            if (date.compareTo(nowDate) > 0) {
+                status = true;
+            } else {
+                status = false;
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return status;
+
+    }
+    
+
+
+    }

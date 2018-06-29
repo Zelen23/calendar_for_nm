@@ -308,12 +308,12 @@ import java.util.Locale;
             int mns=Integer.parseInt(am[1])-1;
             String fuckedDate=am[0]+"-"+mns+"-"+am[2];
 
-            Log.i("ExecDB_beWrite", dateOfShtamp);
 
-           String dat="SELECT * FROM clients where date= '"
-                    + fuckedDate+"' and sf_num='"
-                    +num+"'";
 
+           String dat="SELECT * FROM clients where sf_num like '%"
+                    +num+"%' and date='"+fuckedDate+"'";
+
+            Log.i("ExecDB_beWrite", "in "+timeShtamp+" out "+dateOfShtamp+" qq "+dat);
             ArrayList<String> queue = new ArrayList<>();
 
             mDbHelper = new db(context);
@@ -380,6 +380,49 @@ import java.util.Locale;
         Log.i("4_",String.valueOf(queue));
         return queue;
     }
+
+
+    // читаю юзер all 30 lim
+    List<Constructor_top> userlist(String lim, Context ct) {
+        List<Constructor_top> uslist = new ArrayList<>();
+        mDbHelper = new db(ct);
+        mDbHelper.getWritableDatabase();
+        SQLiteDatabase db2 = mDbHelper.getWritableDatabase();
+        //db1.execSQL("SELECT * FROM clients where date like '"+ddat+"%'");
+        //Cursor c = db1.query("clients",null,null,null,null,null,null);
+        // Cursor c = db1.rawQuery("SELECT * FROM clients where date like '" + ddat + "%'", null);
+        Cursor c = db2.rawQuery("SELECT * FROM user where last is not null order by count desc "+lim, null);
+
+        if (c.moveToFirst()) {
+            int _id = c.getColumnIndex("id");
+            int pk_num = c.getColumnIndex("pk_num");
+            int name = c.getColumnIndex("name");
+            int family = c.getColumnIndex("family");
+            int url = c.getColumnIndex("url");
+            int count = c.getColumnIndex("count");
+            int last = c.getColumnIndex("last");
+
+/*обход нулей прри чтении*/
+            do {
+                uslist.add(new Constructor_top(c.getString(_id)
+                        ,c.getString(pk_num)
+                        ,c.getString(name)
+                        ,c.getString(count)
+                        ,c.getString(last)));
+            }
+
+            while (c.moveToNext());
+
+            c.close();
+        }
+
+        return uslist;
+
+
+    }
+
+
+
 
 
 

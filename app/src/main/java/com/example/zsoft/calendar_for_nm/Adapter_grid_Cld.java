@@ -51,10 +51,10 @@ public class Adapter_grid_Cld extends BaseAdapter {
          ImageView imageView;
          ContentFrameLayout contentFrameLayout;
 
-
          ViewHolder(View item ){
             textView=item.findViewById(R.id.textDay);
-            imageView=item.findViewById(R.id.im_day_View);contentFrameLayout =item.findViewById(R.id.contentFrameLayout);
+            imageView=item.findViewById(R.id.im_day_View);
+            contentFrameLayout =item.findViewById(R.id.contentFrameLayout);
         }
     }
 

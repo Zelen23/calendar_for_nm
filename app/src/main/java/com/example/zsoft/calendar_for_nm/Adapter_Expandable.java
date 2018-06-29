@@ -2,15 +2,14 @@ package com.example.zsoft.calendar_for_nm;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+
 import android.content.Context;
-import android.database.DataSetObserver;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+
 import android.widget.ExpandableListAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+
 /**
  * Created by AZelinskiy on 14.06.2018.
  */
@@ -41,6 +41,7 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
     List<Constructor_search> child=new ArrayList<>();
     ExecDB execDB=new ExecDB();
     HelperData helperData=new HelperData();
+
 
 
     public Adapter_Expandable(Context mContext, HashMap<String, List<Constructor_search>> search) {
@@ -79,13 +80,7 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        //return  search.get(child.get(groupPosition)).get(childPosition);
-        Log.i("child",""+childPosition);
-        return helperData.cutTimeShtamp(helperData
-                .TimeShtampTranslater(
-                        search.get(groupName.get(groupPosition)).get(childPosition).date1));
-        //search.get(groupName.get(groupPosition)).get(childPosition);
-
+        return null;
     }
 
     @Override
@@ -110,8 +105,12 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
         if(convertView==null) {
             LayoutInflater layoutInflater = (LayoutInflater)
                     mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
             convertView = layoutInflater.inflate(R.layout.exp_parent,null);
+
         }
+
+        //Log.i("",""+groupPosition);
 
 
         TextView nameClient=(TextView)convertView.findViewById(R.id.nameClient);
@@ -140,10 +139,6 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
         TextView expItemDate=convertView.findViewById(R.id.expItemDate);
         ImageView expItemInfo=convertView.findViewById(R.id.expItemInfo);
 
-        String ii=(String)getChild(groupPosition,childPosition);
-
-        //если тайм штамп == пердыдудуш времени
-
         expItemTime.setText(search.get(child.get(groupPosition).sf_num).get(childPosition).time1);
         expItemDate.setText(new HelperData().ConvertDateFromDB(
                 search.get(child.get(groupPosition).sf_num).get(childPosition).date));
@@ -160,6 +155,9 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
 
     @Override
     public void onGroupExpanded(int groupPosition) {
+
+
+
         super.onGroupExpanded(groupPosition);
     }
 

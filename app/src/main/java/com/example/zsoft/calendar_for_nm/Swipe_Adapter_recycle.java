@@ -247,6 +247,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
                 @Override
                 public void onClick(View v) {
+
                     InputMethodManager imm = (InputMethodManager) v.getContext()
                             .getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -382,12 +383,12 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     ArrayList<String> data=exec.getLine_(context,"clients",ful_data.id);
                     ArrayList<String> user=exec.getLine_(context,"user",data.get(1));
                     ArrayList<String> infoTimeShtamp=exec.beWrite(context,data.get(1)
-                            ,getTimeStamp(data.get(5)));
+                            ,new HelperData().TimeShtampTranslater(data.get(5)));
 
                     String mess;
                         mess = "Номер: "+user.get(3)+
                         "\nВсего записей: "+user.get(6)+
-                        "\nЗаписана: "+ getTimeStamp(data.get(5))+
+                        "\nЗаписана: "+ new HelperData().TimeShtampTranslater(data.get(5))+
                         "\n";
                     if(infoTimeShtamp!=null && infoTimeShtamp.size()>0){
                         mess=mess
@@ -551,9 +552,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 @Override
                 public void onSlide(SwipeRevealLayout view, float slideOffset) {
                     super.onSlide(view, slideOffset);
-
-
-
                 }
             });
 

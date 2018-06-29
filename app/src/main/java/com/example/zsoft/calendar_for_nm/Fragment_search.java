@@ -137,6 +137,7 @@ public class Fragment_search extends Fragment {
                         return false;
                     }
                 });
+
                 expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
                     int previousGroup = -1;
 
@@ -145,6 +146,7 @@ public class Fragment_search extends Fragment {
                         if(groupPosition != previousGroup)
                             expandableListView.collapseGroup(previousGroup);
                         previousGroup = groupPosition;
+
                     }
                 });
             }
