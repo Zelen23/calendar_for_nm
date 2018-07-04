@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorSwipeMenu">#bdcecaca</color>
+    <color name="dayNow">#404d4c4c</color>
+    <color name="pictColor">#a6f7f7f7</color>
+    <color name="White">#fdfffefe</color>
+
 </resources>

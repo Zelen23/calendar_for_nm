@@ -1,6 +1,7 @@
 package com.example.zsoft.calendar_for_nm;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,34 +29,16 @@ import java.util.List;
  */
 
 public class preference  extends PreferenceActivity{
-//activity pref
-/*
-    @Override
-    protected void onCreate(@Nullable final Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction().
-               replace(android.R.id.content,new PrefFragment()).commit();
-
-    }
-
-*/
 
     @Override
     protected void onPause() {
         super.onPause();
-
     }
-
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        /*
-        Intent intent= new Intent(preference.this,MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        */
     }
 
     @Override
@@ -67,9 +50,13 @@ public class preference  extends PreferenceActivity{
 
     @Override
     protected boolean isValidFragment(String fragmentName) {
-        return  PrefFragment.class.getName().equals(fragmentName);
+
+        //return  PrefFragment.class.getName().equals(fragmentName);
+        return true;
     }
 
+
+    // фрагменты настоек
 
     public static class PrefFragment extends PreferenceFragment{
 
@@ -81,30 +68,33 @@ public class preference  extends PreferenceActivity{
 
         }
 
+        @Override
+        public void onPause() {
+            super.onPause();
+            Log.i("pref__psuse","" +
+                    "Pause");
+
+        }
+    }
+
+    public static class PrefUserSettingsFragment extends PreferenceFragment{
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.preference_user);
+        }
 
         @Override
         public void onPause() {
             super.onPause();
-            //startActivity(refresh);
-            refrash();
-            Log.i("pref__psuse","" +
+            Log.i("prefusr__psuse","" +
                     "Pause");
-
-
-
-        }
-
-        public  void refrash(){
-            Intent intent= null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                intent = new Intent(getContext(),MainActivity.class);
-            }
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
 
         }
 
     }
+
+
 
 
 

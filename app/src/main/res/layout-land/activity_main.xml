@@ -14,19 +14,18 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="1dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/menu_back"
+        android:background="@drawable/background_transparent"
+
         android:contentDescription="@string/app_name"
-        android:scaleX="0.5"
-        android:scaleY="0.5"
         app:layout_constraintBottom_toTopOf="@+id/gestures"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.13"
-        app:srcCompat="@drawable/menu" />
+        app:srcCompat="@drawable/ic_baseline_menu_24px" />
 
     <TextView
         android:id="@+id/date_label"
@@ -70,17 +69,15 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/menu_back"
+        android:background="@drawable/background_transparent"
         android:contentDescription="@string/app_name"
-        android:scaleX="0.5"
-        android:scaleY="0.5"
         app:layout_constraintBottom_toTopOf="@+id/gestures"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/menu"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.050000012"
-        app:srcCompat="@drawable/settings2" />
+        app:srcCompat="@drawable/ic_outline_settings_24px" />
 
     <android.gesture.GestureOverlayView
         android:id="@+id/gestures"
@@ -106,5 +103,21 @@
             android:focusable="true"
             android:numColumns="7" />
     </android.gesture.GestureOverlayView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleMain"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:scrollbars="vertical"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gestures"
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

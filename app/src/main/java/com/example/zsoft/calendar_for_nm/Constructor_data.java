@@ -1,37 +1,85 @@
 package com.example.zsoft.calendar_for_nm;
 
+
+
 /**
  * Created by adolf on 14.04.2018.
  */
 
-public class Constructor_data {
+class Constructor_data {
+
     String h1,h2,m1,m2;
-    String name;
-    int sum;
+    String id,name;
+    String sum;
     boolean flag;
 
-    Constructor_data(String name,int sum,boolean flag,String h1,String m1,String h2,String m2){
+
+    private String[] parseTimefree(String t){
+        return t.split(":");
+
+    }
+
+    Constructor_data(String id,String t1,String t2,String name,String sum,boolean flag){
+        this.id=id;
+        this.h1=parseTimefree(t1)[0];
+        this.h2=parseTimefree(t2)[0];
+        this.m1=parseTimefree(t1)[1];
+        this.m2=parseTimefree(t2)[1];
+
         this.name=name;
         this.sum=sum;
         this.flag=flag;
-        this.h1=h1;
-        this.h2=h2;
-        this.m1=m1;
-        this.m2=m2;
     }
 
-    public static class Constructor_free_data{
+    static class Constructor_free_data{
+
         String h1,h2,m1,m2;
-        Constructor_free_data(String h1,String m1,String h2,String m2){
-            this.h1=h1;
-            this.h2=h2;
-            this.m1=m1;
-            this.m2=m2;
 
+        String[] parseTimefree(String t){
+            return t.split(":");
         }
-
-
+        Constructor_free_data(String t1,String t2){
+            this.h1=parseTimefree(t1)[0];
+            this.h2=parseTimefree(t2)[0];
+            this.m1=parseTimefree(t1)[1];
+            this.m2=parseTimefree(t2)[1];
+        }
     }
+
 }
 
+class Constructor_dayWeight{
+    String day;
+    int weight;
 
+     Constructor_dayWeight(String day,int weight){
+         this.day=day;
+         this.weight=weight;
+     }
+}
+
+class Constructor_search{
+    String sf_num,name,time1,date,date1;
+
+     Constructor_search(String sf_num, String name, String time1, String date, String date1) {
+        this.sf_num = sf_num;
+        this.name = name;
+        this.time1 = time1;
+        this.date = date;
+        this.date1 = date1;
+    }
+
+
+}
+
+class Constructor_top{
+    String _id,pk_num,name,count,last;
+
+    public Constructor_top(String _id, String pk_num, String name, String count, String last) {
+        this._id = _id;
+        this.pk_num = pk_num;
+        this.name = name;
+        this.count = count;
+        this.last = last;
+    }
+}
