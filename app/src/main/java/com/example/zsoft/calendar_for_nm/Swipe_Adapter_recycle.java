@@ -732,7 +732,8 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             m1.setMaxValue(59);
 
             m2.setMinValue(0);
-            m2.setMaxValue(tm2);
+            //4.07tm2
+            m2.setMaxValue(59);
         }
 
         h2.setMinValue(th1);
@@ -825,7 +826,8 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         m2.setMaxValue(59);
                     }else{
                         m2.setMinValue(0);
-                        m2.setMaxValue(tm2);
+                        //4.07tm2
+                        m2.setMaxValue(59);
                     }
                 }
 
