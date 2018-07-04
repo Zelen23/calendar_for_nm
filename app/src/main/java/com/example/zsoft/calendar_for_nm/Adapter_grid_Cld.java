@@ -111,8 +111,13 @@ public class Adapter_grid_Cld extends BaseAdapter {
         }else{
             holder = (ViewHolder)view.getTag();
         }
+        if(image_id[i]==R.drawable.ic_services){
 
-        holder.imageView.setImageResource(image_id[i]);
+            holder.imageView.setBackgroundResource(R.drawable.ic_nowday);
+        }
+            holder.imageView.setImageResource(image_id[i]);
+
+
         holder.textView.setText(string.get(i));
 
         if(holder.textView.getText().toString().equals(ms_day[0])&&

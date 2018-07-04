@@ -37,20 +37,6 @@
                 android:scaleY="2"
                 app:srcCompat="@drawable/ic_create_black_24dp" />
 
-            <ImageButton
-                android:id="@+id/bPaste"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:foregroundGravity="center"
-                android:scaleX="2"
-                android:scaleY="2"
-                app:srcCompat="@drawable/ic_content_paste_black_24dp"
-                tools:srcCompat="?android:attr/actionModeCutDrawable" />
 
 
         </LinearLayout>

@@ -477,7 +477,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         CardView card_empt;
         TextView h,m,h2,m2;
 
-        ImageButton bPase,bWrite;
+        ImageButton bWrite;
         SwipeRevealLayout swipeFree;
 
         View firstFrameFree;
@@ -492,7 +492,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             h2= itemView.findViewById(R.id.empty_h2);
             m2= itemView.findViewById(R.id.empty_m2);
 
-            bPase=itemView.findViewById(R.id.bPaste);
+           // bPase=itemView.findViewById(R.id.bPaste);
             bWrite=itemView.findViewById(R.id.bWrite);
             firstFrameFree=itemView.findViewById(R.id.firstFrameFree);
             secondFrameFree=itemView.findViewById(R.id.secondFrameFree);
@@ -506,6 +506,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             m2.setText(free.m2);
             binderHelper.bind(swipeFree,free.h1);
             binderHelper.setOpenOnlyOne(true);
+
 
             bWrite.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -535,7 +536,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             });
 
 
-
+/*8
             bPase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -554,7 +555,8 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     }
                 }
             });
-            clicableBtn(true,bPase);
+            */
+          //  clicableBtn(true,bPase);
             swipeFree.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
 
                 @Override
