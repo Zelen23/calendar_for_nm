@@ -343,6 +343,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                 , data.get(0), data.get(1), "temp", ful_data.id);
 
                     }
+                    binderHelper.closeLayout(ful_data.id);
                 }
             });
 
@@ -509,9 +510,26 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             bWrite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Alert(context,date,
-                            free.h1+":"+free.m1,
-                            free.h2+":"+free.m2);
+                    ArrayList<String> data=new ExecDB().getLine_(context,"temp"," ' ' or _id>0");
+                    //еслт Temp не пуст то
+                    if(data.size()>0) {
+                        Alert(context, date,
+                                free.h1 + ":" + free.m1,
+                                free.h2 + ":" + free.m2);
+                        eName.setText(data.get(0));
+                        eNum.setText(data.get(1));
+                        eSum.setText(data.get(6));
+                        flagpaste=true;
+                    }else{
+                        Alert(context, date,
+                                free.h1 + ":" + free.m1,
+                                free.h2 + ":" + free.m2);
+                    }
+
+
+                    /*если есть вырезанная запись то вставляю ее
+                    * в противном случае пусто*/
+
 
                 }
             });
@@ -646,36 +664,43 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         });
 
            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+           final HelperData helperData=new HelperData();
             /*дата и 2 времени*/
            builder.setView(vw)
                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                        @Override
                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                           if(h1.getValue()==h2.getValue()&&m1.getValue()==m2.getValue()){
+                           if(h1.getValue()==h2.getValue()&&m1.getValue()==m2.getValue() ||
+                                   eNum.getText().length()<1 && eName.getText().length()<1){
 
-                               Toast.makeText(context,"WTF&! time1==time2",Toast.LENGTH_SHORT)
+                               Toast.makeText(context,"WTF&! Пустое имя и номер",Toast.LENGTH_SHORT)
                                        .show();
-                           }else
-                           new ExecDB().write_orders(context, date,
-                                   formTime(h1.getValue(), m1.getValue()),
-                                   formTime(h2.getValue(), +m2.getValue()),
+                           }else{
+                               new ExecDB().write_orders(context, date,
+                                       formTime(h1.getValue(), m1.getValue()),
+                                       formTime(h2.getValue(), +m2.getValue()),
 
-                                   eSum.getText().toString(),
-                                   eName.getText().toString(),
-                                   new String(
-                                           eNum.getText().toString().replaceAll("\\D+",""))
-                                           , "clients", "");
+                                       eSum.getText().toString(),
+                                       eName.getText().toString(),
+                                       helperData.ClearNumberFormat(eNum.getText().toString())
+                                       //new String(eNum.getText().toString().replaceAll("\\D+",""))
+                                       , "clients", ""
+                               );
 
-                           new MainActivity().updGridCld();
-           //Чистит темп если вставил
-                           if(flagpaste == true){
-                               new ExecDB().deleterow(context,"temp","'' or _id>0");
-                               flagpaste=false;
+                               new MainActivity().updGridCld();
+                               //Чистит темп если вставил
+                               ArrayList<String> data=new ExecDB().getLine_(context,"temp"," ' ' or _id>0");
+                               if(flagpaste == true && data.get(1).toString().equals(
+                                       helperData.ClearNumberFormat(eNum.getText().toString()))){
+                                   new ExecDB().deleterow(context,"temp","'' or _id>0");
+                                   flagpaste=false;
+                               }
+
+                               refresh();
+                               dialogInterface.dismiss();
                            }
 
-                           refresh();
-                           dialogInterface.dismiss();
                        }
                    });
 

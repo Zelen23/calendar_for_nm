@@ -143,6 +143,9 @@ public class HelperData {
         return status;
 
     }
+    public String ClearNumberFormat(String phonenumber){
+        return  phonenumber.toString().replaceAll("\\D+","");
+    }
     
 
 
