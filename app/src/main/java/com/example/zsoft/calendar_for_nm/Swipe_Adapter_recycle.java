@@ -667,9 +667,11 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
            final HelperData helperData=new HelperData();
+           final ArrayList<String> dataTemp=new ExecDB().getLine_(context,"temp"," ' ' or _id>0");
+           final ExecDB exec=new ExecDB();
             /*дата и 2 времени*/
-           builder.setView(vw)
-                   .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+           builder.setView(vw);
+                   builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                        @Override
                        public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -692,30 +694,38 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
                                new MainActivity().updGridCld();
                                //Чистит темп если вставил
-                               ArrayList<String> data=new ExecDB().getLine_(context,"temp"," ' ' or _id>0");
-                               if(flagpaste == true && data.get(1).toString().equals(
+                               if(flagpaste == true && dataTemp.get(1).toString().equals(
                                        helperData.ClearNumberFormat(eNum.getText().toString()))){
                                    new ExecDB().deleterow(context,"temp","'' or _id>0");
                                    flagpaste=false;
                                }
-
                                refresh();
                                dialogInterface.dismiss();
                            }
-
                        }
                    });
-
-           try {
-               set_time_to_spiner(time1, time2);
-           } catch (ParseException e) {
-               e.printStackTrace();
-           }
-
-           alert = builder.create();
-          // alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
-           alert.show();
-
+                   if(dataTemp.size()>0){
+                       builder.setNeutralButton("Clean", new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int which) {
+                               //если вырезал ир венуть назад
+                               if(Boolean.parseBoolean(dataTemp.get(7))==true){
+                                   exec.write_orders(context,dataTemp.get(4),dataTemp.get(2),dataTemp.get(3)
+                                           ,dataTemp.get(6),dataTemp.get(0),dataTemp.get(1),"clients",dataTemp.get(8));
+                               }
+                               exec.deleterow(context,"temp","'' or _id>0");
+                               flagpaste=false;
+                               refresh();
+                           }});
+                   }
+                   try {
+                       set_time_to_spiner(time1, time2);
+                   } catch (ParseException e) {
+                       e.printStackTrace();
+                   }
+                   alert = builder.create();
+                   // alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
+            alert.show();
     }
 
     // если 23ч аходит в интервал свободных
