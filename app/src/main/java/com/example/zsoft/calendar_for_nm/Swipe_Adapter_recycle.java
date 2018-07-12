@@ -747,6 +747,10 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
         h1.setMinValue(th1);
         h1.setMaxValue(th2);
+
+        h2.setMinValue(th1);
+        h2.setMaxValue(th2);
+        h2.setValue(th1+1);
         if(th1==th2){
             m1.setMinValue(tm1);
             m1.setMaxValue(tm2);
@@ -760,12 +764,15 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
             m2.setMinValue(0);
             //4.07tm2
-            m2.setMaxValue(59);
+            if(h2.getValue()==th2){
+                m2.setMaxValue(tm2);
+            }else{
+                m2.setMaxValue(59);
+            }
+
         }
 
-        h2.setMinValue(th1);
-        h2.setMaxValue(th2);
-        h2.setValue(th1+1);
+
 
         h1.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -780,7 +787,13 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 if(newVal>oldVal&&newVal>th1){
                     h2.setValue(newVal+1);
                     m2.setMinValue(0);
-                    m2.setMaxValue(59);
+                    //12.07
+                    if(h2.getValue()==th2){
+                        m2.setMaxValue(tm2);
+                    }else{
+                        m2.setMaxValue(59);
+                    }
+
                     m2.setValue(0);
 
                     m1.setMinValue(0);
@@ -805,7 +818,13 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 if(newVal<oldVal&&newVal>th1){
                     h2.setValue(newVal+1);
                     m2.setMinValue(0);
-                    m2.setMaxValue(59);
+                    //12.07  m2.setMaxValue(59);
+                    if(h2.getValue()==th2){
+                        m2.setMaxValue(tm2);
+                    }else{
+                        m2.setMaxValue(59);
+                    }
+
                     m2.setValue(0);
 
                     m1.setMinValue(0);
@@ -828,7 +847,12 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     h2.setValue(newVal+1);
 
                     m2.setMinValue(0);
-                    m2.setMaxValue(59);
+                    //12.07  m2.setMaxValue(59);
+                    if(h2.getValue()==th2){
+                        m2.setMaxValue(tm2);
+                    }else{
+                        m2.setMaxValue(59);
+                    }
                     m2.setValue(0);
 
                     m1.setMinValue(tm1);
@@ -853,8 +877,13 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         m2.setMaxValue(59);
                     }else{
                         m2.setMinValue(0);
-                        //4.07tm2
-                        m2.setMaxValue(59);
+                        //4.07tm2 m2.setMaxValue(59);
+                        //12.07  m2.setMaxValue(59);
+                        if(h2.getValue()==th2){
+                            m2.setMaxValue(tm2);
+                        }else{
+                            m2.setMaxValue(59);
+                        }
                     }
                 }
 
