@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -705,6 +706,8 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                        }
                    });
                    if(dataTemp.size()>0){
+                       builder.setNeutralButton("Clear",null);
+                       /*
                        builder.setNeutralButton("Clean", new DialogInterface.OnClickListener() {
                            @Override
                            public void onClick(DialogInterface dialog, int which) {
@@ -717,7 +720,13 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                flagpaste=false;
                                refresh();
                            }});
+
+                      */
+
+
                    }
+
+
                    try {
                        set_time_to_spiner(time1, time2);
                    } catch (ParseException e) {
@@ -725,7 +734,34 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                    }
                    alert = builder.create();
                    // alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
-            alert.show();
+
+
+        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(final DialogInterface dialogInterface) {
+
+                Button button = ((AlertDialog) dialogInterface).getButton(AlertDialog.BUTTON_NEUTRAL);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        if(Boolean.parseBoolean(dataTemp.get(7))==true){
+                            exec.write_orders(context,dataTemp.get(4),dataTemp.get(2),dataTemp.get(3)
+                                    ,dataTemp.get(6),dataTemp.get(0),dataTemp.get(1),"clients",dataTemp.get(8));
+                        }
+                        exec.deleterow(context,"temp","'' or _id>0");
+                        eName.getText().clear();
+                        eNum.getText().clear();
+                        eSum.getText().clear();
+                        flagpaste=false;
+                        refresh();
+                    }
+                });
+            }
+        });
+        alert.show();
+
     }
 
     // если 23ч аходит в интервал свободных
