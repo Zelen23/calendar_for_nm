@@ -48,15 +48,38 @@ class Constructor_data {
 
 }
 
- class Constructor_dayWeight{
+class Constructor_dayWeight{
     String day;
     int weight;
 
      Constructor_dayWeight(String day,int weight){
          this.day=day;
          this.weight=weight;
-
      }
+}
+
+class Constructor_search{
+    String sf_num,name,time1,date,date1;
+
+     Constructor_search(String sf_num, String name, String time1, String date, String date1) {
+        this.sf_num = sf_num;
+        this.name = name;
+        this.time1 = time1;
+        this.date = date;
+        this.date1 = date1;
+    }
+
 
 }
 
+class Constructor_top{
+    String _id,pk_num,name,count,last;
+
+    public Constructor_top(String _id, String pk_num, String name, String count, String last) {
+        this._id = _id;
+        this.pk_num = pk_num;
+        this.name = name;
+        this.count = count;
+        this.last = last;
+    }
+}

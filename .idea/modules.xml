@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/calendar_for_nm_3.iml" filepath="$PROJECT_DIR$/calendar_for_nm_3.iml" />
-      <module fileurl="file://E:\prj\calendar_for_nm_3\prj.iml" filepath="E:\prj\calendar_for_nm_3\prj.iml" />
     </modules>
   </component>
 </project>

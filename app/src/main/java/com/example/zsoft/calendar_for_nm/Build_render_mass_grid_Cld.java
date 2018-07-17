@@ -77,13 +77,15 @@ class Build_render_mass_grid_Cld {
                 case 13:
                     mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_75;
                     break;
-    //----
                 case 14:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_100;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_75;
                     break;
                 case 15:
-                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_100;
+                    mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_75;
                     break;
+    //----
+
+
                 case 16:
                     mass_pic[list_d.indexOf(day_for_render.get(i))]=R.drawable.ic_svg_100;
                     break;

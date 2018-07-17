@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -247,6 +248,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
                 @Override
                 public void onClick(View v) {
+
                     InputMethodManager imm = (InputMethodManager) v.getContext()
                             .getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -342,6 +344,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                                 , data.get(0), data.get(1), "temp", ful_data.id);
 
                     }
+                    binderHelper.closeLayout(ful_data.id);
                 }
             });
 
@@ -382,12 +385,12 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     ArrayList<String> data=exec.getLine_(context,"clients",ful_data.id);
                     ArrayList<String> user=exec.getLine_(context,"user",data.get(1));
                     ArrayList<String> infoTimeShtamp=exec.beWrite(context,data.get(1)
-                            ,getTimeStamp(data.get(5)));
+                            ,new HelperData().TimeShtampTranslater(data.get(5)));
 
                     String mess;
                         mess = "Номер: "+user.get(3)+
                         "\nВсего записей: "+user.get(6)+
-                        "\nЗаписана: "+ getTimeStamp(data.get(5))+
+                        "\nЗаписана: "+ new HelperData().TimeShtampTranslater(data.get(5))+
                         "\n";
                     if(infoTimeShtamp!=null && infoTimeShtamp.size()>0){
                         mess=mess
@@ -412,52 +415,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             });
         }
     //Дата на русском
-        String getTimeStamp(String s){
 
-            SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
-            ,new Locale("ru"));
-            String ss = null;
-            try {
-                Date day=sdf.parse(s);
-                ss=sdf.format(day);
-                Log.i("1eeeSwipeAd_s",ss+"loc "+Locale.getDefault());
-
-            } catch (ParseException e) {
-                /* в гетлайне Thu May 10 10:05:00 EAT 2018-  в таком формате приходит
-                * //Thu May 10 10:05:00 EAT 2018 loc en_US
-                 //Thu May 10 11:05:00 GMT+04:00 2018 loc en_US
-                * */
-                /*4.4 -z хавает EAT */
-                SimpleDateFormat sdf3=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
-                        ,new Locale("en"));
-                Date day;
-                try {
-                    day = sdf3.parse(s);
-                    ss=sdf.format(day);
-                    Log.i("3eeeSwipeAd_s",ss+" loc "+Locale.getDefault());
-                } catch (ParseException e1) {
-
-                    SimpleDateFormat sdf2=new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy"
-                            ,Locale.US );
-                    // sdf.setTimeZone(TimeZone.getTimeZone("GMT+3"));
-                    // String sss=s.replace("EAT","");
-                    String [] splt=s.split(" ");
-
-                    try {
-                        if(splt.length>5){
-                            day = sdf2.parse(splt[0]+" "+splt[1]+" "+splt[2]+" "+splt[3]+" "+splt[5]);
-                            ss=sdf.format(day);
-                        }
-
-                    } catch (ParseException e2) {
-                        e2.printStackTrace();
-                        ss="^"+s;
-                    }
-                    e1.printStackTrace();
-                }
-            }
-            return ss;
-        }
 
         // если в базе есть вырезанная запись
         void alertTemp(final ArrayList<String> data, final ArrayList<String> temp, final String id){
@@ -520,7 +478,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         CardView card_empt;
         TextView h,m,h2,m2;
 
-        ImageButton bPase,bWrite;
+        ImageButton bWrite;
         SwipeRevealLayout swipeFree;
 
         View firstFrameFree;
@@ -535,7 +493,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             h2= itemView.findViewById(R.id.empty_h2);
             m2= itemView.findViewById(R.id.empty_m2);
 
-            bPase=itemView.findViewById(R.id.bPaste);
+           // bPase=itemView.findViewById(R.id.bPaste);
             bWrite=itemView.findViewById(R.id.bWrite);
             firstFrameFree=itemView.findViewById(R.id.firstFrameFree);
             secondFrameFree=itemView.findViewById(R.id.secondFrameFree);
@@ -550,18 +508,36 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             binderHelper.bind(swipeFree,free.h1);
             binderHelper.setOpenOnlyOne(true);
 
+
             bWrite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Alert(context,date,
-                            free.h1+":"+free.m1,
-                            free.h2+":"+free.m2);
+                    ArrayList<String> data=new ExecDB().getLine_(context,"temp"," ' ' or _id>0");
+                    //еслт Temp не пуст то
+                    if(data.size()>0) {
+                        Alert(context, date,
+                                free.h1 + ":" + free.m1,
+                                free.h2 + ":" + free.m2);
+                        eName.setText(data.get(0));
+                        eNum.setText(data.get(1));
+                        eSum.setText(data.get(6));
+                        flagpaste=true;
+                    }else{
+                        Alert(context, date,
+                                free.h1 + ":" + free.m1,
+                                free.h2 + ":" + free.m2);
+                    }
+
+
+                    /*если есть вырезанная запись то вставляю ее
+                    * в противном случае пусто*/
+
 
                 }
             });
 
 
-
+/*8
             bPase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -580,7 +556,8 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     }
                 }
             });
-            clicableBtn(true,bPase);
+            */
+          //  clicableBtn(true,bPase);
             swipeFree.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
 
                 @Override
@@ -596,9 +573,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 @Override
                 public void onSlide(SwipeRevealLayout view, float slideOffset) {
                     super.onSlide(view, slideOffset);
-
-
-
                 }
             });
 
@@ -693,48 +667,100 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         });
 
            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+           final HelperData helperData=new HelperData();
+           final ArrayList<String> dataTemp=new ExecDB().getLine_(context,"temp"," ' ' or _id>0");
+           final ExecDB exec=new ExecDB();
             /*дата и 2 времени*/
-           builder.setView(vw)
-                   .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+           builder.setView(vw);
+                   builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                        @Override
                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                           if(h1.getValue()==h2.getValue()&&m1.getValue()==m2.getValue()){
+                           if(h1.getValue()==h2.getValue()&&m1.getValue()==m2.getValue() ||
+                                   eNum.getText().length()<1 && eName.getText().length()<1){
 
-                               Toast.makeText(context,"WTF&! time1==time2",Toast.LENGTH_SHORT)
+                               Toast.makeText(context,"WTF&! Пустое имя и номер",Toast.LENGTH_SHORT)
                                        .show();
-                           }else
-                           new ExecDB().write_orders(context, date,
-                                   formTime(h1.getValue(), m1.getValue()),
-                                   formTime(h2.getValue(), +m2.getValue()),
+                           }else{
+                               new ExecDB().write_orders(context, date,
+                                       formTime(h1.getValue(), m1.getValue()),
+                                       formTime(h2.getValue(), +m2.getValue()),
 
-                                   eSum.getText().toString(),
-                                   eName.getText().toString(),
-                                   new String(
-                                           eNum.getText().toString().replaceAll("\\D+",""))
-                                           , "clients", "");
+                                       eSum.getText().toString(),
+                                       eName.getText().toString(),
+                                       helperData.ClearNumberFormat(eNum.getText().toString())
+                                       //new String(eNum.getText().toString().replaceAll("\\D+",""))
+                                       , "clients", ""
+                               );
 
-                           new MainActivity().updGridCld();
-           //Чистит темп если вставил
-                           if(flagpaste == true){
-                               new ExecDB().deleterow(context,"temp","'' or _id>0");
-                               flagpaste=false;
+                               new MainActivity().updGridCld();
+                               //Чистит темп если вставил
+                               if(flagpaste == true && dataTemp.get(1).toString().equals(
+                                       helperData.ClearNumberFormat(eNum.getText().toString()))){
+                                   new ExecDB().deleterow(context,"temp","'' or _id>0");
+                                   flagpaste=false;
+                               }
+                               refresh();
+                               dialogInterface.dismiss();
                            }
-
-                           refresh();
-                           dialogInterface.dismiss();
                        }
                    });
+                   if(dataTemp.size()>0){
+                       builder.setNeutralButton("Clear",null);
+                       /*
+                       builder.setNeutralButton("Clean", new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int which) {
+                               //если вырезал ир венуть назад
+                               if(Boolean.parseBoolean(dataTemp.get(7))==true){
+                                   exec.write_orders(context,dataTemp.get(4),dataTemp.get(2),dataTemp.get(3)
+                                           ,dataTemp.get(6),dataTemp.get(0),dataTemp.get(1),"clients",dataTemp.get(8));
+                               }
+                               exec.deleterow(context,"temp","'' or _id>0");
+                               flagpaste=false;
+                               refresh();
+                           }});
 
-           try {
-               set_time_to_spiner(time1, time2);
-           } catch (ParseException e) {
-               e.printStackTrace();
-           }
+                      */
 
-           alert = builder.create();
-          // alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
-           alert.show();
+
+                   }
+
+
+                   try {
+                       set_time_to_spiner(time1, time2);
+                   } catch (ParseException e) {
+                       e.printStackTrace();
+                   }
+                   alert = builder.create();
+                   // alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
+
+
+        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(final DialogInterface dialogInterface) {
+
+                Button button = ((AlertDialog) dialogInterface).getButton(AlertDialog.BUTTON_NEUTRAL);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        if(Boolean.parseBoolean(dataTemp.get(7))==true){
+                            exec.write_orders(context,dataTemp.get(4),dataTemp.get(2),dataTemp.get(3)
+                                    ,dataTemp.get(6),dataTemp.get(0),dataTemp.get(1),"clients",dataTemp.get(8));
+                        }
+                        exec.deleterow(context,"temp","'' or _id>0");
+                        eName.getText().clear();
+                        eNum.getText().clear();
+                        eSum.getText().clear();
+                        flagpaste=false;
+                        refresh();
+                    }
+                });
+            }
+        });
+        alert.show();
 
     }
 
@@ -767,6 +793,10 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
         h1.setMinValue(th1);
         h1.setMaxValue(th2);
+
+        h2.setMinValue(th1);
+        h2.setMaxValue(th2);
+        h2.setValue(th1+1);
         if(th1==th2){
             m1.setMinValue(tm1);
             m1.setMaxValue(tm2);
@@ -779,12 +809,16 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             m1.setMaxValue(59);
 
             m2.setMinValue(0);
-            m2.setMaxValue(tm2);
+            //4.07tm2
+            if(h2.getValue()==th2){
+                m2.setMaxValue(tm2);
+            }else{
+                m2.setMaxValue(59);
+            }
+
         }
 
-        h2.setMinValue(th1);
-        h2.setMaxValue(th2);
-        h2.setValue(th1+1);
+
 
         h1.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -799,7 +833,13 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 if(newVal>oldVal&&newVal>th1){
                     h2.setValue(newVal+1);
                     m2.setMinValue(0);
-                    m2.setMaxValue(59);
+                    //12.07
+                    if(h2.getValue()==th2){
+                        m2.setMaxValue(tm2);
+                    }else{
+                        m2.setMaxValue(59);
+                    }
+
                     m2.setValue(0);
 
                     m1.setMinValue(0);
@@ -824,7 +864,13 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 if(newVal<oldVal&&newVal>th1){
                     h2.setValue(newVal+1);
                     m2.setMinValue(0);
-                    m2.setMaxValue(59);
+                    //12.07  m2.setMaxValue(59);
+                    if(h2.getValue()==th2){
+                        m2.setMaxValue(tm2);
+                    }else{
+                        m2.setMaxValue(59);
+                    }
+
                     m2.setValue(0);
 
                     m1.setMinValue(0);
@@ -847,7 +893,12 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     h2.setValue(newVal+1);
 
                     m2.setMinValue(0);
-                    m2.setMaxValue(59);
+                    //12.07  m2.setMaxValue(59);
+                    if(h2.getValue()==th2){
+                        m2.setMaxValue(tm2);
+                    }else{
+                        m2.setMaxValue(59);
+                    }
                     m2.setValue(0);
 
                     m1.setMinValue(tm1);
@@ -872,7 +923,13 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         m2.setMaxValue(59);
                     }else{
                         m2.setMinValue(0);
-                        m2.setMaxValue(tm2);
+                        //4.07tm2 m2.setMaxValue(59);
+                        //12.07  m2.setMaxValue(59);
+                        if(h2.getValue()==th2){
+                            m2.setMaxValue(tm2);
+                        }else{
+                            m2.setMaxValue(59);
+                        }
                     }
                 }
 
@@ -926,5 +983,52 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
     @SuppressLint("DefaultLocale")
     private String formTime(int h, int m){
         return format("%02d",h)+":"+ format("%02d",m)+":00";
+    }
+
+    public String getTimeStamp(String s){
+
+        SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+                ,new Locale("ru"));
+        String ss = null;
+        try {
+            Date day=sdf.parse(s);
+            ss=sdf.format(day);
+            Log.i("1eeeSwipeAd_s",ss+"loc "+Locale.getDefault());
+
+        } catch (ParseException e) {
+                /* в гетлайне Thu May 10 10:05:00 EAT 2018-  в таком формате приходит
+                * //Thu May 10 10:05:00 EAT 2018 loc en_US
+                 //Thu May 10 11:05:00 GMT+04:00 2018 loc en_US
+                * */
+                /*4.4 -z хавает EAT */
+            SimpleDateFormat sdf3=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+                    ,new Locale("en"));
+            Date day;
+            try {
+                day = sdf3.parse(s);
+                ss=sdf.format(day);
+                Log.i("3eeeSwipeAd_s",ss+" loc "+Locale.getDefault());
+            } catch (ParseException e1) {
+
+                SimpleDateFormat sdf2=new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy"
+                        ,Locale.US );
+                // sdf.setTimeZone(TimeZone.getTimeZone("GMT+3"));
+                // String sss=s.replace("EAT","");
+                String [] splt=s.split(" ");
+
+                try {
+                    if(splt.length>5){
+                        day = sdf2.parse(splt[0]+" "+splt[1]+" "+splt[2]+" "+splt[3]+" "+splt[5]);
+                        ss=sdf.format(day);
+                    }
+
+                } catch (ParseException e2) {
+                    e2.printStackTrace();
+                    ss="^"+s;
+                }
+                e1.printStackTrace();
+            }
+        }
+        return ss;
     }
 }
