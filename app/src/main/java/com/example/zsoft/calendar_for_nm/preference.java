@@ -8,8 +8,14 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.List;
 
@@ -82,6 +88,7 @@ public class preference  extends PreferenceActivity{
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference_user);
+
         }
 
         @Override
@@ -92,6 +99,24 @@ public class preference  extends PreferenceActivity{
 
         }
 
+    }
+
+    public static class PrefClearDB extends PreferenceFragment{
+
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            View v=inflater.inflate(R.layout.pref_clear_db,container,false);
+            Button b=v.findViewById(R.id.button22);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("-----","------");
+                }
+            });
+
+            return v;
+        }
     }
 
 
