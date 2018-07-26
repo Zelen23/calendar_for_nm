@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -146,7 +145,36 @@ public class HelperData {
     public String ClearNumberFormat(String phonenumber){
         return  phonenumber.toString().replaceAll("\\D+","");
     }
-    
 
+
+    public int Intrval_to_seekBar(String t1){
+        int i1 = 0;
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date startDate=sdf.parse(t1);
+             i1=(int)startDate.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return i1;
+
+        /*
+        Дата первой записи
+        дата последней записи
+        */
+    }
+
+    public String fromIntToDateString(int i){
+        String s="";
+
+
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+
+        Date d= new Date();
+        d.setTime(i*10000);
+        s=sdf.format(d);
+
+        return s;
+    }
 
     }
