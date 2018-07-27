@@ -63,7 +63,6 @@
 
     <SeekBar
         android:id="@+id/seekBar2"
-        style="@android:style/Widget.Material.SeekBar.Discrete"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_alignParentStart="true"
@@ -75,9 +74,10 @@
 
     <TextView
         android:id="@+id/textView6"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/seekBar" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/conditionClear"
+        android:layout_marginStart="12dp"
+        android:layout_toEndOf="@+id/conditionClear" />
 
 </RelativeLayout>

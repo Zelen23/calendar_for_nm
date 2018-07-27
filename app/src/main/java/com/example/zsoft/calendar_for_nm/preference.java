@@ -116,31 +116,37 @@ public class preference  extends PreferenceActivity{
             Button b=v.findViewById(R.id.button22);
             SeekBar intervalClean=v.findViewById(R.id.seekBar);
             final TextView textView=v.findViewById(R.id.textView6);
-            intervalClean.setMin(new HelperData()
-                    .Intrval_to_seekBar("2016-1-21"));
 
-            intervalClean.setMax(new HelperData()
-                    .Intrval_to_seekBar("2018-8-21"));
+            final String dateFirstWrite="2016-1-21";
+            final String dateLastWrite="2019-7-29";
+            String toDay= MainActivity.year + "-" + MainActivity.mns + "-" + MainActivity.today;
+            final HelperData helperData=new HelperData();
 
-            textView.setText("0");
+            //intervalClean.setMin(1);
+            intervalClean.setMax(
+                    helperData.Intrval_to_seekBar(dateFirstWrite,dateLastWrite));
+            intervalClean.setProgress(
+                    helperData.Intrval_to_seekBar(dateFirstWrite,toDay));
+            textView.setText(helperData.fromIntToDateString(
+                    dateFirstWrite,intervalClean.getProgress()));
 
             intervalClean.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
                 }
 
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-
                 }
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    textView.setText(new HelperData().fromIntToDateString(seekBar.getProgress()));
-
+                    textView.setText(helperData.fromIntToDateString(
+                            dateFirstWrite,seekBar.getProgress()));
                 }
             });
+
+
 
 
 
@@ -149,8 +155,8 @@ public class preference  extends PreferenceActivity{
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(),""+new HelperData()
-                            .Intrval_to_seekBar("2016-1-21"),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),""+helperData
+                            .Intrval_to_seekBar(dateFirstWrite,dateLastWrite),Toast.LENGTH_SHORT).show();
 
                 }
             });
