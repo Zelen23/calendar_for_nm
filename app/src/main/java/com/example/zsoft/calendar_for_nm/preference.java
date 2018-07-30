@@ -234,6 +234,7 @@ public class preference  extends PreferenceActivity{
 
                 //  tt.reads(common.this);
                 //   publishProgress( tt.reads(common.this));
+
                 int ii = 0;
 
                 mDbHelper = new db(getActivity());
@@ -266,6 +267,9 @@ public class preference  extends PreferenceActivity{
 
                 // TimeUnit.SECONDS.sleep(1);
                 return null;
+
+
+
             }
 
             @Override
@@ -317,12 +321,13 @@ public class preference  extends PreferenceActivity{
                 SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
 
                 ContentValues val = new ContentValues();
-                Cursor c = db1.rawQuery("SELECT id,pk_num,count FROM user", null);
+                Cursor c = db1.rawQuery("SELECT id,pk_num,count,last FROM user", null);
                 db1.beginTransaction();
                 if (c.moveToFirst()) {
                     int id = c.getColumnIndex("id");
                     int pk_num = c.getColumnIndex("pk_num");
                     int count = c.getColumnIndex("count");
+                    int last = c.getColumnIndex("last");
 
                     do {
                         ii++;
@@ -331,6 +336,7 @@ public class preference  extends PreferenceActivity{
                         val.put(db.ID_TEMP,c.getString(id));
                         val.put(db.CONTACT_TEMP,c.getString(pk_num));
                         val.put(db.PAY_TEMP,c.getString(count));
+                        val.put(db.DATE_TEMP,c.getString(last));
                         val.put(db.NAME_TEMP,"--");
 
                         db1.insert("temp", null, val);
@@ -386,21 +392,24 @@ public class preference  extends PreferenceActivity{
                 SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
                 db1.beginTransaction();
                 ContentValues val = new ContentValues();
-                Cursor c = db1.rawQuery("SELECT * FROM temp", null);
+                String s="select sf_num,pay,date from temp";
+                Cursor c = db1.rawQuery(s, null);
 
                 if (c.moveToFirst()) {
                     int id = c.getColumnIndex("_id");
                     int pk_num = c.getColumnIndex("sf_num");
                     int count = c.getColumnIndex("pay");
+                    int date = c.getColumnIndex("date");
 
                     do {
                         ii++;
                         publishProgress(ii++);
                         //  val.put(db.ID_TEMP,c.getString(id));
-                        //  val.put(db.CONTACT_TEMP,c.getString(pk_num));
+                        val.put(db.last_us,c.getString(date));
                         val.put(db.count_us,c.getString(count));
                         db1.update("user",val,"pk_num = '"+c.getString(pk_num)+"'",null);
 
+                        Log.i("upd_user",val.toString());
 
                     }
                     while (c.moveToNext());

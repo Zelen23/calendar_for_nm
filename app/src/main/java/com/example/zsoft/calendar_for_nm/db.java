@@ -33,8 +33,6 @@ public class db extends SQLiteOpenHelper implements BaseColumns {
     public static final String VISIT_COLUMN="visit" ;
     public static final String FILE_DIR="/sdcard/";
 
-
-
     private static final String DATABASE_TABLE2 ="user";
     public static final String id_us="id";
     public static final String pk_num_us="pk_num";
