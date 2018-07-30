@@ -133,7 +133,7 @@ public class preference  extends PreferenceActivity{
         public static final int IDM_DELETE_BUP = 104;
         String head_gr;
 
-        TextView textView,countOrd;
+        TextView textView,countOrd,verVal;
         Button b;
         SeekBar intervalClean;
         ExecDB execDB=new ExecDB();
@@ -146,24 +146,30 @@ public class preference  extends PreferenceActivity{
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            final String dateFirstWrite=execDB.MinOrMax(getActivity(),"min");
+            final String dateLastWrite=execDB.MinOrMax(getActivity(),"max");
+            int i=MainActivity.mns+1;
+            String toDay= MainActivity.year + "-" +i + "-" + MainActivity.today;
+            final HelperData helperData=new HelperData();
+
              View v=inflater.inflate(R.layout.pref_clear_db,container,false);
              b=v.findViewById(R.id.button22);
              b.setVisibility(View.INVISIBLE);
              intervalClean=v.findViewById(R.id.seekBar);
              textView=v.findViewById(R.id.textView6);
              prb=v.findViewById(R.id.progressBar);
+             prb.setVisibility(View.INVISIBLE);
              lw2=v.findViewById(R.id.ListView);
              countOrd=v.findViewById(R.id.sizeDBVal);
              countOrd.setText(""+execDB.get_count("clients",getActivity()));
+             verVal=v.findViewById(R.id.VerVal);
+             verVal.setText(toDay);
 
 
 
 
 
-            final String dateFirstWrite=execDB.MinOrMax(getActivity(),"min");
-            final String dateLastWrite=execDB.MinOrMax(getActivity(),"max");
-            String toDay= MainActivity.year + "-" + MainActivity.mns + "-" + MainActivity.today;
-            final HelperData helperData=new HelperData();
+
             view_buckUp();
 
             //intervalClean.setMin(1);
@@ -419,6 +425,7 @@ public class preference  extends PreferenceActivity{
                        "temp",getActivity())+" rows \n"+fn,Toast.LENGTH_SHORT);
                 execDB. deleterow(getActivity(), "temp","0 or _id!=0");
                 prb.setProgress(0);
+                prb.setVisibility(View.INVISIBLE);
                 view_buckUp();
                 Toast.makeText(getActivity(),"выполннено",Toast.LENGTH_SHORT).show();
 

@@ -25,6 +25,14 @@
         android:text="@string/verDB" />
 
     <TextView
+        android:id="@+id/VerVal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/versiondb"
+        android:layout_alignBottom="@+id/versiondb"
+        android:layout_toEndOf="@+id/sizeDBVal" />
+
+    <TextView
         android:id="@+id/countOrd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
