@@ -235,6 +235,7 @@ public class preference  extends PreferenceActivity{
                 //  tt.reads(common.this);
                 //   publishProgress( tt.reads(common.this));
 
+                /*
                 int ii = 0;
 
                 mDbHelper = new db(getActivity());
@@ -266,6 +267,8 @@ public class preference  extends PreferenceActivity{
                 db1.endTransaction();
 
                 // TimeUnit.SECONDS.sleep(1);
+
+                */
                 return null;
 
 
