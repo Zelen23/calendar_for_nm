@@ -39,8 +39,16 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/versiondb"
         android:layout_below="@+id/versiondb"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="16dp"
         android:text="@string/sizeDB" />
+
+    <TextView
+        android:id="@+id/sizeDBVal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/conditionClear"
+        android:layout_marginStart="13dp"
+        android:layout_toEndOf="@+id/countOrd" />
 
     <TextView
         android:id="@+id/conditionClear"
@@ -61,17 +69,6 @@
         android:max="10"
         android:progress="3" />
 
-    <SeekBar
-        android:id="@+id/seekBar2"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/button22"
-        android:layout_marginTop="41dp"
-        android:max="10"
-        android:progress="3"
-        android:thumb="@drawable/gradient_1" />
-
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
@@ -79,5 +76,22 @@
         android:layout_alignBottom="@+id/conditionClear"
         android:layout_marginStart="12dp"
         android:layout_toEndOf="@+id/conditionClear" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button22"
+        android:layout_centerHorizontal="true" />
+
+    <ListView
+        android:id="@+id/ListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/progressBar"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="25dp" />
 
 </RelativeLayout>
