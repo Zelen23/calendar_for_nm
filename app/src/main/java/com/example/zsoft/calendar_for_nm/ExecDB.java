@@ -422,6 +422,73 @@ import java.util.Locale;
     }
 
 
+    public boolean CleanDBofDate(Context context,String dateClean){
+        /*delete from clients
+     Where
+(CAST(substr((date),0,5) as INTEGER)||
+       '-'||printf('%02d',CAST(substr(substr((date),6),0,instr(substr((date),6),'-')) as INTEGER)+1)||
+       '-'||printf('%02d',CAST(ltrim(substr(ltrim(date,'-'),8),'-')as INTEGER)))
+        <'2017-02-03'*/
+
+        mDbHelper = new db(context);
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+        Log.i("ExecDB_delete_row", dateClean);
+
+        String query="(CAST(substr((date),0,5) as INTEGER)||" +
+         "'-'||printf('%02d',CAST(substr(substr((date),6),0,instr(substr((date),6),'-')) as INTEGER)+1)||" +
+         "'-'||printf('%02d',CAST(ltrim(substr(ltrim(date,'-'),8),'-')as INTEGER)))< '";
+        return db1.delete("clients", query + dateClean+"'", null) > 0;
+    }
+
+
+    //для чистки
+    public int get_count(String s,Context ct){
+        mDbHelper = new db(ct);
+        mDbHelper.getWritableDatabase();
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+
+        Cursor c = db1.rawQuery("SELECT count(*) FROM "+s, null);
+        int i_ct = 0;
+        if (c.moveToFirst()) {
+            int count = c.getColumnIndex("count(*)");
+
+            do {
+                i_ct = Integer.parseInt(c.getString(count));
+            }
+            while (c.moveToNext());
+            c.close();
+        }
+        return i_ct;
+    }
+
+    public String MinOrMax(Context ct,String minORmax){
+        mDbHelper = new db(ct);
+        mDbHelper.getWritableDatabase();
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+
+       String query="CAST(substr((date),0,5) as INTEGER)||\n" +
+               "       '-'||printf('%02d',CAST(substr(substr((date),6),0,instr(substr((date),6),'-')) as INTEGER)+1)||\n" +
+               "       '-'||printf('%02d',CAST(ltrim(substr(ltrim(date,'-'),8),'-')as INTEGER))";
+
+        Cursor c = db1.rawQuery("SELECT "+minORmax+"("+query+") as ds FROM clients", null);
+        String i_ct = "";
+        if (c.moveToFirst()) {
+            int count = c.getColumnIndex("ds");
+
+            do {
+                i_ct =c.getString(count);
+            }
+            while (c.moveToNext());
+            c.close();
+        }
+        return i_ct;
+
+    }
+
+
+
+
+
 
 
 

@@ -2,12 +2,16 @@ package com.example.zsoft.calendar_for_nm;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.icu.util.DateInterval;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -146,7 +150,56 @@ public class HelperData {
     public String ClearNumberFormat(String phonenumber){
         return  phonenumber.toString().replaceAll("\\D+","");
     }
-    
 
+    //возвращаю количество дней между датами
+    public int Intrval_to_seekBar(String t1,String t2){
+        int i1 = 0;
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            Date startDate=sdf.parse(t1);
+            Date startDate2=sdf.parse(t2);
+
+            DateTime dt1 = new DateTime(startDate);
+            DateTime dt2 = new DateTime(startDate2);
+
+            Days daysDelta=Days.daysBetween(dt1,dt2);
+            i1=daysDelta.getDays();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return i1;
+
+        /*
+        Дата первой записи
+        дата последней записи
+        */
+    }
+
+    //к начальной дате прибавляю дни, получаю новую дату
+    public String fromIntToDateString(String startDate,int i){
+
+        String s;
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("d MMM yyyy",
+                new Locale("ru"));
+        try {
+            Date date=sdf.parse(startDate);
+            DateTime dt1 = new DateTime(date);
+            DateTime dateTime=dt1.plusDays(i);
+            Date date1=new Date(dateTime.getMillis());
+
+            s=sdf.format(date1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            s="-----";
+        }
+
+
+
+
+        return s;
+    }
 
     }
