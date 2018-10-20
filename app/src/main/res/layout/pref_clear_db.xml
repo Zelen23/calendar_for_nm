@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fwf"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/button22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="118dp"
+        android:layout_marginTop="233dp"
+        android:text="Button" />
+
+    <TextView
+        android:id="@+id/versiondb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="17dp"
+        android:text="@string/verDB" />
+
+    <TextView
+        android:id="@+id/VerVal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/versiondb"
+        android:layout_alignBottom="@+id/versiondb"
+        android:layout_toEndOf="@+id/sizeDBVal" />
+
+    <TextView
+        android:id="@+id/countOrd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/sizeDB"
+        android:layout_below="@+id/sizeDB"
+        android:layout_marginTop="14dp"
+        android:text="@string/countOrd" />
+
+    <TextView
+        android:id="@+id/sizeDB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/versiondb"
+        android:layout_below="@+id/versiondb"
+        android:layout_marginTop="16dp"
+        android:text="@string/sizeDB" />
+
+    <TextView
+        android:id="@+id/sizeDBVal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/conditionClear"
+        android:layout_marginStart="13dp"
+        android:layout_toEndOf="@+id/countOrd" />
+
+    <TextView
+        android:id="@+id/conditionClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/countOrd"
+        android:layout_below="@+id/countOrd"
+        android:layout_marginTop="42dp"
+        android:text="@string/conditionClear" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@+id/conditionClear"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:max="10"
+        android:progress="3" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/conditionClear"
+        android:layout_marginStart="12dp"
+        android:layout_toEndOf="@+id/conditionClear" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button22"
+        android:layout_centerHorizontal="true" />
+
+    <ListView
+        android:id="@+id/ListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/progressBar"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="25dp" />
+
+</RelativeLayout>
