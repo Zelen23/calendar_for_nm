@@ -28,4 +28,7 @@
         android:key="background"
         android:summary="Select background"
         android:title="List preference" />
+
+
+
 </PreferenceScreen>

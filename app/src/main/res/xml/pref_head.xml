@@ -17,4 +17,9 @@
         android:title="ClearDb"
         android:summary="---"/>
     <header/>
+    <header
+        android:fragment="com.example.zsoft.calendar_for_nm.preference$Yandex_sync"
+        android:title="Sync"
+        android:summary="---"/>
+    <header/>
 </preference-headers>

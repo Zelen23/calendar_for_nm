@@ -1,32 +1,37 @@
 package com.example.zsoft.calendar_for_nm;
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ExpandableListView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -62,7 +67,6 @@ import java.util.List;
 
 public class preference  extends PreferenceActivity{
 
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -79,7 +83,6 @@ public class preference  extends PreferenceActivity{
         loadHeadersFromResource(R.xml.pref_head,target);
     }
 
-
     @Override
     protected boolean isValidFragment(String fragmentName) {
 
@@ -87,9 +90,7 @@ public class preference  extends PreferenceActivity{
         return true;
     }
 
-
     // фрагменты настоек
-
     public static class PrefFragment extends PreferenceFragment{
 
 
@@ -153,6 +154,7 @@ public class preference  extends PreferenceActivity{
             final HelperData helperData=new HelperData();
 
              View v=inflater.inflate(R.layout.pref_clear_db,container,false);
+
              b=v.findViewById(R.id.button22);
              b.setVisibility(View.INVISIBLE);
              intervalClean=v.findViewById(R.id.seekBar);
@@ -609,6 +611,142 @@ public class preference  extends PreferenceActivity{
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+        }
+
+    }
+
+    public static class Yandex_sync extends  PreferenceFragment{
+
+        SharedPreferences sharedPreferences;
+        EditText ya_id,ya_login;
+        TextView token;
+        Button yaBtn;
+        LayoutInflater li;
+
+        String ya_getCode="https://oauth.yandex.ru/authorize?"+
+                "response_type=code" +
+                "&client_id=fc3985e6de824b35a95e56b00dd21685" +
+                "&display=popup"+
+                "&login_hint=DskDrv" +
+                "&force_confirm=yes" +
+                "&state=true";
+
+        String ya_getToken="https://oauth.yandex.ru/authorize?" +
+                "response_type=token" +
+                "&client_id=fc3985e6de824b35a95e56b00dd21685" +
+                "&device_name=NM_mobile" +
+               // "& redirect_uri=<адрес перенаправления>]" +
+                "&login_hint=DskDrv@yandex.ru" +
+               // "&scope=<запрашиваемые необходимые права>" +
+               // "&optional_scope=<запрашиваемые опциональные права>" +
+                "& force_confirm=yes" +
+                "& state=id000001" +
+                "& display=popup";
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            View v=inflater.inflate(R.layout.ya_sync,container,false);
+            sharedPreferences= getActivity().getPreferences(Context.MODE_PRIVATE);
+            ya_id=v.findViewById(R.id.ya_ClientID);
+            ya_login=v.findViewById(R.id.ya_ln);
+            yaBtn=v.findViewById(R.id.ya_btn);
+            token=v.findViewById(R.id.ya_token);
+
+            ya_login.setText(sharedPreferences.getString("login_hint","DskDrv@yandex.ru"));
+            ya_id.setText(sharedPreferences.getString("client_id","fc3985e6de824b35a95e56b00dd21685"));
+
+            String s_token=sharedPreferences.getString("token","null");
+            token.setText(s_token);
+
+            // получаю токен
+            yaBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alert_premission();
+                }
+            });
+
+            //  если изменил логин
+            ya_login.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("login_hint",ya_login.getText().toString());
+                    editor.commit();
+                }
+            });
+
+            return v;
+        }
+
+       // получаю разрешение на доступ к диску и код для получения токена
+        public void alert_premission(){
+
+            li= LayoutInflater.from(getActivity());
+            View view=li.inflate(R.layout.alert_premission,null);
+            final AlertDialog.Builder ad_b=new AlertDialog.Builder(getActivity());
+            ad_b.setView(view);
+            final String[] s = new String[1];
+
+            final WebView wv= view.findViewById(R.id.webview);
+            wv.getSettings().setJavaScriptEnabled(true);
+            wv.getSettings().setSaveFormData(true);
+            wv.getSettings().setBuiltInZoomControls(true);
+            wv.loadUrl(ya_getToken);
+
+            final AlertDialog alert = ad_b.create();
+            alert.show();
+    //тут можно определить действие если пришел токен и если нет
+            wv.setWebViewClient(new WebViewClient(){
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    if (url.startsWith("dskdrv://token")) {
+                        s[0] =url.toString();
+                        alert.dismiss();
+                        view.destroy();
+                       // parseURL(url.toString());
+                        //Log.i("response",s[0]);
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("token",parseURL(url.toString()));
+                        editor.commit();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
+
+        String  parseURL(String url){
+            // dskdrv://token#
+            // access_token=AQAAAAAh8KpiAASqQodGr4H4sU2qrhODN1B84NI
+            // &token_type=bearer
+            // &expires_in=31531472
+            ArrayList list=new ArrayList<String>();
+            String tok=url.substring(url.indexOf("#")+1,url.length());
+            String[] parse=tok.split("&");
+            for(int i=0;i<parse.length;i++){
+                if(parse[i].contains("error")){
+                    return parse[i].split(" error=")[1];
+                }else
+                if(parse[i].contains("access_token")){
+                    return parse[i].split("access_token=")[1];
+
+                }
+            }
+
+
+        return null;
         }
 
     }
