@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
@@ -631,17 +632,7 @@ public class preference  extends PreferenceActivity{
                 "&force_confirm=yes" +
                 "&state=true";
 
-        String ya_getToken="https://oauth.yandex.ru/authorize?" +
-                "response_type=token" +
-                "&client_id=fc3985e6de824b35a95e56b00dd21685" +
-                "&device_name=NM_mobile" +
-               // "& redirect_uri=<адрес перенаправления>]" +
-                "&login_hint=DskDrv@yandex.ru" +
-               // "&scope=<запрашиваемые необходимые права>" +
-               // "&optional_scope=<запрашиваемые опциональные права>" +
-                "& force_confirm=yes" +
-                "& state=id000001" +
-                "& display=popup";
+        String ya_getToken;
 
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -656,13 +647,24 @@ public class preference  extends PreferenceActivity{
             ya_id.setText(sharedPreferences.getString("client_id","fc3985e6de824b35a95e56b00dd21685"));
 
             String s_token=sharedPreferences.getString("token","null");
-            token.setText(s_token);
 
-            // получаю токен
-            yaBtn.setOnClickListener(new View.OnClickListener() {
+            token.setText(s_token);
+            token.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void onClick(View v) {
-                    alert_premission();
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("token",token.getText().toString());
+                    editor.commit();
                 }
             });
 
@@ -685,12 +687,32 @@ public class preference  extends PreferenceActivity{
                     editor.commit();
                 }
             });
+            // получаю токен
+            yaBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    ya_getToken="https://oauth.yandex.ru/authorize?" +
+                            "response_type=token" +
+                            "&client_id="+ya_id.getText().toString() +
+                            "&device_name=NM_mobile" +
+                            // "& redirect_uri=<адрес перенаправления>]" +
+                            "&login_hint="+ya_login.getText().toString() +
+                            // "&scope=<запрашиваемые необходимые права>" +
+                            // "&optional_scope=<запрашиваемые опциональные права>" +
+                            "& force_confirm=yes" +
+                            "& state=id000001" +
+                            "& display=popup";
+
+                    alert_premission(ya_getToken);
+                }
+            });
 
             return v;
         }
 
        // получаю разрешение на доступ к диску и код для получения токена
-        public void alert_premission(){
+        public void alert_premission(String surl){
 
             li= LayoutInflater.from(getActivity());
             View view=li.inflate(R.layout.alert_premission,null);
@@ -702,11 +724,15 @@ public class preference  extends PreferenceActivity{
             wv.getSettings().setJavaScriptEnabled(true);
             wv.getSettings().setSaveFormData(true);
             wv.getSettings().setBuiltInZoomControls(true);
-            wv.loadUrl(ya_getToken);
+            wv.loadUrl(surl);
 
             final AlertDialog alert = ad_b.create();
             alert.show();
+            alert.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     //тут можно определить действие если пришел токен и если нет
+            // нет клавы
+            // refresher
             wv.setWebViewClient(new WebViewClient(){
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -714,17 +740,19 @@ public class preference  extends PreferenceActivity{
                         s[0] =url.toString();
                         alert.dismiss();
                         view.destroy();
-                       // parseURL(url.toString());
+
                         //Log.i("response",s[0]);
 
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("token",parseURL(url.toString()));
-                        editor.commit();
+                        token.setText(parseURL(url.toString()));
                         return true;
                     }
+
+                    Log.i("exeption","fdfd");
                     return false;
                 }
             });
+        wv.clearCache(true);
+        wv.clearFormData();
         }
 
         String  parseURL(String url){
@@ -740,7 +768,9 @@ public class preference  extends PreferenceActivity{
                     return parse[i].split(" error=")[1];
                 }else
                 if(parse[i].contains("access_token")){
+                    Log.i("response",parse[i].split("access_token=")[1]);
                     return parse[i].split("access_token=")[1];
+
 
                 }
             }
