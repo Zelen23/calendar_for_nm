@@ -619,9 +619,9 @@ public class preference  extends PreferenceActivity{
     public static class Yandex_sync extends  PreferenceFragment{
 
         SharedPreferences sharedPreferences;
-        EditText ya_id,ya_login;
+        EditText ya_id,ya_login,ya_folder;
         TextView token;
-        Button yaBtn;
+        Button yaBtn,check_folder;
         LayoutInflater li;
 
         String ya_getCode="https://oauth.yandex.ru/authorize?"+
@@ -637,18 +637,22 @@ public class preference  extends PreferenceActivity{
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             View v=inflater.inflate(R.layout.ya_sync,container,false);
-            sharedPreferences= getActivity().getPreferences(Context.MODE_PRIVATE);
+            sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getActivity());
             ya_id=v.findViewById(R.id.ya_ClientID);
             ya_login=v.findViewById(R.id.ya_ln);
-            yaBtn=v.findViewById(R.id.ya_btn);
+            ya_folder=v.findViewById(R.id.ya_folder);
+
             token=v.findViewById(R.id.ya_token);
+
+            yaBtn=v.findViewById(R.id.ya_btn);
+            check_folder=v.findViewById(R.id.check_folder);
 
             ya_login.setText(sharedPreferences.getString("login_hint","DskDrv@yandex.ru"));
             ya_id.setText(sharedPreferences.getString("client_id","fc3985e6de824b35a95e56b00dd21685"));
 
             String s_token=sharedPreferences.getString("token","null");
-
             token.setText(s_token);
+            // если изменил токен пишу в настройки
             token.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -667,7 +671,6 @@ public class preference  extends PreferenceActivity{
                     editor.commit();
                 }
             });
-
             //  если изменил логин
             ya_login.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -687,8 +690,9 @@ public class preference  extends PreferenceActivity{
                     editor.commit();
                 }
             });
+
             // получаю токен
-            yaBtn.setOnClickListener(new View.OnClickListener() {
+            yaBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
 
@@ -708,7 +712,46 @@ public class preference  extends PreferenceActivity{
                 }
             });
 
+
+            ya_folder.setText(sharedPreferences.getString("yaFolder","/"));
+            ya_folder.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("yaFolder",ya_folder.getText().toString());
+                    editor.commit();
+                }
+            });
+
+            check_folder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // чекнуть папку (передать папку/тип запроса, получить код и ответ )
+                    /*
+                    * вызвать метод api
+                    * получить json
+                    * распарсить увидеть что есть такая папка
+                    *
+                    * */
+
+                     yandex_api api=new yandex_api(getActivity().getApplicationContext());
+                     api.execute();
+
+                   // new yandex_api(getActivity().getApplicationContext());
+                }
+            });
             return v;
+
         }
 
        // получаю разрешение на доступ к диску и код для получения токена
@@ -747,7 +790,6 @@ public class preference  extends PreferenceActivity{
                         return true;
                     }
 
-                    Log.i("exeption","fdfd");
                     return false;
                 }
             });
