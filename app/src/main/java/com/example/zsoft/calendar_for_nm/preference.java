@@ -621,7 +621,7 @@ public class preference  extends PreferenceActivity{
         SharedPreferences sharedPreferences;
         EditText ya_id,ya_login,ya_folder;
         TextView token;
-        Button yaBtn,check_folder;
+        Button yaBtn,check_folder,synchroize;
         LayoutInflater li;
 
         String ya_getCode="https://oauth.yandex.ru/authorize?"+
@@ -646,6 +646,7 @@ public class preference  extends PreferenceActivity{
 
             yaBtn=v.findViewById(R.id.ya_btn);
             check_folder=v.findViewById(R.id.check_folder);
+            synchroize=v.findViewById(R.id.synchroize);
 
             ya_login.setText(sharedPreferences.getString("login_hint","DskDrv@yandex.ru"));
             ya_id.setText(sharedPreferences.getString("client_id","fc3985e6de824b35a95e56b00dd21685"));
@@ -748,6 +749,15 @@ public class preference  extends PreferenceActivity{
                      api.execute();
 
                    // new yandex_api(getActivity().getApplicationContext());
+                }
+            });
+
+            synchroize.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    yandex_setFile api=new yandex_setFile(getActivity().getApplicationContext());
+                    api.execute();
+
                 }
             });
             return v;
