@@ -27,6 +27,7 @@ import java.io.IOException;
 /*https://tech.yandex.ru/disk/api/sdk/java-docpage/*/
 public class yandex_api extends AsyncTask<Void,Void,String> {
 
+
     Context context;
     public yandex_api(Context context) {
         this.context = context;
@@ -48,7 +49,7 @@ public class yandex_api extends AsyncTask<Void,Void,String> {
 
                     .build()).getResourceList().getItems().toString();
 
-            Log.i("inf",ss);
+           // Log.i("inf",ss);
             return ss;
         } catch (IOException e) {
             e.printStackTrace();

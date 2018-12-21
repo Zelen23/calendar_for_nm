@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by adolf on 17.03.2018.
@@ -734,6 +735,7 @@ public class preference  extends PreferenceActivity{
                 }
             });
 
+            //проверяю есть ли папка если есть то чекаю sinfo.json
             check_folder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -746,7 +748,19 @@ public class preference  extends PreferenceActivity{
                     * */
 
                      yandex_api api=new yandex_api(getActivity().getApplicationContext());
-                     api.execute();
+                    try {
+
+                     // HelperData readjson=new HelperData();
+                      //  readjson.readjson(api.execute().get());
+                        Log.i("preference",api.execute().get());
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    // String ddd=api.doInBackground();
+                    // Log.i("preference",ddd);
 
                    // new yandex_api(getActivity().getApplicationContext());
                 }
@@ -755,9 +769,13 @@ public class preference  extends PreferenceActivity{
             synchroize.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    yandex_setFile api=new yandex_setFile(getActivity().getApplicationContext());
-                    api.execute();
 
+                   new yandex_setFile(getActivity().getApplicationContext()).execute();
+
+                    HelperData readjson=new HelperData();
+                    String strInf =readjson.readToStream("/sdcard/sdcard/info.json").toString();
+                    Toast.makeText(getActivity(),readjson.readjson(strInf).toString(),
+                            Toast.LENGTH_SHORT).show();
                 }
             });
             return v;

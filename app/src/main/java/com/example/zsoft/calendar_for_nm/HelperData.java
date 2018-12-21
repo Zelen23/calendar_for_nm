@@ -2,16 +2,21 @@ package com.example.zsoft.calendar_for_nm;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.icu.util.DateInterval;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -125,6 +130,7 @@ public class HelperData {
     return null;
     }
 
+    //сравнение дат
     public boolean comparateDate(String data) {
         //приходит дата сравниваю ее с текушей, если больше текущей
         // возвпащаю true
@@ -202,4 +208,59 @@ public class HelperData {
         return s;
     }
 
+    //читать из json. получать версию и дату
+    /*{
+    'date_Last_write':'Mon Dec 05 00:17:16 EET 2016',
+     'version_base':1
+    }*/
+
+    //прочитать json
+    public ArrayList readjson(String jsonData){
+        ArrayList info=new ArrayList<String>();
+        // переделать на автопарсинг
+
+        try {
+            JSONObject jsonObject=new JSONObject(jsonData);
+            String date_Last_write=jsonObject.getString("date_Last_write");
+            int version=jsonObject.getInt("version_base");
+            info.add(date_Last_write);
+            info.add(String.valueOf(version));
+
+            return info;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
     }
+
+    //получить файл по пути
+    public StringBuffer readToStream(String way){
+        StringBuffer fileContent = new StringBuffer("");
+
+        try {
+            FileInputStream fis=new FileInputStream(way);
+            byte buff []=new byte[1024];
+
+            int read;
+            try {
+                while ((read=fis.read(buff))!=-1){
+
+                    fileContent.append(new String(buff, 0, read));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return fileContent;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return  null;
+
+        }
+
+    }
+
+    }
+

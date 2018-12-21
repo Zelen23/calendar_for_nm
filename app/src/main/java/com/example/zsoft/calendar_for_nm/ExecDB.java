@@ -460,7 +460,7 @@ import java.util.Locale;
         }
         return i_ct;
     }
-
+    // Эту дичь нужно описать
     public String MinOrMax(Context ct,String minORmax){
         mDbHelper = new db(ct);
         mDbHelper.getWritableDatabase();
@@ -482,6 +482,12 @@ import java.util.Locale;
             c.close();
         }
         return i_ct;
+
+    }
+
+    //Получаю датуи время последних изменений
+    public void database_info(){
+
 
     }
 

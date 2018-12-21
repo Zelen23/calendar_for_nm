@@ -17,10 +17,22 @@ import com.yandex.disk.rest.json.Link;
 import java.io.File;
 import java.io.IOException;
 
-public class yandex_setFile extends AsyncTask<Void,Void,String> {
 
+/* Скачать или отправить
+* должна быть проверка
+* на свежесть базы
+* выкидывать окно с описанием базы которая лежит на диске
+* --версия базы
+* --кол-во записей
+* --дата последнего изменния
+*
+*  в окне 3 кнопки скачать/отправить/отменить
+*   если отправить то все что есть в задании на отправку
+* */
+
+
+ class yandex_setFile extends AsyncTask <Void,Void,String>  {
     Context context;
-
     public yandex_setFile(Context context) {
         this.context = context;
     }
@@ -36,8 +48,8 @@ public class yandex_setFile extends AsyncTask<Void,Void,String> {
         try {
             String ss="";
             Link link = client.getUploadLink(
-                    //sharedPreferences.getString("yaFolder","/")
-                    "disk:/sync/st.db"
+                    sharedPreferences.getString("yaFolder","/")+"/st.db"
+                    //"disk:/sync/st.db"
                     , true);
             client.uploadFile(link, true, new File("/sdcard/sdcard/st.db"),
                     new ProgressListener() {
@@ -66,4 +78,62 @@ public class yandex_setFile extends AsyncTask<Void,Void,String> {
 
         return null;
     }
+
+
+
+
+}
+ class yandex_getFile extends AsyncTask <Void,Void,String>  {
+    Context context;
+    public yandex_getFile(Context context) {
+        this.context = context;
+    }
+
+    @Override
+    protected String doInBackground(Void... voids) {
+        SharedPreferences sharedPreferences;
+        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(context);
+        Credentials credentials = new Credentials(
+                sharedPreferences.getString("login_hint","DskDrv@yandex.ru"),
+                sharedPreferences.getString("token","null"));
+        RestClient client = RestClientUtil.getInstance(credentials);
+        try {
+            String ss="";
+            Link link = client.getUploadLink(
+                    sharedPreferences.getString("yaFolder","/")+"/st.db"
+                    //"disk:/sync/st.db"
+                    , true);
+            client.uploadFile(link, true, new File("/sdcard/sdcard/st.db"),
+                    new ProgressListener() {
+                        @Override
+                        public void updateProgress(long loaded, long total) {
+
+                        }
+
+                        @Override
+                        public boolean hasCancelled() {
+                            return false;
+                        }
+                    });
+
+            Log.i("inf",ss);
+            return ss;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ServerIOException e) {
+            e.printStackTrace();
+        } catch (WrongMethodException e) {
+            e.printStackTrace();
+        } catch (ServerException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+
+
+
+
 }
