@@ -11,12 +11,18 @@ import org.joda.time.Days;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -295,5 +301,72 @@ public class HelperData {
 
     }
 
+    public void  saveFile(String pathName, String dataToSave){
+        InputStream in=null;
+        OutputStream out=null;
+
+        try {
+            File mdr=new File(pathName);
+            if(!mdr.exists()){
+                mdr.mkdirs();
+            }
+
+            in= new ByteArrayInputStream(dataToSave.getBytes());
+            out= new FileOutputStream(pathName+"info.json");
+            byte buff []=new byte[1024];
+            int read;
+
+            try {
+                while ((read=in.read(buff))!=-1){
+                    out.write(buff,0,read);
+                }
+                in.close();
+                in=null;
+
+                out.flush();
+                out.close();
+                out=null;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
+
+
+    // Data now
+    public  String nowDate(){
+
+        Date now = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+                ,new Locale("ru"));
+        //Locale locale=new Locale("ru");
+        //Locale.setDefault(locale);
+
+        String day=sdf.format(now);
+
+        return day;
+    }
+
+    // temp convert 'ср, 26 дек. 2018 19:55:14' to date
+    public Long tempDate (String sdateTime){
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
+                new Locale("ru"));
+        Date day=new Date();
+        try {
+            day = sdf.parse(sdateTime);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+       return day.getTime();
+    }
+
+
+}
+
+
 

@@ -40,10 +40,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.yandex.disk.rest.Credentials;
 import com.yandex.disk.rest.ProgressListener;
 import com.yandex.disk.rest.RestClient;
 import com.yandex.disk.rest.exceptions.ServerException;
+
+import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -832,13 +836,18 @@ public class preference  extends PreferenceActivity{
 
                              HelperData readjson=new HelperData();
                              String strInf =readjson.readToStream(fileToSDcard.getAbsolutePath()).toString();
-                             List data=readjson.readjson(strInf);
+
+                             GsonBuilder gsonBuilder= new GsonBuilder();
+                             Gson gson= gsonBuilder.create();
+                             JsonFile gsonFile=new JsonFile();
+                             gsonFile=gson.fromJson(strInf,JsonFile.class);
+
 
                              AlertDialog.Builder adb=new AlertDialog.Builder(getActivity());
                              adb
                                      .setTitle("Получить/Отправить")
 // результат сравнения даты из YaDisk и локальной базы
-                                     .setMessage(comporateLastOrderWrite(data.get(0).toString()))
+                                     .setMessage(comporateLastOrderWrite(gsonFile.date_Last_write))
                                      .setPositiveButton("Получить", new DialogInterface.OnClickListener() {
                                          @Override
                                          public void onClick(DialogInterface dialog, int which) {
@@ -944,32 +953,59 @@ public class preference  extends PreferenceActivity{
         return null;
         }
 
-        String comporateLastOrderWrite(String  dateInJson){
-             HelperData help =new HelperData();
-             Boolean whoEarly =help.comparateDateX(dateInJson,new Date());
-             if (whoEarly){
+        String comporateLastOrderWrite(long  dateInJson){
+
+
+        HelperData help =new HelperData();
+           //  Boolean whoEarly =help.comparateDateX(dateInJson,new Date());
+        long timeLastOrd=help.tempDate(new ExecDB().database_info(getActivity()).get(0).toString());
+             if (dateInJson>timeLastOrd){
                  return "На Диске лежат данные новее чем локально" +
                          "\n Нажмите Получить";
              }else{
+                 if(dateInJson==timeLastOrd){
+                 return "Локальные данные соответствуют данным на диске";
+                 }else
+
                  return "Локальные данные актуальнее чем на диске" +
                          "\n Нажмите Отправить";
              }
 
         }
 
+
+
         public  void setDB(){
             /* получить инфу из базы
             собрать в json
             отправить базу+json
             * */
-
+// получаю данные в базе
+        HelperData help=   new HelperData();
         List<String> fromDbToJson=    new ExecDB().database_info(getActivity());
-        // передать в конструктор все парпметры что получили из этих параметров будет создан json
-        //  сохранить json  в указанном месте
+
+        JsonFile jsonFile= new JsonFile();
+        jsonFile.createDate=help.tempDate(help.nowDate());
+        jsonFile.date_Last_write=help.tempDate(fromDbToJson.get(0));
+        jsonFile.countOrders=Integer.parseInt(fromDbToJson.get(2));
+        jsonFile.version_base=fromDbToJson.get(1);
+
+
+        GsonBuilder gsonBuilder=new GsonBuilder();
+        Gson gson=gsonBuilder.create();
+
+// coхраняю данные в json
+        help.saveFile("/sdcard/sdcard/",gson.toJson(jsonFile));
+
+        //Log.i("pref_setDB",gson.toJson(jsonFile));
 
             new yandex_setFile(getActivity(),
                     "disk:/sync/st.db",
                     new File("/sdcard/sdcard/st.db")).execute();
+
+            new yandex_setFile(getActivity(),
+                    "disk:/sync/sinfo.json",
+                    new File("/sdcard/sdcard/info.json")).execute();
         }
 
     }
