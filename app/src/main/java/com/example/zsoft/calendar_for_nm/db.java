@@ -85,8 +85,20 @@ public class db extends SQLiteOpenHelper implements BaseColumns {
     public static final String date_his_t="date";
     public static final String count_his_t="d_count";
 
+    private static final String DATABASE_TABLE9 ="settings";
+    public static final String key_settings="key";
+    public static final String value_settings="value";
+
+
+
 
     /*
+
+CREATE TABLE [settings] (
+  [_id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [key] CHAR,
+  [value] CHAR);
+
 CREATE TABLE [queue_user] (
   [id] INT NOT NULL,
   [num] int NOT NULL,
@@ -201,6 +213,13 @@ CREATE TABLE [temp_user] (
             +count_his_t+ " VARCHAR );"
             ;
 
+    private static final String DATABASE_CREATE_SCRIPT9="create table "
+            +DATABASE_TABLE9+" (" + BaseColumns._ID
+            + " integer primary key autoincrement, "
+            +key_settings+ " VARCHAR ,"
+            +value_settings+ " VARCHAR );"
+            ;
+
     /*db(View.OnClickListener onClickListener, String s, Context context, int i){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
     }
@@ -245,6 +264,8 @@ CREATE TABLE [temp_user] (
         db.execSQL(DATABASE_CREATE_SCRIPT6);
       // db.execSQL(DATABASE_CREATE_SCRIPT7);
         db.execSQL(DATABASE_CREATE_SCRIPT8);
+        db.execSQL(DATABASE_CREATE_SCRIPT9);
+
         db.execSQL( "CREATE TRIGGER [count+]\n" +
                 "AFTER INSERT\n" +
                 "ON [clients]\n" +
@@ -483,6 +504,14 @@ CREATE TABLE [temp_user] (
                 "From user,clients\n" +
                 "Where user.pk_num=clients.[sf_num] and date like strftime('%Y-%m-%%')\n" +
                 "order  by  number desc;");
+
+        db.execSQL("CREATE VIEW [info] AS \n" +
+                "Select \n" +
+                "(select date1 from clients where _id=(select max(_id) from clients)) as date_Last_write,\n" +
+                "count(clients.[_id]) as countOrders,\n" +
+                "(select value from settings where `key`='version') as version\n" +
+                "\n" +
+                "from clients;\n");
 
         Log.i("db", "create");
     }

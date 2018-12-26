@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import static java.lang.String.format;
@@ -131,7 +132,7 @@ public class HelperData {
     }
 
     //сравнение дат
-    public boolean comparateDate(String data) {
+    public boolean comparateDate(String data, Date nowDate) {
         //приходит дата сравниваю ее с текушей, если больше текущей
         // возвпащаю true
         boolean status = false;
@@ -140,19 +141,51 @@ public class HelperData {
         try {
             Date date = sdf.parse(data);
             date.setMonth(date.getMonth() + 1);
-            Date nowDate = new Date();
+             //nowDate = new Date();
             if (date.compareTo(nowDate) > 0) {
                 status = true;
             } else {
                 status = false;
             }
+            Log.i("HelperData",date+"  "+nowDate+" status "+status);
 
         } catch (ParseException e) {
+            Log.i("HelperData",e.getMessage());
             e.printStackTrace();
         }
+
+
         return status;
 
     }
+
+    public boolean comparateDateX(String data, Date nowDate) {
+        //приходит дата сравниваю ее с текушей, если больше текущей
+        // возвпащаю true
+        boolean status = false;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = sdf.parse(data);
+            date.setMonth(date.getMonth());
+            //nowDate = new Date();
+            if (date.compareTo(nowDate) > 0) {
+                status = true;
+            } else {
+                status = false;
+            }
+            Log.i("HelperData",date+"  "+nowDate+" status "+status);
+
+        } catch (ParseException e) {
+            Log.i("HelperData",e.getMessage());
+            e.printStackTrace();
+        }
+
+
+        return status;
+
+    }
+
     public String ClearNumberFormat(String phonenumber){
         return  phonenumber.toString().replaceAll("\\D+","");
     }

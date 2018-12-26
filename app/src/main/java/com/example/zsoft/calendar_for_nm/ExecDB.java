@@ -486,9 +486,35 @@ import java.util.Locale;
     }
 
     //Получаю датуи время последних изменений
-    public void database_info(){
+    public List database_info(Context ct){
+        List<String> list = new ArrayList<String>();
 
+        mDbHelper = new db(ct);
+        mDbHelper.getWritableDatabase();
+        SQLiteDatabase db2 = mDbHelper.getWritableDatabase();
+        String query="Select * from info";
 
+        Cursor c = db2.rawQuery(query, null);
+
+        if (c.moveToFirst()) {
+
+            int date_Last_write = c.getColumnIndex("date_Last_write");
+            int version_base = c.getColumnIndex("version");
+            int countOrders = c.getColumnIndex("countOrders");
+            do {
+                list.add(c.getString(date_Last_write));
+                list.add(c.getString(version_base));
+                list.add(c.getString(countOrders));
+
+            }
+
+            while (c.moveToNext());
+            c.close();
+        }
+
+        Log.i("ExecDB_DataBase_info",list.toString());
+
+        return list ;
     }
 
 

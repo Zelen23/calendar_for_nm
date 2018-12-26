@@ -3,6 +3,7 @@ package com.example.zsoft.calendar_for_nm;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -38,6 +39,11 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.yandex.disk.rest.Credentials;
+import com.yandex.disk.rest.ProgressListener;
+import com.yandex.disk.rest.RestClient;
+import com.yandex.disk.rest.exceptions.ServerException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -168,10 +174,6 @@ public class preference  extends PreferenceActivity{
              countOrd.setText(""+execDB.get_count("clients",getActivity()));
              verVal=v.findViewById(R.id.VerVal);
              verVal.setText(toDay);
-
-
-
-
 
 
             view_buckUp();
@@ -370,6 +372,7 @@ public class preference  extends PreferenceActivity{
                        "user",getActivity())+" rows \n"+fn,Toast.LENGTH_SHORT);
                 prb.setProgress(0);
                 Log.i("CleanDb2ndStep", textView.getText().toString());
+                // удалить записи clients старше чем указано
                 new ExecDB().CleanDBofDate(getActivity(),textView.getText().toString());
                 new upd_user().execute();
 
@@ -620,6 +623,7 @@ public class preference  extends PreferenceActivity{
     public static class Yandex_sync extends  PreferenceFragment{
 
         SharedPreferences sharedPreferences;
+        String pr_loginHint,pr_token,pr_client_id,pr_dbFolder;
         EditText ya_id,ya_login,ya_folder;
         TextView token;
         Button yaBtn,check_folder,synchroize;
@@ -638,7 +642,14 @@ public class preference  extends PreferenceActivity{
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             View v=inflater.inflate(R.layout.ya_sync,container,false);
-            sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getActivity());
+// SharedPreference
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            pr_loginHint      = sharedPreferences.getString("login_hint","DskDrv@yandex.ru");
+            pr_token          = sharedPreferences.getString("token","null");
+            pr_client_id      = sharedPreferences.getString("client_id","fc3985e6de824b35a95e56b00dd21685");
+            pr_dbFolder       = sharedPreferences.getString("yaFolder","/");
+// SharedPreference
+
             ya_id=v.findViewById(R.id.ya_ClientID);
             ya_login=v.findViewById(R.id.ya_ln);
             ya_folder=v.findViewById(R.id.ya_folder);
@@ -649,11 +660,11 @@ public class preference  extends PreferenceActivity{
             check_folder=v.findViewById(R.id.check_folder);
             synchroize=v.findViewById(R.id.synchroize);
 
-            ya_login.setText(sharedPreferences.getString("login_hint","DskDrv@yandex.ru"));
-            ya_id.setText(sharedPreferences.getString("client_id","fc3985e6de824b35a95e56b00dd21685"));
+            ya_login.setText(pr_loginHint);
+            ya_id.setText(pr_client_id);
 
-            String s_token=sharedPreferences.getString("token","null");
-            token.setText(s_token);
+          //  String s_token=pr_token;
+            token.setText(pr_token);
             // если изменил токен пишу в настройки
             token.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -714,8 +725,7 @@ public class preference  extends PreferenceActivity{
                 }
             });
 
-
-            ya_folder.setText(sharedPreferences.getString("yaFolder","/"));
+            ya_folder.setText(pr_dbFolder);
             ya_folder.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -751,8 +761,8 @@ public class preference  extends PreferenceActivity{
                     try {
 
                      // HelperData readjson=new HelperData();
-                      //  readjson.readjson(api.execute().get());
-                        Log.i("preference",api.execute().get());
+                     //  readjson.readjson(api.execute().get());
+                        Log.i("preference",api.execute().get().toString());
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -770,12 +780,97 @@ public class preference  extends PreferenceActivity{
                 @Override
                 public void onClick(View v) {
 
-                   new yandex_setFile(getActivity().getApplicationContext()).execute();
+                    /*запрашиавю инфо из папки
+                    * если данные в нем старше то заменяю новыми
+                    * ложу файл инфо*/
 
+                    final File fileToSDcard=new File("/sdcard/sdcard/sinfo.json");
+                    final String fileFromDisk="disk:/sync/sinfo.json";
+//get filename in folders
+                    List info= new ArrayList();
+                    try {
+                        info = new yandex_api(getActivity().getApplicationContext()).execute().get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+// if info exist then download info
+                    if(info.contains("sinfo.json")){
+                        final Credentials credentials = new Credentials(
+                              pr_loginHint,pr_token
+                        );
+
+                     new AsyncTask<Void, Void, Void>() {
+                         @Override
+                         protected Void doInBackground(Void... voids) {
+
+                             RestClient client = RestClientUtil.getInstance(credentials);
+                             ProgressListener progressListener=new ProgressListener() {
+                                 @Override
+                                 public void updateProgress(long loaded, long total) {
+                                 }
+                                 @Override
+                                 public boolean hasCancelled() {
+                                     return false;
+                                 }
+                             };
+
+                             try {
+                                 client.downloadFile(fileFromDisk,fileToSDcard,
+                                         progressListener);
+                             } catch (IOException e) {
+                                 e.printStackTrace();
+                             } catch (ServerException e) {
+                                 e.printStackTrace();
+                             }
+                             return null;
+                         }
+
+                         @Override
+                         protected void onPostExecute(Void aVoid) {
+
+                             HelperData readjson=new HelperData();
+                             String strInf =readjson.readToStream(fileToSDcard.getAbsolutePath()).toString();
+                             List data=readjson.readjson(strInf);
+
+                             AlertDialog.Builder adb=new AlertDialog.Builder(getActivity());
+                             adb
+                                     .setTitle("Получить/Отправить")
+// результат сравнения даты из YaDisk и локальной базы
+                                     .setMessage(comporateLastOrderWrite(data.get(0).toString()))
+                                     .setPositiveButton("Получить", new DialogInterface.OnClickListener() {
+                                         @Override
+                                         public void onClick(DialogInterface dialog, int which) {
+                                             fileToSDcard.delete();
+                                             new File("/sdcard/sdcard/st.db").delete();
+                                             new yandex_getFile(getActivity(),
+                                                     "disk:/sync/st.db",
+                                                     new File("/sdcard/sdcard/st.db")).execute();
+                                         }
+                                     })
+                                     .setNegativeButton("Отправить", new DialogInterface.OnClickListener() {
+                                         @Override
+                                         public void onClick(DialogInterface dialog, int which) {
+                                             fileToSDcard.delete();
+                                             setDB();
+                                         }
+                                     });
+                             AlertDialog alertDialog=adb.create();
+                             alertDialog.show();
+                             super.onPostExecute(aVoid);
+                         }
+
+                     }.execute();
+                    }
+
+                    /*
+                    new yandex_setFile(getActivity().getApplicationContext()).execute();
                     HelperData readjson=new HelperData();
                     String strInf =readjson.readToStream("/sdcard/sdcard/info.json").toString();
                     Toast.makeText(getActivity(),readjson.readjson(strInf).toString(),
                             Toast.LENGTH_SHORT).show();
+                   */
                 }
             });
             return v;
@@ -849,8 +944,35 @@ public class preference  extends PreferenceActivity{
         return null;
         }
 
-    }
+        String comporateLastOrderWrite(String  dateInJson){
+             HelperData help =new HelperData();
+             Boolean whoEarly =help.comparateDateX(dateInJson,new Date());
+             if (whoEarly){
+                 return "На Диске лежат данные новее чем локально" +
+                         "\n Нажмите Получить";
+             }else{
+                 return "Локальные данные актуальнее чем на диске" +
+                         "\n Нажмите Отправить";
+             }
 
+        }
+
+        public  void setDB(){
+            /* получить инфу из базы
+            собрать в json
+            отправить базу+json
+            * */
+
+        List<String> fromDbToJson=    new ExecDB().database_info(getActivity());
+        // передать в конструктор все парпметры что получили из этих параметров будет создан json
+        //  сохранить json  в указанном месте
+
+            new yandex_setFile(getActivity(),
+                    "disk:/sync/st.db",
+                    new File("/sdcard/sdcard/st.db")).execute();
+        }
+
+    }
 
 
 

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -93,7 +94,7 @@ public class Adapter_TopUser extends BaseAdapter {
 
         holder.itemTopNumber.setText(
                 constructorTop.get(position).pk_num);
-        if(new HelperData().comparateDate(constructorTop.get(position).last)){
+        if(new HelperData().comparateDate(constructorTop.get(position).last,new Date())){
             holder.imageArrow.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
         }else{
             holder.imageArrow.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);

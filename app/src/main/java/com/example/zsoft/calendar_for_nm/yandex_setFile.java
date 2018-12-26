@@ -1,9 +1,12 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.annotation.DrawableRes;
 import android.util.Log;
 
 import com.yandex.disk.rest.Credentials;
@@ -13,6 +16,7 @@ import com.yandex.disk.rest.exceptions.ServerException;
 import com.yandex.disk.rest.exceptions.ServerIOException;
 import com.yandex.disk.rest.exceptions.WrongMethodException;
 import com.yandex.disk.rest.json.Link;
+import com.yandex.disk.rest.json.Resource;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,8 +37,13 @@ import java.io.IOException;
 
  class yandex_setFile extends AsyncTask <Void,Void,String>  {
     Context context;
-    public yandex_setFile(Context context) {
+    String toDiskfile;
+    File fromSDFile;
+
+    public yandex_setFile(Context context,String toDiskfile,File fromSDFile) {
         this.context = context;
+        this.toDiskfile=toDiskfile;
+        this.fromSDFile=fromSDFile;
     }
 
     @Override
@@ -47,11 +56,9 @@ import java.io.IOException;
         RestClient client = RestClientUtil.getInstance(credentials);
         try {
             String ss="";
-            Link link = client.getUploadLink(
-                    sharedPreferences.getString("yaFolder","/")+"/st.db"
-                    //"disk:/sync/st.db"
-                    , true);
-            client.uploadFile(link, true, new File("/sdcard/sdcard/st.db"),
+            //"disk:/sync/st.db"
+            Link link = client.getUploadLink( toDiskfile, true);
+            client.uploadFile(link, true, fromSDFile,
                     new ProgressListener() {
                         @Override
                         public void updateProgress(long loaded, long total) {
@@ -85,8 +92,12 @@ import java.io.IOException;
 }
  class yandex_getFile extends AsyncTask <Void,Void,String>  {
     Context context;
-    public yandex_getFile(Context context) {
+    String filename;
+    File dwnLoadFile;
+    public yandex_getFile(Context context,String filename,File dwnLoadFile) {
         this.context = context;
+        this.filename=filename;
+        this.dwnLoadFile=dwnLoadFile;
     }
 
     @Override
@@ -98,26 +109,22 @@ import java.io.IOException;
                 sharedPreferences.getString("token","null"));
         RestClient client = RestClientUtil.getInstance(credentials);
         try {
-            String ss="";
-            Link link = client.getUploadLink(
-                    sharedPreferences.getString("yaFolder","/")+"/st.db"
-                    //"disk:/sync/st.db"
-                    , true);
-            client.uploadFile(link, true, new File("/sdcard/sdcard/st.db"),
-                    new ProgressListener() {
-                        @Override
-                        public void updateProgress(long loaded, long total) {
 
-                        }
+            ProgressListener progressListener=new ProgressListener() {
+                @Override
+                public void updateProgress(long loaded, long total) {
+                }
 
-                        @Override
-                        public boolean hasCancelled() {
-                            return false;
-                        }
-                    });
+                @Override
+                public boolean hasCancelled() {
+                    return false;
+                }
+            };
+            client.downloadFile(filename,dwnLoadFile,
+                    progressListener);
 
-            Log.i("inf",ss);
-            return ss;
+
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ServerIOException e) {
@@ -132,8 +139,17 @@ import java.io.IOException;
     }
 
 
+     @Override
+     protected void onPostExecute(String s) {
+         super.onPostExecute(s);
 
 
 
+     }
+ }
 
-}
+ class yandex_read_meta{
+
+
+
+ }
