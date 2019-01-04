@@ -1,4 +1,4 @@
-package com.example.zsoft.calendar_for_nm;
+package com.example.zsoft.calendar_for_nm.json;
 
 /**
  * Created by adolf on 26.12.2018.
@@ -14,10 +14,10 @@ public class JsonFile {
     }
     */
 
-Long  createDate;
-Long date_Last_write;
-int countOrders;
-String version_base;
+  public Long  createDate;
+  public Long date_Last_write;
+  public int countOrders;
+  public String version_base;
 
   public   JsonFile(){
 

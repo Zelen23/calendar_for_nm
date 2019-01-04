@@ -2,17 +2,13 @@ package com.example.zsoft.calendar_for_nm;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -40,14 +36,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zsoft.calendar_for_nm.json.JsonFile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.yandex.disk.rest.Credentials;
 import com.yandex.disk.rest.ProgressListener;
 import com.yandex.disk.rest.RestClient;
 import com.yandex.disk.rest.exceptions.ServerException;
-
-import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.FileInputStream;

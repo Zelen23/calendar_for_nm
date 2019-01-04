@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.zsoft.calendar_for_nm.json.Services;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.Locale;
  class ExecDB {
 
     private db mDbHelper;
+    Boolean F_SYNC=true;
 
     // по дате(месяц, год) создаю лист с парами(день, кол-во записей)
     List<Constructor_dayWeight> init_mass(Context context, int month, int y) {
@@ -139,6 +142,10 @@ import java.util.Locale;
                 val.put(db.TIME1_COLUMN, times);
                 val.put(db.TIME2_COLUMN, times2);
                 val.put(db.DATE_COLUMN, dats);
+
+                if(F_SYNC){
+                    new Services().savejson(new Services().writeOrdToJson(val));
+                }
                 break;
             case "temp":
 
@@ -153,15 +160,17 @@ import java.util.Locale;
                 break;
         }
         db1.insert(table, null, val);
-        Log.i("ExecDB_write_orders", "tab " + table);
         db1.close();
+
+
+
     }
 
     // удаляю строку по _id
     public boolean deleterow(Context context, String table, String id) {
         mDbHelper = new db(context);
         SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
-        Log.i("ExecDB_delete_row", id);
+        Log.i("ExecDB_delete_row",   table+" "+id);
         return db1.delete(table, "_id = " + id, null) > 0;
         //return db1.delete(table, "date like'"+date+"' "+time1, null) > 0;
 
@@ -284,7 +293,7 @@ import java.util.Locale;
 
         db1.update(table,val,"_id = '"+id+"'",null);
 
-        Log.i("ExecDB_flag_visitOrPay",val.toString());
+        Log.i("ExecDB_flag_visitOrPay", flag+" "+ id+" "+table+" "+coloumn);
         db1.close();
     }
 
