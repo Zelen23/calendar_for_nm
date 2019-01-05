@@ -1,25 +1,25 @@
 package com.example.zsoft.calendar_for_nm;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.DrawableRes;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.yandex.disk.rest.Credentials;
 import com.yandex.disk.rest.ProgressListener;
 import com.yandex.disk.rest.RestClient;
+import com.yandex.disk.rest.exceptions.NetworkIOException;
 import com.yandex.disk.rest.exceptions.ServerException;
 import com.yandex.disk.rest.exceptions.ServerIOException;
 import com.yandex.disk.rest.exceptions.WrongMethodException;
 import com.yandex.disk.rest.json.Link;
-import com.yandex.disk.rest.json.Resource;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 
 /* Скачать или отправить
@@ -33,6 +33,8 @@ import java.io.IOException;
 *  в окне 3 кнопки скачать/отправить/отменить
 *   если отправить то все что есть в задании на отправку
 * */
+
+
 
 
  class yandex_setFile extends AsyncTask <Void,Void,String>  {
@@ -90,10 +92,17 @@ import java.io.IOException;
 
 
 }
+
  class yandex_getFile extends AsyncTask <Void,Void,String>  {
+
+     File tempFile= new File("/sdcard/sdcard/temp/st.db");
+
+     // скачиваю файл во временную папку
+     // после скачивания заменяю
     Context context;
     String filename;
     File dwnLoadFile;
+
     public yandex_getFile(Context context,String filename,File dwnLoadFile) {
         this.context = context;
         this.filename=filename;
@@ -102,11 +111,16 @@ import java.io.IOException;
 
     @Override
     protected String doInBackground(Void... voids) {
+
+        tempFile.delete();
+
         SharedPreferences sharedPreferences;
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(context);
+
         Credentials credentials = new Credentials(
                 sharedPreferences.getString("login_hint","DskDrv@yandex.ru"),
                 sharedPreferences.getString("token","null"));
+
         RestClient client = RestClientUtil.getInstance(credentials);
         try {
 
@@ -120,7 +134,7 @@ import java.io.IOException;
                     return false;
                 }
             };
-            client.downloadFile(filename,dwnLoadFile,
+            client.downloadFile(filename,tempFile,
                     progressListener);
 
 
@@ -141,6 +155,12 @@ import java.io.IOException;
 
      @Override
      protected void onPostExecute(String s) {
+
+         HelperData helperData=new HelperData();
+         helperData.return_copy(tempFile,dwnLoadFile);
+
+         Log.i("yandex_getFile",tempFile.getAbsolutePath()+"  "+dwnLoadFile.getAbsolutePath());
+
          super.onPostExecute(s);
 
 

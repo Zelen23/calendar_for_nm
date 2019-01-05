@@ -19,7 +19,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -213,6 +216,7 @@ public class HelperData {
             i1=daysDelta.getDays();
         } catch (ParseException e) {
             e.printStackTrace();
+            return 0;
         }
 
         return i1;
@@ -302,7 +306,46 @@ public class HelperData {
 
     }
 
-    public void  saveFile(String pathName, String dataToSave){
+    public void return_copy(File fromFile,File toPath){
+        /*копируем в папку sdcard
+        * удаляем st.db
+        * переимеовываеи то что скопировали в st.db*/
+
+        InputStream in=null;
+        OutputStream out=null;
+       // del_buckup("/sdcard/sdcard/","st.db");
+        try {
+            File mdr=new File(toPath.getParent());
+            if(!mdr.exists()){
+                mdr.mkdirs();
+            }
+
+            in= new FileInputStream(fromFile.getAbsolutePath());
+            out= new FileOutputStream(toPath.getAbsolutePath());
+            byte buff []=new byte[1024];
+            int read;
+
+            try {
+                while ((read=in.read(buff))!=-1){
+                    out.write(buff,0,read);
+                }
+                in.close();
+                in=null;
+
+                out.flush();
+                out.close();
+                out=null;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void  saveFile(String pathName,String filename, String dataToSave){
         InputStream in=null;
         OutputStream out=null;
 
@@ -313,7 +356,7 @@ public class HelperData {
             }
 
             in= new ByteArrayInputStream(dataToSave.getBytes());
-            out= new FileOutputStream(pathName+"info.json");
+            out= new FileOutputStream(pathName+filename);
             byte buff []=new byte[1024];
             int read;
 

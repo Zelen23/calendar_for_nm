@@ -24,10 +24,10 @@ public class SyncFileJson {
         public String date;
         public String name;
         public String sf_num;
-        public int pay;
+        public String pay;
         public String date1;
 
-        public Clients_write(String time1, String time2, String date, String name, String sf_num, int pay, String date1) {
+        public Clients_write(String time1, String time2, String date, String name, String sf_num, String pay, String date1) {
             this.time1 = time1;
             this.time2 = time2;
             this.date = date;

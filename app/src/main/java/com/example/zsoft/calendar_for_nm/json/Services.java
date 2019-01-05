@@ -38,18 +38,18 @@ public class Services {
          /*time1=09:00:00 date=2019-0-28 time2=10:00:00 name=rrr pay=666 date1=чт, 27 дек. 2018 21:10:57 sf_num=7777*/
 
           SyncFileJson syncFileJson=new SyncFileJson();
-          syncFileJson.timeshtamp=444;
-          syncFileJson.version="3";
+          syncFileJson.timeshtamp=new HelperData().tempDate(new HelperData().nowDate());
+          syncFileJson.version="4";
 
           List<SyncFileJson.Clients_write> ord=new ArrayList<>();
           ord.add(new SyncFileJson.Clients_write(
-                  valuse.getAsString("time1").toString(),
-                  valuse.getAsString("time2").toString(),
-                  valuse.getAsString("date").toString(),
-                  valuse.getAsString("name").toString(),
-                  valuse.getAsString("sf_num").toString(),
-                  Integer.parseInt(valuse.getAsString("pay")),
-                  valuse.getAsString("date1").toString()));
+                  valuse.getAsString("time1"),
+                  valuse.getAsString("time2"),
+                  valuse.getAsString("date"),
+                  valuse.getAsString("name"),
+                  valuse.getAsString("sf_num"),
+                  valuse.getAsString("pay"),
+                  valuse.getAsString("date1")));
 
           syncFileJson.clients_write=ord;
 
@@ -62,21 +62,24 @@ public class Services {
 
           GsonBuilder gsonBuilder=new GsonBuilder();
           Gson gson=gsonBuilder.create();
+          String way="/sdcard/sdcard/temp/";
+          String name="info.json";
 
-          File file=new File("/sdcard/sdcard/222/info.json");
+          File file=new File(way+name);
+
           if(file.exists()){
           List<SyncFileJson.Clients_write> ord= gson.fromJson(new HelperData()
-                       .readToStream("/sdcard/sdcard/222/info.json").toString(),SyncFileJson.class).clients_write;
+                       .readToStream(way+name).toString(),SyncFileJson.class).clients_write;
                ord.add(syncFileJson.clients_write.get(0));
 
                syncFileJson.clients_write=ord;
 
                new HelperData().
-                       saveFile("/sdcard/sdcard/222/",gson.toJson(syncFileJson));
+                       saveFile(way,name,gson.toJson(syncFileJson));
 
           }else{
                new HelperData().
-                       saveFile("/sdcard/sdcard/222/",gson.toJson(syncFileJson));
+                       saveFile(way,name,gson.toJson(syncFileJson));
           }
 
      }

@@ -178,32 +178,33 @@ public class preference  extends PreferenceActivity{
             view_buckUp();
 
             //intervalClean.setMin(1);
-            intervalClean.setMax(
-                    helperData.Intrval_to_seekBar(dateFirstWrite,dateLastWrite));
-            intervalClean.setProgress(
-                    helperData.Intrval_to_seekBar(dateFirstWrite,toDay));
-            textView.setText(helperData.fromIntToDateString(
-                    dateFirstWrite,intervalClean.getProgress()));
+            if(dateFirstWrite!=null){
+                intervalClean.setMax(
+                        helperData.Intrval_to_seekBar(dateFirstWrite,dateLastWrite));
+                intervalClean.setProgress(
+                        helperData.Intrval_to_seekBar(dateFirstWrite,toDay));
+                textView.setText(helperData.fromIntToDateString(
+                        dateFirstWrite,intervalClean.getProgress()));
+                intervalClean.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        textView.setText(helperData.fromIntToDateString(
+                                dateFirstWrite,seekBar.getProgress()));
+                    }
 
-            intervalClean.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    textView.setText(helperData.fromIntToDateString(
-                            dateFirstWrite,seekBar.getProgress()));
-                }
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                    }
 
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                        textView.setText(helperData.fromIntToDateString(
+                                dateFirstWrite,seekBar.getProgress()));
+                        b.setVisibility(View.VISIBLE);
 
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    textView.setText(helperData.fromIntToDateString(
-                            dateFirstWrite,seekBar.getProgress()));
-                    b.setVisibility(View.VISIBLE);
-
-                }
-            });
+                    }
+                });
+            }
 
 
             b.setOnClickListener(new View.OnClickListener() {
@@ -518,8 +519,6 @@ public class preference  extends PreferenceActivity{
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 
-
-
                 head_gr=null;
 
                 AdapterView.AdapterContextMenuInfo inf =
@@ -528,21 +527,19 @@ public class preference  extends PreferenceActivity{
                 menu.setHeaderTitle(View("/sdcard/archive").get(inf.position).toString());
                 menu.add(menu.NONE, IDM_RETURN, menu.NONE, "Восстановить");
                 menu.add(menu.NONE, IDM_DELETE_BUP, menu.NONE, "Удалить точку");
-
-
-
         }
 
         @Override
         public boolean onContextItemSelected(MenuItem item) {
 
-
-
-
             switch (item.getItemId()) {
 
                 case IDM_RETURN:
-                    return_copy("/sdcard/sdcard/",head_gr);
+                   // return_copy("/sdcard/sdcard/",head_gr);
+                   // del_buckup("/sdcard/sdcard/","st.db");
+                    new HelperData().return_copy(
+                            new File("/sdcard/archive/"+head_gr),
+                            new File("/sdcard/sdcard/st.db"));
 
                     break;
 
@@ -622,7 +619,7 @@ public class preference  extends PreferenceActivity{
     public static class Yandex_sync extends  PreferenceFragment{
 
         SharedPreferences sharedPreferences;
-        String pr_loginHint,pr_token,pr_client_id,pr_dbFolder;
+        String pr_loginHint,pr_token,pr_client_id,pr_dbFolder,ya_getToken;
         EditText ya_id,ya_login,ya_folder;
         TextView token;
         Button yaBtn,check_folder,synchroize;
@@ -636,8 +633,6 @@ public class preference  extends PreferenceActivity{
                 "&force_confirm=yes" +
                 "&state=true";
 
-        String ya_getToken;
-
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             View v=inflater.inflate(R.layout.ya_sync,container,false);
@@ -648,16 +643,14 @@ public class preference  extends PreferenceActivity{
             pr_client_id      = sharedPreferences.getString("client_id","fc3985e6de824b35a95e56b00dd21685");
             pr_dbFolder       = sharedPreferences.getString("yaFolder","/");
 // SharedPreference
+            ya_id             = v.findViewById(R.id.ya_ClientID);
+            ya_login          = v.findViewById(R.id.ya_ln);
+            ya_folder         = v.findViewById(R.id.ya_folder);
+            token             = v.findViewById(R.id.ya_token);
 
-            ya_id=v.findViewById(R.id.ya_ClientID);
-            ya_login=v.findViewById(R.id.ya_ln);
-            ya_folder=v.findViewById(R.id.ya_folder);
-
-            token=v.findViewById(R.id.ya_token);
-
-            yaBtn=v.findViewById(R.id.ya_btn);
-            check_folder=v.findViewById(R.id.check_folder);
-            synchroize=v.findViewById(R.id.synchroize);
+            yaBtn             = v.findViewById(R.id.ya_btn);
+            check_folder      = v.findViewById(R.id.check_folder);
+            synchroize        = v.findViewById(R.id.synchroize);
 
             ya_login.setText(pr_loginHint);
             ya_id.setText(pr_client_id);
@@ -783,7 +776,7 @@ public class preference  extends PreferenceActivity{
                     * если данные в нем старше то заменяю новыми
                     * ложу файл инфо*/
 
-                    final File fileToSDcard=new File("/sdcard/sdcard/sinfo.json");
+                    final File fileInfoToSDcard=new File("/sdcard/sdcard/sinfo.json");
                     final String fileFromDisk="disk:/sync/sinfo.json";
 //get filename in folders
                     List info= new ArrayList();
@@ -800,12 +793,12 @@ public class preference  extends PreferenceActivity{
                               pr_loginHint,pr_token
                         );
 
-                     new AsyncTask<Void, Void, Void>() {
+                     new  AsyncTask<Void, Void, Void>() {
                          @Override
                          protected Void doInBackground(Void... voids) {
 
-                             RestClient client = RestClientUtil.getInstance(credentials);
-                             ProgressListener progressListener=new ProgressListener() {
+                             RestClient client                  = RestClientUtil.getInstance(credentials);
+                             ProgressListener progressListener  = new ProgressListener() {
                                  @Override
                                  public void updateProgress(long loaded, long total) {
                                  }
@@ -816,7 +809,7 @@ public class preference  extends PreferenceActivity{
                              };
 
                              try {
-                                 client.downloadFile(fileFromDisk,fileToSDcard,
+                                 client.downloadFile(fileFromDisk,fileInfoToSDcard,
                                          progressListener);
                              } catch (IOException e) {
                                  e.printStackTrace();
@@ -830,7 +823,7 @@ public class preference  extends PreferenceActivity{
                          protected void onPostExecute(Void aVoid) {
 
                              HelperData readjson=new HelperData();
-                             String strInf =readjson.readToStream(fileToSDcard.getAbsolutePath()).toString();
+                             String strInf =readjson.readToStream(fileInfoToSDcard.getAbsolutePath()).toString();
 
                              GsonBuilder gsonBuilder= new GsonBuilder();
                              Gson gson= gsonBuilder.create();
@@ -846,8 +839,10 @@ public class preference  extends PreferenceActivity{
                                      .setPositiveButton("Получить", new DialogInterface.OnClickListener() {
                                          @Override
                                          public void onClick(DialogInterface dialog, int which) {
-                                             fileToSDcard.delete();
-                                             new File("/sdcard/sdcard/st.db").delete();
+                                             fileInfoToSDcard.delete();
+
+                                            // new File("/sdcard/sdcard/st.db").delete();
+
                                              new yandex_getFile(getActivity(),
                                                      "disk:/sync/st.db",
                                                      new File("/sdcard/sdcard/st.db")).execute();
@@ -856,8 +851,8 @@ public class preference  extends PreferenceActivity{
                                      .setNegativeButton("Отправить", new DialogInterface.OnClickListener() {
                                          @Override
                                          public void onClick(DialogInterface dialog, int which) {
-                                             fileToSDcard.delete();
-                                             setDB();
+                                             fileInfoToSDcard.delete();
+                                             PushBaseAndInfoToDisc();
                                          }
                                      });
                              AlertDialog alertDialog=adb.create();
@@ -866,6 +861,8 @@ public class preference  extends PreferenceActivity{
                          }
 
                      }.execute();
+                    }else{
+                        PushBaseAndInfoToDisc();
                     }
 
                     /*
@@ -970,29 +967,26 @@ public class preference  extends PreferenceActivity{
 
 
 
-        public  void setDB(){
+        public  void PushBaseAndInfoToDisc(){
             /* получить инфу из базы
             собрать в json
             отправить базу+json
             * */
 // получаю данные в базе
-        HelperData help=   new HelperData();
-        List<String> fromDbToJson=    new ExecDB().database_info(getActivity());
+        HelperData help             = new HelperData();
+        List<String> fromDbToJson   = new ExecDB().database_info(getActivity());
 
-        JsonFile jsonFile= new JsonFile();
-        jsonFile.createDate=help.tempDate(help.nowDate());
-        jsonFile.date_Last_write=help.tempDate(fromDbToJson.get(0));
-        jsonFile.countOrders=Integer.parseInt(fromDbToJson.get(2));
-        jsonFile.version_base=fromDbToJson.get(1);
+        JsonFile jsonFile           = new JsonFile();
+        jsonFile.createDate         = help.tempDate(help.nowDate());
+        jsonFile.date_Last_write    = help.tempDate(fromDbToJson.get(0));
+        jsonFile.countOrders        = Integer.parseInt(fromDbToJson.get(2));
+        jsonFile.version_base       = fromDbToJson.get(1);
 
-
-        GsonBuilder gsonBuilder=new GsonBuilder();
-        Gson gson=gsonBuilder.create();
+        GsonBuilder gsonBuilder     = new GsonBuilder();
+        Gson gson                   = gsonBuilder.create();
 
 // coхраняю данные в json
-        help.saveFile("/sdcard/sdcard/",gson.toJson(jsonFile));
-
-        //Log.i("pref_setDB",gson.toJson(jsonFile));
+        help.saveFile("/sdcard/sdcard/","info.json",gson.toJson(jsonFile));
 
             new yandex_setFile(getActivity(),
                     "disk:/sync/st.db",
