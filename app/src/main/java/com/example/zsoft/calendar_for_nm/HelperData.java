@@ -47,10 +47,11 @@ public class HelperData {
 
 
     public  String TimeShtampTranslater(String s){
-
+      //  пт, 1 мар. 2019 11:51:02
+      //  сб, 9 февр. 2019 22:11:11
         SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
                 ,new Locale("ru"));
-        String ss = null;
+        String ss = " ";
         try {
             Date day=sdf.parse(s);
             ss=sdf.format(day);
@@ -81,6 +82,8 @@ public class HelperData {
                     if(splt.length>5){
                         day = sdf2.parse(splt[0]+" "+splt[1]+" "+splt[2]+" "+splt[3]+" "+splt[5]);
                         ss=sdf.format(day);
+                    }else{
+                        ss=s;
                     }
 
                 } catch (ParseException e2) {
@@ -102,7 +105,7 @@ public class HelperData {
 
     //2018-1-21
     public String ConvertDateFromDB(String data){
-
+    //2019-2-31
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdf2=new SimpleDateFormat("dd-MMM-yyyy",new Locale("ru"));
         String ss;
@@ -113,6 +116,26 @@ public class HelperData {
 
         } catch (ParseException e) {
             ss=data;
+            e.printStackTrace();
+        }
+        return ss;
+    }
+
+    public String ConvertDateFromDBX(String data){
+        //2019-2-31
+        /*взять эту кривую дату  к месяцу прибавить 1*/
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        String[]datePM=data.split("-");
+        Integer mms=Integer.parseInt(datePM[1])+1;
+        String dataP=datePM[0]+"-"+mms+"-"+datePM[2];
+        SimpleDateFormat sdf2=new SimpleDateFormat("dd-MMM-yyyy",new Locale("ru"));
+        String ss;
+        try {
+            Date dat=sdf.parse(dataP);
+            ss=sdf2.format(dat);
+
+        } catch (ParseException e) {
+            ss=dataP;
             e.printStackTrace();
         }
         return ss;
@@ -409,6 +432,29 @@ public class HelperData {
        return day.getTime();
     }
 
+
+    public void forBiwrite(String  timeShtamp){
+        //вт, 5 июня 2018 11:52:28
+        //пт, 1 мар. 2019 11:51:02
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
+                new Locale("ru"));
+
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
+
+
+        Date day = null;
+        try {
+            day = sdf.parse(timeShtamp);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String dateOfShtamp = format.format(day);
+        String [] am=dateOfShtamp.split("-");
+        int mns=Integer.parseInt(am[1])-1;
+        String fuckedDate=am[0]+"-"+mns+"-"+am[2];
+
+    }
 
 }
 

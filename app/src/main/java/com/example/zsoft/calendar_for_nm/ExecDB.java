@@ -306,6 +306,7 @@ import java.util.Locale;
         * */
     ArrayList<String>   beWrite(Context context,String num,String timeShtamp) {
         //вт, 5 июня 2018 11:52:28
+        //пт, 1 мар. 2019 11:51:02
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
                 new Locale("ru"));
 
@@ -353,6 +354,37 @@ import java.util.Locale;
 
         }
         return null;
+
+    }
+
+    ArrayList<String>   beWriteX(Context context,String num,String timeShtamp) {
+
+            String dat="SELECT * FROM clients where sf_num like '%"
+                    +num+"%' and date='"+timeShtamp+"'";
+
+            ArrayList<String> queue = new ArrayList<>();
+
+            mDbHelper = new db(context);
+            mDbHelper.getWritableDatabase();
+            SQLiteDatabase db2 = mDbHelper.getWritableDatabase();
+            Cursor c = db2.rawQuery(dat, null);
+
+            if (c.moveToFirst()) {
+
+                int name = c.getColumnIndex("name");
+                int time = c.getColumnIndex("time1");
+                int time2 = c.getColumnIndex("time2");
+
+                do {
+                    queue.add(c.getString(name));
+                    queue.add(c.getString(time));
+                    queue.add(c.getString(time2));
+                }
+
+                while (c.moveToNext());
+                c.close();
+            }
+            return queue;
 
     }
 
