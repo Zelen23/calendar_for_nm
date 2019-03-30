@@ -625,6 +625,10 @@ public class preference  extends PreferenceActivity{
         Button yaBtn,check_folder,synchroize;
         LayoutInflater li;
 
+
+        String ya_disk_folder;
+
+
         String ya_getCode="https://oauth.yandex.ru/authorize?"+
                 "response_type=code" +
                 "&client_id=fc3985e6de824b35a95e56b00dd21685" +
@@ -654,6 +658,11 @@ public class preference  extends PreferenceActivity{
 
             ya_login.setText(pr_loginHint);
             ya_id.setText(pr_client_id);
+
+
+            final File fileInfoToSDcard=new File("/sdcard/sdcard/sinfo.json");
+            final String fileFromDisk="disk:"+pr_dbFolder+"/sinfo.json";
+            ya_disk_folder="disk:"+pr_dbFolder;
 
           //  String s_token=pr_token;
             token.setText(pr_token);
@@ -737,30 +746,25 @@ public class preference  extends PreferenceActivity{
                 }
             });
 
+
+
             //проверяю есть ли папка если есть то чекаю sinfo.json
             check_folder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // чекнуть папку (передать папку/тип запроса, получить код и ответ )
                     /*
-                    * вызвать метод api
-                    * получить json
-                    * распарсить увидеть что есть такая папка
-                    *
-                    * */
+                    через чек фолдер сохраняю папку в настройках
+                    если папки нет то созаю ее в диалоговом окне
+                     */
+                    //disk:/
+                    new yandex_aps(
+                            getActivity().getApplicationContext(),
+                            ya_folder.getText().toString()
 
-                     yandex_api api=new yandex_api(getActivity().getApplicationContext());
-                    try {
+                    ).execute();
 
-                     // HelperData readjson=new HelperData();
-                     //  readjson.readjson(api.execute().get());
-                        Log.i("preference",api.execute().get().toString());
 
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
                     // String ddd=api.doInBackground();
                     // Log.i("preference",ddd);
 
@@ -776,8 +780,7 @@ public class preference  extends PreferenceActivity{
                     * если данные в нем старше то заменяю новыми
                     * ложу файл инфо*/
 
-                    final File fileInfoToSDcard=new File("/sdcard/sdcard/sinfo.json");
-                    final String fileFromDisk="disk:/sync/sinfo.json";
+
 //get filename in folders
                     List info= new ArrayList();
                     try {
@@ -786,9 +789,13 @@ public class preference  extends PreferenceActivity{
                         e.printStackTrace();
                     } catch (ExecutionException e) {
                         e.printStackTrace();
+
+                        Log.i("pref_sync",fileFromDisk);
                     }
 // if info exist then download info
+
                     if(info.contains("sinfo.json")){
+
                         final Credentials credentials = new Credentials(
                               pr_loginHint,pr_token
                         );
@@ -844,7 +851,8 @@ public class preference  extends PreferenceActivity{
                                             // new File("/sdcard/sdcard/st.db").delete();
 
                                              new yandex_getFile(getActivity(),
-                                                     "disk:/sync/st.db",
+
+                                                     "disk:"+pr_dbFolder+"/st.db",
                                                      new File("/sdcard/sdcard/st.db")).execute();
                                          }
                                      })
@@ -852,7 +860,7 @@ public class preference  extends PreferenceActivity{
                                          @Override
                                          public void onClick(DialogInterface dialog, int which) {
                                              fileInfoToSDcard.delete();
-                                             PushBaseAndInfoToDisc();
+                                             PushBaseAndInfoToDisc(pr_dbFolder);
                                          }
                                      });
                              AlertDialog alertDialog=adb.create();
@@ -862,7 +870,8 @@ public class preference  extends PreferenceActivity{
 
                      }.execute();
                     }else{
-                        PushBaseAndInfoToDisc();
+                        Log.i("pref_info",ya_folder.getText().toString());
+                        PushBaseAndInfoToDisc(ya_folder.getText().toString());
                     }
 
                     /*
@@ -965,9 +974,7 @@ public class preference  extends PreferenceActivity{
 
         }
 
-
-
-        public  void PushBaseAndInfoToDisc(){
+        public  void PushBaseAndInfoToDisc(String sync){
             /* получить инфу из базы
             собрать в json
             отправить базу+json
@@ -989,12 +996,14 @@ public class preference  extends PreferenceActivity{
         help.saveFile("/sdcard/sdcard/","info.json",gson.toJson(jsonFile));
 
             new yandex_setFile(getActivity(),
-                    "disk:/sync/st.db",
+                    "disk:"+sync+"/st.db",
                     new File("/sdcard/sdcard/st.db")).execute();
 
             new yandex_setFile(getActivity(),
-                    "disk:/sync/sinfo.json",
+                    "disk:"+sync+"/sinfo.json",
                     new File("/sdcard/sdcard/info.json")).execute();
+
+            Log.i("pref_PushBase","disk:"+sync+"/st.db");
         }
 
     }

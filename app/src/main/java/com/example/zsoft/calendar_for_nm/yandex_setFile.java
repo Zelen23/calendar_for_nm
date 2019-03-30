@@ -7,19 +7,27 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.yandex.disk.rest.Credentials;
 import com.yandex.disk.rest.ProgressListener;
+import com.yandex.disk.rest.ResourcesArgs;
+import com.yandex.disk.rest.ResourcesHandler;
 import com.yandex.disk.rest.RestClient;
 import com.yandex.disk.rest.exceptions.NetworkIOException;
 import com.yandex.disk.rest.exceptions.ServerException;
 import com.yandex.disk.rest.exceptions.ServerIOException;
 import com.yandex.disk.rest.exceptions.WrongMethodException;
 import com.yandex.disk.rest.json.Link;
+import com.yandex.disk.rest.json.Resource;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.client.Response;
 
 
 /* Скачать или отправить
@@ -33,7 +41,6 @@ import java.nio.charset.StandardCharsets;
 *  в окне 3 кнопки скачать/отправить/отменить
 *   если отправить то все что есть в задании на отправку
 * */
-
 
 
 
@@ -64,7 +71,6 @@ import java.nio.charset.StandardCharsets;
                     new ProgressListener() {
                         @Override
                         public void updateProgress(long loaded, long total) {
-
                         }
 
                         @Override
@@ -87,8 +93,6 @@ import java.nio.charset.StandardCharsets;
 
         return null;
     }
-
-
 
 
 }
@@ -167,6 +171,82 @@ import java.nio.charset.StandardCharsets;
 
      }
  }
+
+ class yandex_aps extends AsyncTask<Void,Void,List> {
+
+
+    Context context;
+    String dir;
+
+
+    public yandex_aps(Context context, String dir) {
+        this.context = context;
+        this.dir= dir;
+    }
+
+
+
+     @Override
+    protected List doInBackground(Void... voids) {
+        SharedPreferences sharedPreferences;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        String login_hint = sharedPreferences.getString("login_hint","DskDrv@yandex.ru");
+        String token      = sharedPreferences.getString("token","null");
+
+        Credentials credentials = new Credentials(login_hint,token);
+        RestClient client       = RestClientUtil.getInstance(credentials);
+        final ArrayList list =new ArrayList();
+        try {
+            String ss;
+
+            Resource resource=client.getResources(new ResourcesArgs.Builder()
+                    .setPath(dir)
+                    .setParsingHandler(new ResourcesHandler() {
+                        @Override
+                        public void handleItem(Resource item) {
+                            list.add(new String(item.getName()));
+                        }
+                    })
+                    .build());
+
+            ss = client.getResources(new ResourcesArgs.Builder()
+                    .setPath(dir)
+                    .setLimit(10)
+                    .build()).getResourceList().getItems().toString();
+
+            boolean HttpCode= client.getResources(new ResourcesArgs.Builder()
+                    .setPath(dir)
+                    .build()).isDir();
+
+
+
+            return list;
+        } catch (IOException e) {
+            list.add(e);
+            e.printStackTrace();
+        } catch (ServerIOException e) {
+            list.add(e);
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+     @Override
+     protected void onProgressUpdate(Void... values) {
+         super.onProgressUpdate(values);
+
+     }
+     @Override
+     protected void onPostExecute(List list) {
+         super.onPostExecute(list);
+
+         Toast.makeText(context,list.toString(),Toast.LENGTH_SHORT).show();
+
+     }
+
+
+}
 
  class yandex_read_meta{
 

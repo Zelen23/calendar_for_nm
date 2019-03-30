@@ -33,18 +33,24 @@ public class yandex_api extends AsyncTask<Void,Void,List> {
 
 
     Context context;
+
+
     public yandex_api(Context context) {
         this.context = context;
+
     }
 
     @Override
     protected List doInBackground(Void... voids) {
         SharedPreferences sharedPreferences;
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(context);
-        Credentials credentials = new Credentials(
-                sharedPreferences.getString("login_hint","DskDrv@yandex.ru"),
-                sharedPreferences.getString("token","null"));
+
+        String login_hint=sharedPreferences.getString("login_hint","DskDrv@yandex.ru");
+        String token=sharedPreferences.getString("token","null");
         String dir=sharedPreferences.getString("yaFolder","/");
+
+        Credentials credentials = new Credentials(login_hint,token);
+
         RestClient client = RestClientUtil.getInstance(credentials);
         try {
             String ss;
@@ -58,13 +64,13 @@ public class yandex_api extends AsyncTask<Void,Void,List> {
                         }
                     })
                     .build());
+
             ss = client.getResources(new ResourcesArgs.Builder()
                     .setPath(dir)
                     .setLimit(10)
 
                     .build()).getResourceList().getItems().toString();
 
-           // Log.i("inf",list.toString());
             return list;
         } catch (IOException e) {
             e.printStackTrace();

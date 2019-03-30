@@ -384,13 +384,15 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     ExecDB exec= new ExecDB();
                     ArrayList<String> data=exec.getLine_(context,"clients",ful_data.id);
                     ArrayList<String> user=exec.getLine_(context,"user",data.get(1));
-                    ArrayList<String> infoTimeShtamp=exec.beWrite(context,data.get(1)
-                            ,new HelperData().TimeShtampTranslater(data.get(5)));
+
+                    String tsh_write=new HelperData().TimeShtampTranslater(data.get(5));
+
+                    ArrayList<String> infoTimeShtamp=exec.beWrite(context,data.get(1),tsh_write);
 
                     String mess;
                         mess = "Номер: "+user.get(3)+
                         "\nВсего записей: "+user.get(6)+
-                        "\nЗаписана: "+ new HelperData().TimeShtampTranslater(data.get(5))+
+                        "\nЗаписана: "+ tsh_write+
                         "\n";
                     if(infoTimeShtamp!=null && infoTimeShtamp.size()>0){
                         mess=mess
