@@ -1,17 +1,28 @@
 package com.example.zsoft.calendar_for_nm.json;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class CreateEventJsom {
 
-    public CreateEventJsom(String name, CreateEventJsom.params params) {
-        this.name = name;
-        this.params = params;
+
+    public CreateEventJsom() {
     }
 
-    String name;
-    params params;
+    List<obj> jsons;
+    HashMap<String, List<obj>> modules;
 
+    public static class obj{
+        String name;
+
+        public obj(String name, CreateEventJsom.params params) {
+            this.name = name;
+            this.params = params;
+        }
+
+        params params;
+
+    }
 
 public static class params{
     public params(String name, String description, Boolean isAllDay, Boolean participantsCanEdit, Boolean participantsCanInvite, Boolean othersCanView, String availability, Integer layerId, String start, String end) {

@@ -19,16 +19,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import static java.lang.String.format;
@@ -455,7 +450,10 @@ public class HelperData {
         String fuckedDate=am[0]+"-"+mns+"-"+am[2];
 
     }
-
+    public String dateFix(String date){
+        String[] d=date.split("-");
+        return d[0]+"-"+format("%02d",Integer.parseInt(d[1])+1)+"-"+ format("%02d",Integer.parseInt(d[2]));
+    }
 }
 
 

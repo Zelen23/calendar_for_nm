@@ -2,7 +2,6 @@ package com.example.zsoft.calendar_for_nm;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,6 +28,7 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -39,10 +39,6 @@ import android.widget.Toast;
 import com.example.zsoft.calendar_for_nm.json.JsonFile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.yandex.disk.rest.Credentials;
-import com.yandex.disk.rest.ProgressListener;
-import com.yandex.disk.rest.RestClient;
-import com.yandex.disk.rest.exceptions.ServerException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by adolf on 17.03.2018.
@@ -623,11 +618,19 @@ public class preference  extends PreferenceActivity{
         EditText ya_id,ya_login;
         TextView token;
         Button yaBtn;
+        CheckBox checkSync;
         LayoutInflater li;
 
+        boolean pr_checkSync;
+        String   ContentType
+                ,Authorization
 
+                ,xyandexmayacid
+                ,xyandexmayackey
+                ,xyandexmayalocale
+                ,xyandexmayatimezone;
         String ya_disk_folder;
-
+        Integer xyandexmayauid;
 
 
         @Override
@@ -639,6 +642,16 @@ public class preference  extends PreferenceActivity{
             pr_token          = sharedPreferences.getString("token","null");
             pr_client_id      = sharedPreferences.getString("client_id","fc3985e6de824b35a95e56b00dd21685");
             pr_dbFolder       = sharedPreferences.getString("yaFolder","/");
+
+            pr_checkSync        = sharedPreferences.getBoolean("syncFlag", false);
+            ContentType         = sharedPreferences.getString("ContentType","application/json");
+            xyandexmayauid      = sharedPreferences.getInt("x-yandex-maya-uid",569420386);
+            xyandexmayacid      = sharedPreferences.getString("x-yandex-maya-cid","MAYA-16891790-1578570738675");
+            xyandexmayackey     = sharedPreferences.getString("x-yandex-maya-ckey","OzUM3DgHei8N64Mr7PoB0cM0hFlwOFl6JgI71uG8ue07ZNYzOJ1farW69DQXCsaq11HBRGEFvWSGr7gy5YHH6w==");
+            xyandexmayalocale   = sharedPreferences.getString("x-yandex-maya-locale","ru");
+            xyandexmayatimezone = sharedPreferences.getString("x-yandex-maya-timezone","Europe/Moscow");
+
+            checkSync   = v.findViewById(R.id.CheckSync);
 // SharedPreference
             ya_id             = v.findViewById(R.id.ya_ClientID);
             ya_login          = v.findViewById(R.id.ya_ln);
@@ -691,6 +704,23 @@ public class preference  extends PreferenceActivity{
                 public void afterTextChanged(Editable s) {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("login_hint",ya_login.getText().toString());
+                    editor.commit();
+                }
+            });
+
+            checkSync.setChecked(pr_checkSync);
+            checkSync.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    if (checkSync.isChecked()) {
+
+                    editor.putBoolean("syncFlag",true);
+                    }else{
+                        editor.putBoolean("syncFlag",false);
+
+
+                    }
                     editor.commit();
                 }
             });
