@@ -144,9 +144,7 @@ import java.util.Locale;
                 val.put(db.DATE_COLUMN, dats);
 
                 if(F_SYNC){
-                    new Services()
-                            .savejson(new Services()
-                                    .writeOrdToJson(val));
+                    new Services().js(val);
                 }
                 break;
             case "temp":

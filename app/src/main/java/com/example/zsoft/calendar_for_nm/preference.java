@@ -402,7 +402,7 @@ public class preference  extends PreferenceActivity{
                 SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
                 db1.beginTransaction();
                 ContentValues val = new ContentValues();
-                String s="select sf_num,pay,date from temp";
+                String s="select sf_num,pay,date from 'temp'";
                 Cursor c = db1.rawQuery(s, null);
 
                 if (c.moveToFirst()) {
@@ -615,27 +615,20 @@ public class preference  extends PreferenceActivity{
         }
 
     }
-
+    //https://oauth.yandex.ru/
     public static class Yandex_sync extends  PreferenceFragment{
 
         SharedPreferences sharedPreferences;
         String pr_loginHint,pr_token,pr_client_id,pr_dbFolder,ya_getToken;
-        EditText ya_id,ya_login,ya_folder;
+        EditText ya_id,ya_login;
         TextView token;
-        Button yaBtn,check_folder,synchroize;
+        Button yaBtn;
         LayoutInflater li;
 
 
         String ya_disk_folder;
 
 
-        String ya_getCode="https://oauth.yandex.ru/authorize?"+
-                "response_type=code" +
-                "&client_id=fc3985e6de824b35a95e56b00dd21685" +
-                "&display=popup"+
-                "&login_hint=DskDrv" +
-                "&force_confirm=yes" +
-                "&state=true";
 
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -649,12 +642,9 @@ public class preference  extends PreferenceActivity{
 // SharedPreference
             ya_id             = v.findViewById(R.id.ya_ClientID);
             ya_login          = v.findViewById(R.id.ya_ln);
-            ya_folder         = v.findViewById(R.id.ya_folder);
             token             = v.findViewById(R.id.ya_token);
-
             yaBtn             = v.findViewById(R.id.ya_btn);
-            check_folder      = v.findViewById(R.id.check_folder);
-            synchroize        = v.findViewById(R.id.synchroize);
+
 
             ya_login.setText(pr_loginHint);
             ya_id.setText(pr_client_id);
@@ -714,7 +704,7 @@ public class preference  extends PreferenceActivity{
                             "response_type=token" +
                             "&client_id="+ya_id.getText().toString() +
                             "&device_name=NM_mobile" +
-                            // "& redirect_uri=<адрес перенаправления>]" +
+                           // "& redirect_uri=dskdrv://token" +
                             "&login_hint="+ya_login.getText().toString() +
                             // "&scope=<запрашиваемые необходимые права>" +
                             // "&optional_scope=<запрашиваемые опциональные права>" +
@@ -726,163 +716,6 @@ public class preference  extends PreferenceActivity{
                 }
             });
 
-            ya_folder.setText(pr_dbFolder);
-            ya_folder.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("yaFolder",ya_folder.getText().toString());
-                    editor.commit();
-                }
-            });
-
-
-
-            //проверяю есть ли папка если есть то чекаю sinfo.json
-            check_folder.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // чекнуть папку (передать папку/тип запроса, получить код и ответ )
-                    /*
-                    через чек фолдер сохраняю папку в настройках
-                    если папки нет то созаю ее в диалоговом окне
-                     */
-                    //disk:/
-                    new yandex_aps(
-                            getActivity().getApplicationContext(),
-                            ya_folder.getText().toString()
-
-                    ).execute();
-
-
-                    // String ddd=api.doInBackground();
-                    // Log.i("preference",ddd);
-
-                   // new yandex_api(getActivity().getApplicationContext());
-                }
-            });
-
-            synchroize.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    /*запрашиавю инфо из папки
-                    * если данные в нем старше то заменяю новыми
-                    * ложу файл инфо*/
-
-
-//get filename in folders
-                    List info= new ArrayList();
-                    try {
-                        info = new yandex_api(getActivity().getApplicationContext()).execute().get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-
-                        Log.i("pref_sync",fileFromDisk);
-                    }
-// if info exist then download info
-
-                    if(info.contains("sinfo.json")){
-
-                        final Credentials credentials = new Credentials(
-                              pr_loginHint,pr_token
-                        );
-
-                     new  AsyncTask<Void, Void, Void>() {
-                         @Override
-                         protected Void doInBackground(Void... voids) {
-
-                             RestClient client                  = RestClientUtil.getInstance(credentials);
-                             ProgressListener progressListener  = new ProgressListener() {
-                                 @Override
-                                 public void updateProgress(long loaded, long total) {
-                                 }
-                                 @Override
-                                 public boolean hasCancelled() {
-                                     return false;
-                                 }
-                             };
-
-                             try {
-                                 client.downloadFile(fileFromDisk,fileInfoToSDcard,
-                                         progressListener);
-                             } catch (IOException e) {
-                                 e.printStackTrace();
-                             } catch (ServerException e) {
-                                 e.printStackTrace();
-                             }
-                             return null;
-                         }
-
-                         @Override
-                         protected void onPostExecute(Void aVoid) {
-
-                             HelperData readjson=new HelperData();
-                             String strInf =readjson.readToStream(fileInfoToSDcard.getAbsolutePath()).toString();
-
-                             GsonBuilder gsonBuilder= new GsonBuilder();
-                             Gson gson= gsonBuilder.create();
-                             JsonFile gsonFile=new JsonFile();
-                             gsonFile=gson.fromJson(strInf,JsonFile.class);
-
-
-                             AlertDialog.Builder adb=new AlertDialog.Builder(getActivity());
-                             adb
-                                     .setTitle("Получить/Отправить")
-// результат сравнения даты из YaDisk и локальной базы
-                                     .setMessage(comporateLastOrderWrite(gsonFile.date_Last_write))
-                                     .setPositiveButton("Получить", new DialogInterface.OnClickListener() {
-                                         @Override
-                                         public void onClick(DialogInterface dialog, int which) {
-                                             fileInfoToSDcard.delete();
-
-                                            // new File("/sdcard/sdcard/st.db").delete();
-
-                                             new yandex_getFile(getActivity(),
-
-                                                     "disk:"+pr_dbFolder+"/st.db",
-                                                     new File("/sdcard/sdcard/st.db")).execute();
-                                         }
-                                     })
-                                     .setNegativeButton("Отправить", new DialogInterface.OnClickListener() {
-                                         @Override
-                                         public void onClick(DialogInterface dialog, int which) {
-                                             fileInfoToSDcard.delete();
-                                             PushBaseAndInfoToDisc(pr_dbFolder);
-                                         }
-                                     });
-                             AlertDialog alertDialog=adb.create();
-                             alertDialog.show();
-                             super.onPostExecute(aVoid);
-                         }
-
-                     }.execute();
-                    }else{
-                        Log.i("pref_info",ya_folder.getText().toString());
-                        PushBaseAndInfoToDisc(ya_folder.getText().toString());
-                    }
-
-                    /*
-                    new yandex_setFile(getActivity().getApplicationContext()).execute();
-                    HelperData readjson=new HelperData();
-                    String strInf =readjson.readToStream("/sdcard/sdcard/info.json").toString();
-                    Toast.makeText(getActivity(),readjson.readjson(strInf).toString(),
-                            Toast.LENGTH_SHORT).show();
-                   */
-                }
-            });
             return v;
 
         }
@@ -906,7 +739,7 @@ public class preference  extends PreferenceActivity{
             alert.show();
             alert.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
             alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-    //тут можно определить действие если пришел токен и если нет
+            //тут можно определить действие если пришел токен и если нет
             // нет клавы
             // refresher
             wv.setWebViewClient(new WebViewClient(){
