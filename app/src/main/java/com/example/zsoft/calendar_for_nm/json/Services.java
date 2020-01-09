@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -84,4 +85,51 @@ public class Services {
 
      }
 
+     public void js(ContentValues valuse){
+
+
+                  String name=valuse.getAsString("name");
+                  String description=valuse.getAsString("sf_num");
+
+                  String start= valuse.getAsString("date")+"T"+valuse.getAsString("time1");
+                  String end= valuse.getAsString("date")+"T"+valuse.getAsString("time2");
+
+
+
+
+          HashMap<String,CreateEventJsom.params> params=new HashMap<>();
+          CreateEventJsom.params valparams= new CreateEventJsom.params
+                  (        name
+                          ,description
+                          ,false
+                          ,false
+                          ,true
+                          ,false
+                          ,"busy"
+                          ,9443673
+                          ,start
+                          ,end
+                          );
+
+          params.put("params",valparams);
+
+          HashMap<String, List<CreateEventJsom>> models=new HashMap<>();
+          List<CreateEventJsom> modelsValue=new ArrayList<>();
+
+          modelsValue.add(new CreateEventJsom("create-event",valparams));
+
+          models.put("models",modelsValue);
+
+          String jsonStr = new Gson().toJson(models);
+          Log.i("jsonStr", jsonStr);
+     }
+
+     public SyncFileJson writeCreateEvent(ContentValues valuse){
+          /*time1=09:00:00 date=2019-0-28 time2=10:00:00 name=rrr pay=666 date1=чт, 27 дек. 2018 21:10:57 sf_num=7777*/
+
+          SyncFileJson syncFileJson=new SyncFileJson();
+
+          return syncFileJson;
+
+     }
 }
