@@ -3,9 +3,7 @@ package com.example.zsoft.calendar_for_nm;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,7 +12,6 @@ import com.yandex.disk.rest.ProgressListener;
 import com.yandex.disk.rest.ResourcesArgs;
 import com.yandex.disk.rest.ResourcesHandler;
 import com.yandex.disk.rest.RestClient;
-import com.yandex.disk.rest.exceptions.NetworkIOException;
 import com.yandex.disk.rest.exceptions.ServerException;
 import com.yandex.disk.rest.exceptions.ServerIOException;
 import com.yandex.disk.rest.exceptions.WrongMethodException;
@@ -23,11 +20,8 @@ import com.yandex.disk.rest.json.Resource;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit.client.Response;
 
 
 /* Скачать или отправить

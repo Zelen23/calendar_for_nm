@@ -23,7 +23,7 @@ import java.util.Locale;
  * Created by azelinsky on 03.05.2018.
  */
 
- class ExecDB {
+public class ExecDB {
 
     private db mDbHelper;
     SharedPreferences sharedPreferences;
@@ -67,7 +67,7 @@ import java.util.Locale;
 
     // получаю по дате массив
     //[397, 19:00, 20:00, лукьянчикова ирина, , true]
-    List<String> l_clients_of_day(Context ct, String ddat) {
+    public  List<String> l_clients_of_day(Context ct, String ddat) {
 //ddat="2016-4-12";
         // read db
         List<String> sqldat = new ArrayList<>();
@@ -146,7 +146,7 @@ import java.util.Locale;
                 val.put(db.DATE_COLUMN, dats);
 
                 if(flagSync(context)){
-                    new Services().saveTemp(val);
+                    new Services(context).saveTemp(val);
                 }
                 break;
             case "temp":
@@ -165,6 +165,21 @@ import java.util.Locale;
         db1.close();
 
 
+
+    }
+
+    public void writeUID(Context context, Integer clientId, Integer uid) {
+
+        mDbHelper = new db(context);
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+        ContentValues val = new ContentValues();
+
+                val.put(db.clientId_synchro, clientId);
+                val.put(db.uid_synchro, uid);
+
+
+        db1.insert("synchro", null, val);
+        db1.close();
 
     }
 

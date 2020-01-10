@@ -454,6 +454,18 @@ public class HelperData {
         String[] d=date.split("-");
         return d[0]+"-"+format("%02d",Integer.parseInt(d[1])+1)+"-"+ format("%02d",Integer.parseInt(d[2]));
     }
+    public String fromSyncDateToDateDB(String date){
+        //"2020-01-09T18:10:00
+
+        String[] d=date.split("T");
+        String[] dateOrd=d[0].split("-");
+        String timeStart=d[1];
+
+        String fakeDateTime=dateOrd[0]+"-"+(Integer.parseInt(dateOrd[1])-1)+"-"+ (Integer.parseInt(dateOrd[2])
+                +"T"+timeStart);
+        Log.i("fromSyncDateToDateDB",fakeDateTime);
+        return fakeDateTime;
+    }
 }
 
 
