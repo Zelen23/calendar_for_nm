@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.util.Log;
 
 import com.example.zsoft.calendar_for_nm.HelperData;
+import com.example.zsoft.calendar_for_nm.PostYandexCalendar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -122,6 +123,7 @@ public class Services {
           File file = new File(way + name);
 
           CreateEventJson createEventJson=new CreateEventJson();
+          PostYandexCalendar postYandexCalendar =new PostYandexCalendar();
 
           if (file.exists()) {
                Log.i("jsonStr", "existFile");
@@ -146,6 +148,12 @@ public class Services {
                new HelperData().
                        saveFile(way, name, gson.toJson(createEventJson));
           }
+          String querry=new HelperData()
+                  .readToStream(way+name).toString();
+          Log.i("querry",querry);
+          postYandexCalendar.sendEvent(querry);
+
+
 
      }
      public SyncFileJson writeCreateEvent(ContentValues valuse){
