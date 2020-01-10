@@ -3,6 +3,7 @@ package com.example.zsoft.calendar_for_nm;
 import android.util.Log;
 
 import com.example.zsoft.calendar_for_nm.NetworkingYandex;
+import com.example.zsoft.calendar_for_nm.json.CreateEventJson;
 import com.example.zsoft.calendar_for_nm.json.responseModel;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class PostYandexCalendar {
     private static NetworkingYandex networkingYandex;
     private static Retrofit retrofit;
 
-   public void sendEvent(String querry) {
+   public void sendEvent(CreateEventJson querry) {
 
        /*проблема в отправляемых данных*/
 
@@ -29,7 +30,7 @@ public class PostYandexCalendar {
 
         networkingYandex = retrofit.create(NetworkingYandex.class);
 
-        Call<responseModel> call = networkingYandex.postData();
+        Call<responseModel> call = networkingYandex.postData(querry);
         call.enqueue(new Callback<responseModel>() {
             @Override
             public void onResponse(Call<responseModel> call, Response<responseModel> response) {

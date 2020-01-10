@@ -2,6 +2,7 @@ package com.example.zsoft.calendar_for_nm;
 
 import android.os.AsyncTask;
 
+import com.example.zsoft.calendar_for_nm.json.CreateEventJson;
 import com.example.zsoft.calendar_for_nm.json.responseModel;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public interface NetworkingYandex  {
 
     })
     @POST("api/models")
-    Call<responseModel>postData();
+    Call<responseModel>postData(@Body CreateEventJson querry);
 
 }
 

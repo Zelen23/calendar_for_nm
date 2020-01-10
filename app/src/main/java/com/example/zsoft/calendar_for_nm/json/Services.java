@@ -151,7 +151,7 @@ public class Services {
           String querry=new HelperData()
                   .readToStream(way+name).toString();
           Log.i("querry",querry);
-          postYandexCalendar.sendEvent(querry);
+          postYandexCalendar.sendEvent(createEventJson);
 
 
 
