@@ -62,5 +62,23 @@
         android:layout_marginStart="20dp"
         android:text="Client_id: " />
 
+    <TextView
+        android:id="@+id/Sync"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ya_token"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="22dp"
+        android:text="Sync: " />
+
+    <CheckBox
+        android:id="@+id/CheckSync"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ya_token"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="15dp"
+        android:layout_toEndOf="@+id/Sync" />
+
 
 </android.widget.RelativeLayout>

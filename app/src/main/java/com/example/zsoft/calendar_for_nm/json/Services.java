@@ -6,13 +6,9 @@ import android.util.Log;
 import com.example.zsoft.calendar_for_nm.HelperData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
-import org.joda.time.DateTime;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -85,20 +81,17 @@ public class Services {
 
      }
 
-     public void js(ContentValues valuse){
+     public CreateEventJson.obj js(ContentValues valuse){
 
 
                   String name=valuse.getAsString("name");
                   String description=valuse.getAsString("sf_num");
+                  String dateFix=new HelperData().dateFix(valuse.getAsString("date"));
+                  String start= dateFix+"T"+valuse.getAsString("time1");
+                  String end= dateFix+"T"+valuse.getAsString("time2");
 
-                  String start= valuse.getAsString("date")+"T"+valuse.getAsString("time1");
-                  String end= valuse.getAsString("date")+"T"+valuse.getAsString("time2");
-
-
-
-
-          HashMap<String,CreateEventJsom.params> params=new HashMap<>();
-          CreateEventJsom.params valparams= new CreateEventJsom.params
+          HashMap<String,CreateEventJson.params> params=new HashMap<>();
+          CreateEventJson.params valparams= new CreateEventJson.params
                   (        name
                           ,description
                           ,false
@@ -111,19 +104,50 @@ public class Services {
                           ,end
                           );
 
-          params.put("params",valparams);
 
-          HashMap<String, List<CreateEventJsom>> models=new HashMap<>();
-          List<CreateEventJsom> modelsValue=new ArrayList<>();
-
-          modelsValue.add(new CreateEventJsom("create-event",valparams));
-
-          models.put("models",modelsValue);
-
-          String jsonStr = new Gson().toJson(models);
-          Log.i("jsonStr", jsonStr);
+          return new CreateEventJson.obj("create-event",valparams);
      }
 
+     public  void saveTemp(ContentValues valuse) {
+
+          /* проверяю есть ли json файл
+           * ксли есть то дописываю аолученный обьект в конец файла
+           * если нет то создаю файл*/
+
+          GsonBuilder gsonBuilder = new GsonBuilder();
+          Gson gson = gsonBuilder.create();
+          String way = "/sdcard/sdcard/temp/";
+          String name = "syncFile.json";
+
+          File file = new File(way + name);
+
+          CreateEventJson createEventJson=new CreateEventJson();
+
+          if (file.exists()) {
+               Log.i("jsonStr", "existFile");
+
+
+               List<CreateEventJson.obj> upditem = gson.fromJson(new HelperData()
+                       .readToStream(way+name).toString(),CreateEventJson.class).models;
+
+               upditem.add(js(valuse));
+               createEventJson.models=upditem;
+               new HelperData().
+                       saveFile(way, name, gson.toJson(createEventJson));
+
+
+          } else {
+               List<CreateEventJson.obj> item=new ArrayList<>();
+               item.add(js(valuse));
+
+
+               createEventJson.models=item;
+               Log.i("jsonStr",createEventJson.models.get(0).toString());
+               new HelperData().
+                       saveFile(way, name, gson.toJson(createEventJson));
+          }
+
+     }
      public SyncFileJson writeCreateEvent(ContentValues valuse){
           /*time1=09:00:00 date=2019-0-28 time2=10:00:00 name=rrr pay=666 date1=чт, 27 дек. 2018 21:10:57 sf_num=7777*/
 

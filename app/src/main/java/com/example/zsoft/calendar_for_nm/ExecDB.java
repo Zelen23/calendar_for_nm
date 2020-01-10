@@ -3,8 +3,10 @@ package com.example.zsoft.calendar_for_nm;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.example.zsoft.calendar_for_nm.json.Services;
@@ -24,7 +26,7 @@ import java.util.Locale;
  class ExecDB {
 
     private db mDbHelper;
-    Boolean F_SYNC=true;
+    SharedPreferences sharedPreferences;
 
     // по дате(месяц, год) создаю лист с парами(день, кол-во записей)
     List<Constructor_dayWeight> init_mass(Context context, int month, int y) {
@@ -143,8 +145,8 @@ import java.util.Locale;
                 val.put(db.TIME2_COLUMN, times2);
                 val.put(db.DATE_COLUMN, dats);
 
-                if(F_SYNC){
-                    new Services().js(val);
+                if(flagSync(context)){
+                    new Services().saveTemp(val);
                 }
                 break;
             case "temp":
@@ -560,7 +562,13 @@ import java.util.Locale;
 
 
 
+    private boolean flagSync(Context context){
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Boolean F_SYNC= sharedPreferences.getBoolean("syncFlag", false);
 
+        return F_SYNC;
+
+    }
 
 
 
