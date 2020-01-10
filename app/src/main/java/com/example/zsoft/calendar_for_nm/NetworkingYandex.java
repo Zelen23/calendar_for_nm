@@ -22,10 +22,11 @@ public interface NetworkingYandex  {
             "x-yandex-maya-cid: MAYA-16891790-1578570738675",
             "x-yandex-maya-ckey: OzUM3DgHei8N64Mr7PoB0cM0hFlwOFl6JgI71uG8ue07ZNYzOJ1farW69DQXCsaq11HBRGEFvWSGr7gy5YHH6w==",
             "x-yandex-maya-locale: ru",
-            "x-yandex-maya-timezone: Europe/Moscow"
+            "x-yandex-maya-timezone: Europe/Moscow",
+
     })
-    @POST("/api/models?_models=create-event")
-    Call<responseModel>getData(@Body String querry);
+    @POST("api/models")
+    Call<responseModel>postData();
 
 }
 

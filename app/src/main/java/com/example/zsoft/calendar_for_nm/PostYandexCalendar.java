@@ -20,27 +20,24 @@ public class PostYandexCalendar {
 
    public void sendEvent(String querry) {
 
+       /*проблема в отправляемых данных*/
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://calendar.yandex.ru:443")
+                .baseUrl("https://calendar.yandex.ru/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         networkingYandex = retrofit.create(NetworkingYandex.class);
 
-        Call<responseModel> call = networkingYandex.getData(querry);
-
-
-       call.enqueue(new Callback<responseModel>() {
+        Call<responseModel> call = networkingYandex.postData();
+        call.enqueue(new Callback<responseModel>() {
             @Override
             public void onResponse(Call<responseModel> call, Response<responseModel> response) {
 
 
-                try {
-                    Log.i("PostYandexCalendar", response.errorBody().string());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    Log.i("PostYandexCalendar", response.body().getUid());
+
+
             }
 
             @Override
