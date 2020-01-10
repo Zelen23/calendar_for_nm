@@ -81,7 +81,7 @@ public class Services {
 
      }
 
-     public CreateEventJsom.obj js(ContentValues valuse){
+     public CreateEventJson.obj js(ContentValues valuse){
 
 
                   String name=valuse.getAsString("name");
@@ -90,8 +90,8 @@ public class Services {
                   String start= dateFix+"T"+valuse.getAsString("time1");
                   String end= dateFix+"T"+valuse.getAsString("time2");
 
-          HashMap<String,CreateEventJsom.params> params=new HashMap<>();
-          CreateEventJsom.params valparams= new CreateEventJsom.params
+          HashMap<String,CreateEventJson.params> params=new HashMap<>();
+          CreateEventJson.params valparams= new CreateEventJson.params
                   (        name
                           ,description
                           ,false
@@ -105,7 +105,7 @@ public class Services {
                           );
 
 
-          return new CreateEventJsom.obj("create-event",valparams);
+          return new CreateEventJson.obj("create-event",valparams);
      }
 
      public  void saveTemp(ContentValues valuse) {
@@ -121,26 +121,30 @@ public class Services {
 
           File file = new File(way + name);
 
-
+          CreateEventJson createEventJson=new CreateEventJson();
 
           if (file.exists()) {
                Log.i("jsonStr", "existFile");
-               String json=new HelperData()
-                       .readToStream(way+name).toString();
 
-                    Log.i("filejson",json);
+
+               List<CreateEventJson.obj> upditem = gson.fromJson(new HelperData()
+                       .readToStream(way+name).toString(),CreateEventJson.class).models;
+
+               upditem.add(js(valuse));
+               createEventJson.models=upditem;
+               new HelperData().
+                       saveFile(way, name, gson.toJson(createEventJson));
 
 
           } else {
-               HashMap<String, List<CreateEventJsom.obj>> models= new HashMap<>();
-               List<CreateEventJsom.obj>modelsValue = new ArrayList<>();
-               modelsValue.add(js(valuse));
-               models.put("models",modelsValue);
-               String jsonStr = new Gson().toJson(models);
+               List<CreateEventJson.obj> item=new ArrayList<>();
+               item.add(js(valuse));
 
-               Log.i("jsonStr", jsonStr);
+
+               createEventJson.models=item;
+               Log.i("jsonStr",createEventJson.models.get(0).toString());
                new HelperData().
-                       saveFile(way, name, gson.toJson(jsonStr));
+                       saveFile(way, name, gson.toJson(createEventJson));
           }
 
      }

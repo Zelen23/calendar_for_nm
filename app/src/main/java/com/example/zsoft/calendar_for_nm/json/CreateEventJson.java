@@ -3,19 +3,19 @@ package com.example.zsoft.calendar_for_nm.json;
 import java.util.HashMap;
 import java.util.List;
 
-public class CreateEventJsom {
+public class CreateEventJson {
 
+    List<obj> models;
 
-    public CreateEventJsom() {
+    public CreateEventJson() {
     }
 
-    List<obj> jsons;
-    HashMap<String, List<obj>> modules;
+
 
     public static class obj{
         String name;
 
-        public obj(String name, CreateEventJsom.params params) {
+        public obj(String name, CreateEventJson.params params) {
             this.name = name;
             this.params = params;
         }
