@@ -7,6 +7,8 @@ import com.example.zsoft.calendar_for_nm.json.CreateEventJson;
 import com.example.zsoft.calendar_for_nm.json.DeleteEventJson;
 import com.example.zsoft.calendar_for_nm.json.Services;
 import com.example.zsoft.calendar_for_nm.json.responseModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.File;
 
@@ -17,14 +19,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PostYandexCalendar {
+    private static NetworkingYandex networkingYandex;
+    private static Retrofit retrofit;
+    Context context;
+    GsonBuilder gsonBuilder = new GsonBuilder();
+    Gson gson = gsonBuilder.create();
     public PostYandexCalendar(Context context) {
         this.context = context;
     }
-
-    Context context;
-
-    private static NetworkingYandex networkingYandex;
-    private static Retrofit retrofit;
 
    public void sendEvent(CreateEventJson querry) {
 
@@ -54,14 +56,8 @@ public class PostYandexCalendar {
                         new Services(context).setUidtoOrder(response.body());
                         file.delete();
 
-                        //Log.i("PostYandexCalendar", String.valueOf(response.body().getModels().get(0).getData().getShowEventId()));
-
                     }else{
-
                     }
-
-
-
 
             }
 
@@ -82,6 +78,17 @@ Log.i("PostYandexCalendar info","---");
 
         final File file = new File(way + name);
 
+       String namecrt = "syncFile.json";
+       final File filecrt = new File(way + namecrt);
+
+       if(filecrt.exists()){
+           CreateEventJson createEventJson=gson.fromJson(new HelperData()
+                   .readToStream(way+namecrt).toString(),CreateEventJson.class);
+
+           sendEvent(createEventJson);
+
+       }
+
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://calendar.yandex.ru/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -97,8 +104,6 @@ Log.i("PostYandexCalendar info","---");
                 if(response.isSuccessful()){
 
                     file.delete();
-                    Log.i("YandexCalendarDelete",
-                            String.valueOf(response.body().getModels().get(0).getData().getStatus()));
 
                 }else{
 
