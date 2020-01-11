@@ -146,7 +146,7 @@ public class ExecDB {
                 val.put(db.DATE_COLUMN, dats);
 
                 if(flagSync(context)){
-                    new Services(context).saveTemp(val);
+                    new Services(context).saveTempCreateEvent(val);
                 }
                 break;
             case "temp":
@@ -182,12 +182,42 @@ public class ExecDB {
         db1.close();
 
     }
+    public Integer getCalendarUid(Context context, String id) {
+        /*вывод диалогового окна с деталями по клиенту
+         * для теста номер*/
+        ArrayList<String> line = new ArrayList<>();
+// контекст из метода
+        mDbHelper = new db(context);
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+        Cursor c;
+        Integer uidval = null;
+
+                c = db1.rawQuery("SELECT * FROM synchro where clientId= " + id, null);
+                if (c.moveToFirst()) {
+
+                    int uid = c.getColumnIndex("uid");
+                    do {
+                        uidval=c.getInt(uid);
+                    }
+                    while (c.moveToNext());
+                    c.close();
+                }
+
+
+        return uidval;
+    }
 
     // удаляю строку по _id
     public boolean deleterow(Context context, String table, String id) {
         mDbHelper = new db(context);
         SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
         Log.i("ExecDB_delete_row",   table+" "+id);
+        if(flagSync(context)){
+            Integer uid= getCalendarUid(context,id);
+            if(uid!=null){
+                new Services(context).saveTempDeleteEvent(uid);
+            }
+        }
         return db1.delete(table, "_id = " + id, null) > 0;
         //return db1.delete(table, "date like'"+date+"' "+time1, null) > 0;
 

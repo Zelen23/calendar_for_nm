@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.zsoft.calendar_for_nm.json.CreateEventJson;
+import com.example.zsoft.calendar_for_nm.json.DeleteEventJson;
 import com.example.zsoft.calendar_for_nm.json.Services;
 import com.example.zsoft.calendar_for_nm.json.responseModel;
 
@@ -40,7 +41,7 @@ public class PostYandexCalendar {
 
         networkingYandex = retrofit.create(NetworkingYandex.class);
 
-        Call<responseModel> call = networkingYandex.postData(querry);
+        Call<responseModel> call = networkingYandex.createEvent(querry);
         call.enqueue(new Callback<responseModel>() {
             @Override
             public void onResponse(Call<responseModel> call, Response<responseModel> response) {
@@ -71,5 +72,49 @@ public class PostYandexCalendar {
         });
 
 Log.i("PostYandexCalendar info","---");
+    }
+
+   public void deleteEvent(DeleteEventJson querry) {
+
+        /*проблема в отправляемых данных*/
+        String way = "/sdcard/sdcard/temp/";
+        String name = "syncFileDelete.json";
+
+        final File file = new File(way + name);
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://calendar.yandex.ru/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        networkingYandex = retrofit.create(NetworkingYandex.class);
+
+        Call<responseModel> call = networkingYandex.deleteEvent(querry);
+        call.enqueue(new Callback<responseModel>() {
+            @Override
+            public void onResponse(Call<responseModel> call, Response<responseModel> response) {
+
+                if(response.isSuccessful()){
+
+                    file.delete();
+                    Log.i("YandexCalendarDelete",
+                            String.valueOf(response.body().getModels().get(0).getData().getStatus()));
+
+                }else{
+
+                }
+
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call<responseModel> call, Throwable t) {
+                Log.i("onFailureDelete " ,"failure " + t);
+            }
+        });
+
+
     }
 }

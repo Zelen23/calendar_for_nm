@@ -1,6 +1,5 @@
 package com.example.zsoft.calendar_for_nm.json;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class CreateEventJson {
@@ -9,9 +8,6 @@ public class CreateEventJson {
 
     public CreateEventJson() {
     }
-
-
-
     public static class obj{
         String name;
 

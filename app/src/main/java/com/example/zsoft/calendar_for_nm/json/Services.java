@@ -67,7 +67,7 @@ public class Services {
 
           return new CreateEventJson.obj("create-event",valparams);
      }
-     public  void saveTemp(ContentValues valuse) {
+     public  void saveTempCreateEvent(ContentValues valuse) {
 
           /* проверяю есть ли json файл
            * ксли есть то дописываю аолученный обьект в конец файла
@@ -136,6 +136,57 @@ public class Services {
 
 
           }
+
+     }
+
+     public DeleteEventJson.obj json(int uid){
+
+          HashMap<String,DeleteEventJson.params> params=new HashMap<>();
+          DeleteEventJson.params valparams= new DeleteEventJson.params
+                  (uid,0,false);
+          return new DeleteEventJson.obj("delete-event",valparams);
+     }
+     public  void saveTempDeleteEvent(int uid) {
+
+          /* проверяю есть ли json файл
+           * ксли есть то дописываю аолученный обьект в конец файла
+           * если нет то создаю файл*/
+
+          GsonBuilder gsonBuilder = new GsonBuilder();
+          Gson gson = gsonBuilder.create();
+          String way = "/sdcard/sdcard/temp/";
+          String name = "syncFileDelete.json";
+
+          File file = new File(way + name);
+
+          DeleteEventJson deleteEventJson=new DeleteEventJson();
+          PostYandexCalendar postYandexCalendar =new PostYandexCalendar(context);
+
+          if (file.exists()) {
+               Log.i("jsonStr", "existFile");
+
+
+               List<DeleteEventJson.obj> upditemD = gson.fromJson(new HelperData()
+                       .readToStream(way+name).toString(),DeleteEventJson.class).models;
+
+               upditemD.add(json(uid));
+               deleteEventJson.models=upditemD;
+               new HelperData().
+                       saveFile(way, name, gson.toJson(deleteEventJson));
+
+
+          } else {
+               List<DeleteEventJson.obj> item=new ArrayList<>();
+               item.add(json(uid));
+
+               deleteEventJson.models=item;
+               Log.i("jsonStrDelete",deleteEventJson.models.get(0).toString());
+               new HelperData().
+                       saveFile(way, name, gson.toJson(deleteEventJson));
+          }
+
+
+         postYandexCalendar.deleteEvent(deleteEventJson);
 
      }
 
