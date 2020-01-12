@@ -192,6 +192,7 @@ public class ExecDB {
         Cursor c;
         Integer uidval = null;
 
+      // при удалении
                 c = db1.rawQuery("SELECT * FROM synchro where clientId= " + id, null);
                 if (c.moveToFirst()) {
 
@@ -212,7 +213,7 @@ public class ExecDB {
         mDbHelper = new db(context);
         SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
         Log.i("ExecDB_delete_row",   table+" "+id);
-        if(flagSync(context)){
+        if(flagSync(context)&&table=="clients"){
             Integer uid= getCalendarUid(context,id);
             if(uid!=null){
                 new Services(context).saveTempDeleteEvent(uid);
