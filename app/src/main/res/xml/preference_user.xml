@@ -6,15 +6,15 @@
         android:key="t1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="Start Day" />
+        android:title="@string/set_user_startTime" />
     <EditTextPreference
         android:defaultValue="23:59"
         android:key="t2"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="Finish Day" />
+        android:title="@string/set_user_endTime" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="hideSum"
-        android:title="HideSumInOrders" />
+        android:title="@string/set_user_HideAmount" />
 </PreferenceScreen>

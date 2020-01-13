@@ -1,34 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditTextPreference
-        android:defaultValue="Default value"
-        android:key="edit_text_preference_1"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:summary="free value"
-        android:title="Edit text preference" />
+
     <ListPreference
         android:defaultValue="12"
         android:entries="@array/text_size"
         android:entryValues="@array/text_size"
         android:key="list_size"
-        android:summary="Selected text size"
-        android:title="List preference" />
+        android:summary="@string/set_view_sumtextSize"
+        android:title="@string/set_view_textSize" />
     <ListPreference
         android:defaultValue="White"
         android:entries="@array/text_color"
         android:entryValues="@array/text_color"
         android:key="list_color"
-        android:summary="Selected color text"
-        android:title="List preference" />
+        android:summary="@string/set_view_sumtextColor"
+        android:title="@string/set_view_textSize" />
     <ListPreference
         android:entries="@array/background"
         android:entryValues="@array/background"
         android:key="background"
-        android:summary="Select background"
-        android:title="List preference" />
-
+        android:summary="@string/set_view_sumback"
+        android:title="@string/set_view_back" />
 
 
 </PreferenceScreen>

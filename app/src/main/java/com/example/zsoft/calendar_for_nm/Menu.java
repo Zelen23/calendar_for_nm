@@ -21,8 +21,7 @@ public class Menu extends AppCompatActivity {
         TabLayout tableLayout=findViewById(R.id.tabLay);
         ViewPager pager=findViewById(R.id.viewPage);
 
-
-        Adapter_FragmentPage adapter_fragmentPage=new Adapter_FragmentPage(getSupportFragmentManager());
+        Adapter_FragmentPage adapter_fragmentPage=new Adapter_FragmentPage(getSupportFragmentManager(),getBaseContext());
 
         pager.setAdapter(adapter_fragmentPage);
 

@@ -3,9 +3,55 @@
     <string name="Number">Number</string>
     <string name="Name">Name</string>
     <string name="Pay">Pay</string>
-    <string name="Top40">ClentsTOP40</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="Top40">ClentsTOP40</string>
+    <string name="serch_1tab">Search</string>
+    <string name="serch_2tab">Top List</string>
+    <string name="serch_button">Search Client</string>
+    <string name="serch_exp_num">Num</string>
+    <string name="serch_exp_name">Nane</string>
+
+
+    <string name="set_view">View Settings</string>
+    <string name="set_sumview">appearance settings</string>
+
+    <string name="set_view_textSize">Set text Size</string>
+    <string name="set_view_textColor">Set text Color</string>
+    <string name="set_view_back">Set View Background</string>
+    <string name="set_view_sumtextSize">text Size</string>
+    <string name="set_view_sumtextColor">text Color</string>
+    <string name="set_view_sumback">background</string>
+
+
+    <string name="set_user_interface">User interface settings</string>
+    <string name="set_user_suminterface">display settings</string>
+
+    <string name="set_user_startTime">Get started with: </string>
+    <string name="set_user_endTime">Finish in: </string>
+    <string name="set_user_HideAmount">Hide amount order</string>
+    <string name="set_user_sumstartTime">open day </string>
+    <string name="set_user_sumendTime">close day </string>
+    <string name="set_user_sumHideAmount">amount display settings</string>
+
+    <string name="set_clearDB">Сleaning data base</string>
+    <string name="set_sumclearDB">delete old records</string>
+
+    <string name="set_DB_version">Version DB: </string>
+    <string name="set_DB_size">Size DB: </string>
+    <string name="set_DB_count_row">number of rows in the database</string>
+    <string name="set_DB_title">delete records older </string>
+    <string name="set_DB_button">Clean DB </string>
+
+
+    <string name="set_sync">Sync settings</string>
+    <string name="set_sumSync">sending data to remote storage</string>
+
+    <string name="set_syncLogin">Login: </string>
+    <string name="set_syncClientId">Identificator: </string>
+    <string name="set_syncButtonToken">Get OAuth token</string>
+    <string name="set_syncFlag">Synk remote storage</string>
+
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="verDB">Версия базы:</string>
