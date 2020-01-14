@@ -147,10 +147,10 @@ public class MainActivity extends AppCompatActivity {
 //  делать адаптер
     @NonNull
     public Adapter_grid_Cld adapterCalendar(int mns, int year){
-        Build_render_mass_grid_Cld creat_mass=new Build_render_mass_grid_Cld();
+        Build_render_mass_grid_Cld creat_mass=new Build_render_mass_grid_Cld(this);
         final List list_date=creat_mass.grv(mns,year);
 // цветной массие
-        final int [] mass_pict= creat_mass.convert_mass_for_render(this,
+        final int [] mass_pict= creat_mass.convert_mass_for_render(
                 creat_mass.grv(mns,year),mns,year);
         // готовые массивы 1-с датами и пробелами 2- с цветами
         adapterGridCld=new Adapter_grid_Cld(this);
@@ -194,18 +194,18 @@ public class MainActivity extends AppCompatActivity {
     void set_date_to_label(int month,int day,int th_syear){
 
         List<String> l_month= new ArrayList<>();
-        l_month.add("Январь");
-        l_month.add("Февраль");
-        l_month.add("Март");
-        l_month.add("Апрель");
-        l_month.add("Май");
-        l_month.add("Июнь");
-        l_month.add("Июль");
-        l_month.add("Август");
-        l_month.add("Сентябрь");
-        l_month.add("Октябрь");
-        l_month.add("Ноябрь");
-        l_month.add("Декабрь");
+        l_month.add(getResources().getString(R.string.mn_jan));
+        l_month.add(getResources().getString(R.string.mn_feb));
+        l_month.add(getResources().getString(R.string.mn_mar));
+        l_month.add(getResources().getString(R.string.mn_apr));
+        l_month.add(getResources().getString(R.string.mn_may));
+        l_month.add(getResources().getString(R.string.mn_jun));
+        l_month.add(getResources().getString(R.string.mn_jul));
+        l_month.add(getResources().getString(R.string.mn_aug));
+        l_month.add(getResources().getString(R.string.mn_sep));
+        l_month.add(getResources().getString(R.string.mn_oct));
+        l_month.add(getResources().getString(R.string.mn_now));
+        l_month.add(getResources().getString(R.string.mn_dec));
 
 
         l_date=findViewById(R.id.date_label);
@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
 
     // слушатель жестов
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
-        final Build_render_mass_grid_Cld creat_mass=new Build_render_mass_grid_Cld();
+        final Build_render_mass_grid_Cld creat_mass=new Build_render_mass_grid_Cld(getApplicationContext());
 
         // получаю дату по позиции клика в слушателе
         private  int [] dat_of_pos(int position){
@@ -431,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
 
-            Build_render_mass_grid_Cld day_in_this_month=new Build_render_mass_grid_Cld();
+            Build_render_mass_grid_Cld day_in_this_month=new Build_render_mass_grid_Cld(getApplicationContext());
             if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >
                     SWIPE_THRESHOLD_VELOCITY) {
                 if(mns<11) {

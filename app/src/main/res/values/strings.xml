@@ -52,6 +52,41 @@
     <string name="set_syncFlag">Synk remote storage</string>
 
 
+    <string name="dw_mo">Mo</string>
+    <string name="dw_tu">Tu</string>
+    <string name="dw_we">We</string>
+    <string name="dw_th">Hh</string>
+    <string name="dw_fr">Fr</string>
+    <string name="dw_sa">Sa</string>
+    <string name="dw_su">Su</string>
+
+    <string name="mn_jan">JAN</string>
+    <string name="mn_feb">FEB</string>
+    <string name="mn_mar">MAR</string>
+    <string name="mn_apr">APR</string>
+    <string name="mn_may">MAY</string>
+    <string name="mn_jun">JUN</string>
+    <string name="mn_jul">JUL</string>
+    <string name="mn_aug">AUG</string>
+    <string name="mn_sep">SEP</string>
+    <string name="mn_oct">OCT</string>
+    <string name="mn_now">NOV</string>
+    <string name="mn_dec">DEC</string>
+
+    <string name="fullCard_del_title">Delete order</string>
+    <string name="fullCard_del_numb">Number: </string>
+    <string name="fullCard_del_start">from: </string>
+    <string name="fullCard_del_end">to: </string>
+    <string name="fullCard_del_bCancel">Cancel</string>
+    <string name="fullCard_del_bDelete">Delete </string>
+
+    <string name="fullCard_recurring">Recurring</string>
+    <string name="YES">Yes</string>
+    <string name="NO">No</string>
+    <string name="fullCard_count">Number of visits</string>
+    <string name="fullCard_lastVisit">Last visit </string>
+
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="verDB">Версия базы:</string>

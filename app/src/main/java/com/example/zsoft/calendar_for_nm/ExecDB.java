@@ -249,7 +249,12 @@ public class ExecDB {
                     do {
                         line.add(c.getString(id));
                         line.add(c.getString(name));
-                        line.add(c.getString(family));
+                        if(c.getString(family)!=null){
+                            line.add(c.getString(family));
+                        }else{
+                            line.add("");
+                        }
+
                         line.add(c.getString(pk_num));
                         line.add(c.getString(url));
                         line.add(c.getString(last));

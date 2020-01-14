@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.Build;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -15,14 +15,11 @@ import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,8 +31,6 @@ import android.widget.Toast;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
-
-import junit.framework.Assert;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -202,6 +197,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             textView.setText(ful_data.name);
             textView.setMaxLines(1);
 
+            final Resources resources=context.getResources();
             editSum.setText(String.valueOf(ful_data.sum));
             //editSum.setImeOptions(EditorInfo.TYPE_NUMBER_FLAG_SIGNED);
 
@@ -290,12 +286,12 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                 public void onClick(View v) {
                     final AlertDialog.Builder adb=new AlertDialog.Builder(context);
                     ArrayList data=new ExecDB().getLine_(context,"clients",ful_data.id);
-                    adb.setTitle("Удалить запись "+data.get(0));
-                    adb.setMessage("Номер:"+data.get(1)+
-                    "\nC:"+data.get(2)+
-                    "\nПо:"+data.get(3));
+                    adb.setTitle(resources.getString(R.string.fullCard_del_title )+"\n"+data.get(0));
+                    adb.setMessage(resources.getString(R.string.fullCard_del_numb )+data.get(1)+
+                    "\n"+resources.getString(R.string.fullCard_del_start)+" "+data.get(2)+
+                    "\n"+resources.getString(R.string.fullCard_del_end )+"      "+data.get(3));
 
-                    adb.setPositiveButton("Удалить",new DialogInterface.OnClickListener() {
+                    adb.setPositiveButton(resources.getString(R.string.fullCard_del_bDelete ),new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             new ExecDB().deleterow(context,"clients",ful_data.id);
@@ -307,7 +303,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         }
                     });
 
-                    adb.setNegativeButton("Oтменить", new DialogInterface.OnClickListener() {
+                    adb.setNegativeButton(resources.getString(R.string.fullCard_del_bCancel ), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -390,18 +386,20 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     ArrayList<String> infoTimeShtamp=exec.beWrite(context,data.get(1),tsh_write);
 
                     String mess;
-                        mess = "Номер: "+user.get(3)+
-                        "\nВсего записей: "+user.get(6)+
-                        "\nЗаписана: "+ tsh_write+
+                        mess = resources.getString(R.string.fullCard_del_numb)+" "+user.get(3)+
+                        "\n"+resources.getString(R.string.fullCard_count)+": "+user.get(6)+
+                        "\n"+resources.getString(R.string.fullCard_lastVisit)+": "+ tsh_write+
                         "\n";
                     if(infoTimeShtamp!=null && infoTimeShtamp.size()>0){
                         mess=mess
-                                +"\nБыла в момент записи: ДА"
-                                +"\nC: "+infoTimeShtamp.get(1)
-                                +"\nПо: "+infoTimeShtamp.get(2);
+                                +"\n"+resources.getString(R.string.fullCard_recurring)
+                                +" "+resources.getString(R.string.YES)
+                                +"\n"+resources.getString(R.string.fullCard_del_start)+" "+infoTimeShtamp.get(1)
+                                +"\n"+resources.getString(R.string.fullCard_del_end)+" "+infoTimeShtamp.get(2);
                     }else{
                         mess=mess
-                                +"\nБыла в момент записи: НЕТ";
+                                +"\n"+resources.getString(R.string.fullCard_recurring)
+                                +" "+resources.getString(R.string.NO);
                     }
                     AlertDialog.Builder adb=new AlertDialog.Builder(context);
                     adb.setTitle(user.get(1)+" "+user.get(2));
