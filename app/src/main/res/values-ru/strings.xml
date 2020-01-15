@@ -1,0 +1,98 @@
+<resources>
+    <string name="app_name">Calendar_for_NM</string>
+    <string name="Number">Номер</string>
+    <string name="Name">Имя</string>
+    <string name="Pay">Сумма</string>
+
+    <string name="Top40">Топ Клиентов</string>
+    <string name="serch_1tab">Поиск</string>
+    <string name="serch_2tab">Топ Клиентов</string>
+    <string name="serch_button">Поиск клиента</string>
+    <string name="serch_exp_num">Номер</string>
+    <string name="serch_exp_name">Имя</string>
+
+
+    <string name="set_view">Настройки отображения</string>
+    <string name="set_sumview">внешний вид формы</string>
+
+    <string name="set_view_textSize">Установить размер текста</string>
+    <string name="set_view_textColor">Установить цвет текста</string>
+    <string name="set_view_back">Выбрать фон</string>
+    <string name="set_view_sumtextSize">текст</string>
+    <string name="set_view_sumtextColor">цвет</string>
+    <string name="set_view_sumback">фоновый градиент</string>
+
+
+    <string name="set_user_interface">Настройки пользовательского интерфейса</string>
+    <string name="set_user_suminterface">интерфейс</string>
+
+    <string name="set_user_startTime">Начало рабочего дня:  </string>
+    <string name="set_user_endTime">Конец рабочего дня: </string>
+    <string name="set_user_HideAmount">Скрыть сумму </string>
+    <string name="set_user_sumstartTime">Начало рабочего дня </string>
+    <string name="set_user_sumendTime">Конец рабочего дня </string>
+    <string name="set_user_sumHideAmount">отображение на экрне суммы заказа</string>
+
+    <string name="set_clearDB">Удаление старых данных</string>
+    <string name="set_sumclearDB">очистка базы заддых</string>
+
+    <string name="set_DB_version">Версия базы: </string>
+    <string name="set_DB_size">Размер базы: </string>
+    <string name="set_DB_count_row">Колличество записей:</string>
+    <string name="set_DB_title">Удалить записи старше:</string>
+    <string name="set_DB_button">Удалить </string>
+    <string name="set_DB_backup_del">Удалить точку восстановления </string>
+    <string name="set_DB_backup_check">Восстановить резервную копию </string>
+
+
+    <string name="set_sync">Настройки синхронизации</string>
+    <string name="set_sumSync">Отправка данных в календарь</string>
+
+    <string name="set_syncLogin">Логин: </string>
+    <string name="set_syncClientId">ID: </string>
+    <string name="set_syncButtonToken">Получить токен</string>
+    <string name="set_syncFlag">Включить синхронизацию с календарем</string>
+
+
+    <string name="dw_mo">Пн</string>
+    <string name="dw_tu">Вт</string>
+    <string name="dw_we">Ср</string>
+    <string name="dw_th">Чт</string>
+    <string name="dw_fr">Пт</string>
+    <string name="dw_sa">Сб</string>
+    <string name="dw_su">Вс</string>
+
+    <string name="mn_jan">Январь</string>
+    <string name="mn_feb">Февраль</string>
+    <string name="mn_mar">Март</string>
+    <string name="mn_apr">Апрель</string>
+    <string name="mn_may">Май</string>
+    <string name="mn_jun">Июнь</string>
+    <string name="mn_jul">Июль</string>
+    <string name="mn_aug">Август</string>
+    <string name="mn_sep">Сентябрь</string>
+    <string name="mn_oct">Октябрь</string>
+    <string name="mn_now">Ноябрь</string>
+    <string name="mn_dec">Декабрь</string>
+
+    <string name="fullCard_del_title">Удалить запись</string>
+    <string name="fullCard_del_numb">Номер: </string>
+    <string name="fullCard_del_start">С: </string>
+    <string name="fullCard_del_end">По: </string>
+    <string name="fullCard_del_bCancel">Отменить</string>
+    <string name="fullCard_del_bDelete">Удалить </string>
+
+    <string name="fullCard_recurring">Был в момент записи</string>
+    <string name="YES">Да</string>
+    <string name="NO">Нет</string>
+    <string name="fullCard_count">Колличество посещений</string>
+    <string name="fullCard_lastVisit">Последее посещение </string>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="verDB">Версия базы:</string>
+    <string name="countOrd">Кол-во записей:</string>
+    <string name="sizeDB">Размер базы:</string>
+    <string name="conditionClear">Удалить записи старше:</string>
+</resources>

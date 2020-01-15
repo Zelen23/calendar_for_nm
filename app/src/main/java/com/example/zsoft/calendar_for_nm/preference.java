@@ -520,8 +520,8 @@ public class preference  extends PreferenceActivity{
                         (AdapterView.AdapterContextMenuInfo) menuInfo;
                 head_gr=View("/sdcard/archive").get(inf.position).toString();
                 menu.setHeaderTitle(View("/sdcard/archive").get(inf.position).toString());
-                menu.add(menu.NONE, IDM_RETURN, menu.NONE, "Восстановить");
-                menu.add(menu.NONE, IDM_DELETE_BUP, menu.NONE, "Удалить точку");
+                menu.add(menu.NONE, IDM_RETURN, menu.NONE, getResources().getString(R.string.set_DB_backup_check));
+                menu.add(menu.NONE, IDM_DELETE_BUP, menu.NONE, getResources().getString(R.string.set_DB_backup_del));
         }
 
         @Override

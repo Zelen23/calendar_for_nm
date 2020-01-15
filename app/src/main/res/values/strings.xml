@@ -9,7 +9,7 @@
     <string name="serch_2tab">Top List</string>
     <string name="serch_button">Search Client</string>
     <string name="serch_exp_num">Num</string>
-    <string name="serch_exp_name">Nane</string>
+    <string name="serch_exp_name">Name</string>
 
 
     <string name="set_view">View Settings</string>
@@ -41,6 +41,8 @@
     <string name="set_DB_count_row">number of rows in the database</string>
     <string name="set_DB_title">delete records older </string>
     <string name="set_DB_button">Clean DB </string>
+    <string name="set_DB_backup_del">delete backup </string>
+    <string name="set_DB_backup_check">checkout backup </string>
 
 
     <string name="set_sync">Sync settings</string>

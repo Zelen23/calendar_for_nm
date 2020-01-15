@@ -388,7 +388,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     String mess;
                         mess = resources.getString(R.string.fullCard_del_numb)+" "+user.get(3)+
                         "\n"+resources.getString(R.string.fullCard_count)+": "+user.get(6)+
-                        "\n"+resources.getString(R.string.fullCard_lastVisit)+": "+ tsh_write+
+                        "\n"+resources.getString(R.string.fullCard_lastVisit)+": \r\n"+ tsh_write+
                         "\n";
                     if(infoTimeShtamp!=null && infoTimeShtamp.size()>0){
                         mess=mess
