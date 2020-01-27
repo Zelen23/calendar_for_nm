@@ -23,7 +23,7 @@ public class db extends SQLiteOpenHelper implements BaseColumns {
 
     private static final String DATABASE_TABLE ="clients";
     public static final String ID_COLUMN="id";
-    static final String NAME_COLUMN="name";
+    public static final String NAME_COLUMN="name";
     public static final String TIME1_COLUMN="time1";
     public static final String TIME2_COLUMN="time2";
     public static final String CONTACT_COLUMN="sf_num";

@@ -112,7 +112,7 @@ public class ExecDB {
             c.close();
             db1.close();
         }
-         Log.i("ExecDB_l_clients_of_day", String.valueOf(sqldat));
+         Log.i("ExecDB_l_clients_of_day", "querry: "+ddat+" data: "+String.valueOf(sqldat));
         return sqldat;
     }
 
@@ -213,13 +213,17 @@ public class ExecDB {
         mDbHelper = new db(context);
         SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
         Log.i("ExecDB_delete_row",   table+" "+id);
+
+
+        boolean result=db1.delete(table, "_id = " + id, null) > 0;
         if(flagSync(context)&&table=="clients"){
-            Integer uid= getCalendarUid(context,id);
-            if(uid!=null){
-                new Services(context).saveTempDeleteEvent(uid);
-            }
+            //если не отсинхронен  то удаляю не создав json на удаление
+
+            new Services(context).saveTempDeleteEvent(id);
+            /*по id */
+
         }
-        return db1.delete(table, "_id = " + id, null) > 0;
+        return result;
         //return db1.delete(table, "date like'"+date+"' "+time1, null) > 0;
 
     }

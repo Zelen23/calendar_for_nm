@@ -70,56 +70,71 @@ public class PostYandexCalendar {
 Log.i("PostYandexCalendar info","---");
     }
 
-   public void deleteEvent(DeleteEventJson querry) {
+   public void deleteEvent(final DeleteEventJson querry) {
 
-        /*проблема в отправляемых данных*/
-        String way = "/sdcard/sdcard/temp/";
-        String name = "syncFileDelete.json";
+ Runnable runnable =new Runnable() {
+     @Override
+     public void run() {
+         try {
+             Thread.sleep(1000);
+             /*проблема в отправляемых данных*/
+             String way = "/sdcard/sdcard/temp/";
+             String name = "syncFileDelete.json";
 
-        final File file = new File(way + name);
+             final File file = new File(way + name);
 
-       String namecrt = "syncFile.json";
-       final File filecrt = new File(way + namecrt);
+             String namecrt = "syncFile.json";
+             final File filecrt = new File(way + namecrt);
 
-       if(filecrt.exists()){
-           CreateEventJson createEventJson=gson.fromJson(new HelperData()
-                   .readToStream(way+namecrt).toString(),CreateEventJson.class);
+             if(filecrt.exists()){
+                 CreateEventJson createEventJson=gson.fromJson(new HelperData()
+                         .readToStream(way+namecrt).toString(),CreateEventJson.class);
 
-           sendEvent(createEventJson);
+                 sendEvent(createEventJson);
 
-       }
+             }
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://calendar.yandex.ru/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+             if(querry!=null){
+                 retrofit = new Retrofit.Builder()
+                         .baseUrl("https://calendar.yandex.ru/")
+                         .addConverterFactory(GsonConverterFactory.create())
+                         .build();
 
-        networkingYandex = retrofit.create(NetworkingYandex.class);
+                 networkingYandex = retrofit.create(NetworkingYandex.class);
 
-        Call<responseModel> call = networkingYandex.deleteEvent(querry);
-        call.enqueue(new Callback<responseModel>() {
-            @Override
-            public void onResponse(Call<responseModel> call, Response<responseModel> response) {
+                 Call<responseModel> call = networkingYandex.deleteEvent(querry);
+                 call.enqueue(new Callback<responseModel>() {
+                     @Override
+                     public void onResponse(Call<responseModel> call, Response<responseModel> response) {
 
-                if(response.isSuccessful()){
+                         if(response.isSuccessful()){
 
-                    file.delete();
+                             file.delete();
 
-                }else{
+                         }else{
 
-                }
-
-
+                         }
 
 
-            }
+                     }
 
-            @Override
-            public void onFailure(Call<responseModel> call, Throwable t) {
-                Log.i("onFailureDelete " ,"failure " + t);
-            }
-        });
+                     @Override
+                     public void onFailure(Call<responseModel> call, Throwable t) {
+                         Log.i("onFailureDelete " ,"failure " + t);
+                     }
+                 });
+             }
 
+
+         } catch (InterruptedException e) {
+             e.printStackTrace();
+         }
+
+     }
+
+ };
+       Thread thread=new Thread(runnable);
+       thread.start();
 
     }
 }
