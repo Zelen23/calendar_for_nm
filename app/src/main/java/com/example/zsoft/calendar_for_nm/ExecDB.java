@@ -215,7 +215,7 @@ public class ExecDB {
         Log.i("ExecDB_delete_row",   table+" "+id);
 
 
-        boolean result=db1.delete(table, "_id = " + id, null) > 0;
+
         if(flagSync(context)&&table=="clients"){
             //если не отсинхронен  то удаляю не создав json на удаление
 
@@ -223,6 +223,7 @@ public class ExecDB {
             /*по id */
 
         }
+        boolean result=db1.delete(table, "_id = " + id, null) > 0;
         return result;
         //return db1.delete(table, "date like'"+date+"' "+time1, null) > 0;
 
