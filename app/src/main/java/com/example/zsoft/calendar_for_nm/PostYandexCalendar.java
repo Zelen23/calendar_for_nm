@@ -76,7 +76,7 @@ Log.i("PostYandexCalendar info","---");
      @Override
      public void run() {
          try {
-             Thread.sleep(1000);
+             Thread.sleep(3000);
              /*проблема в отправляемых данных*/
              String way = "/sdcard/sdcard/temp/";
              String name = "syncFileDelete.json";
@@ -108,7 +108,7 @@ Log.i("PostYandexCalendar info","---");
                      public void onResponse(Call<responseModel> call, Response<responseModel> response) {
 
                          if(response.isSuccessful()){
-
+                             Log.i("deleteEvent  " , String.valueOf(response.raw()));
                              file.delete();
 
                          }else{

@@ -165,30 +165,28 @@ public class Services {
           DeleteEventJson deleteEventJson=new DeleteEventJson();
           PostYandexCalendar postYandexCalendar =new PostYandexCalendar(context);
           ExecDB execDB=new ExecDB();
+          GsonBuilder gsonBuilder = new GsonBuilder();
+          Gson gson = gsonBuilder.create();
+          String way = "/sdcard/sdcard/temp/";
+          String nameDel = "syncFileDelete.json";
 
           // по id получаю uid
+          //  если юид есть значит была синхра- созаю json на удаление
           Integer uid= execDB.getCalendarUid(context,id);
           if(uid!=null){
-               GsonBuilder gsonBuilder = new GsonBuilder();
-               Gson gson = gsonBuilder.create();
-               String way = "/sdcard/sdcard/temp/";
-               String name = "syncFileDelete.json";
 
-               File file = new File(way + name);
-
-
+               File file = new File(way + nameDel);
                if (file.exists()) {
                     Log.i("jsonStr", "existFile");
 
-
                     List<DeleteEventJson.obj> upditemD = gson.fromJson(new HelperData()
-                            .readToStream(way+name).toString(),DeleteEventJson.class).models;
+                            .readToStream(way+nameDel).toString(),DeleteEventJson.class).models;
 
                     upditemD.add(json(uid));
                     deleteEventJson.models=upditemD;
-                    new HelperData().
-                            saveFile(way, name, gson.toJson(deleteEventJson));
 
+                    new HelperData().
+                            saveFile(way, nameDel, gson.toJson(deleteEventJson));
 
                } else {
                     List<DeleteEventJson.obj> item=new ArrayList<>();
@@ -196,19 +194,22 @@ public class Services {
 
                     deleteEventJson.models=item;
                     Log.i("jsonStrDelete",deleteEventJson.models.get(0).toString());
+
                     new HelperData().
-                            saveFile(way, name, gson.toJson(deleteEventJson));
+                            saveFile(way, nameDel, gson.toJson(deleteEventJson));
                }
 
           }else {
+               // если запись не была синхронизирована
                Log.i("jsonStrDelete","_id "+id+" nonSync, if filr send Exist checl in");
 
-               String way = "/sdcard/sdcard/temp/";
-               String name = "syncFile.json";
-               File fileSend = new File(way + name);
+
+               String namecrt = "syncFile.json";
+               File fileSend = new File(way + namecrt);
+
                if(fileSend.exists()){
 
-                    Log.i("jsonStrDelete","file "+name +" exist");
+                    Log.i("jsonStrDelete","file "+namecrt +" exist");
                     ArrayList<String> list = execDB.getLine_(context, "clients", id);
                     // если uid-a нет проверить в  файле на отпавку и удалитьв нем
                     ContentValues values=new ContentValues();
@@ -223,38 +224,34 @@ public class Services {
                     values.put(dbs.DATE_COLUMN, list.get(4));
 
                     CreateEventJson.obj searchObj = js(values);
-                    GsonBuilder gsonBuilder = new GsonBuilder();
-                    Gson gson = gsonBuilder.create();
+
 
                     List<CreateEventJson.obj> listObj = gson.fromJson(new HelperData()
-                            .readToStream(way+name).toString(),CreateEventJson.class).models;
+                            .readToStream(way+namecrt).toString(),CreateEventJson.class).models;
 
                     for (int i=0; i<listObj.size();i++){
 
                          CreateEventJson.obj elt=listObj.get(i);
 
-                      if(
-                              elt.params.name.equals(searchObj.params.name)&&
+                      if(elt.params.name.equals(searchObj.params.name)&&
                               elt.params.description.equals(searchObj.params.description)&&
-                              elt.params.start.equals(searchObj.params.start)
-
-                      ){
+                              elt.params.start.equals(searchObj.params.start))
+                      {
                            listObj.remove(i);
                            CreateEventJson createEventJson=new CreateEventJson();
                            createEventJson.models= listObj;
                            Log.i("jsonStrDelete","id for delete "+i);
                            new HelperData().
-                                   saveFile(way, name, gson.toJson(createEventJson));
+                                   saveFile(way, namecrt, gson.toJson(createEventJson));
                       }
-
                          }
-
-
-
                }
 
-          }
+               deleteEventJson =gson.fromJson(new HelperData()
+                       .readToStream(way+nameDel).toString(),DeleteEventJson.class);
 
+
+          }
 
          postYandexCalendar.deleteEvent(deleteEventJson);
 
