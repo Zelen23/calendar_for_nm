@@ -68,6 +68,7 @@ import java.util.List;
  */
 
 public class preference  extends PreferenceActivity{
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onPause() {
@@ -708,6 +709,9 @@ public class preference  extends PreferenceActivity{
                 }
             });
 
+            if(pr_token=="null"){
+                checkSync.setEnabled(false);
+            }
             checkSync.setChecked(pr_checkSync);
             checkSync.setOnClickListener(new View.OnClickListener() {
                 @Override
