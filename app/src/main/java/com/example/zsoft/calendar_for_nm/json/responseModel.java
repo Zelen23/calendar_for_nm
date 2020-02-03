@@ -107,9 +107,18 @@ public class responseModel {
         String status;
         Integer sequence;
         Integer showEventId;
+        Integer layerId;
         String showDate;
         String endTs;
         String [] externalIds;
+
+        public Integer getLayerId() {
+            return layerId;
+        }
+
+        public void setLayerId(Integer layerId) {
+            this.layerId = layerId;
+        }
 
         public String getStatus() {
             return status;
@@ -161,13 +170,14 @@ public class responseModel {
 
 
 
-        public DataParams(String status, Integer sequence, Integer showEventId, String showDate, String endTs, String[] externalIds) {
+        public DataParams(String status, Integer sequence, Integer showEventId, String showDate, String endTs, String[] externalIds,Integer layerId) {
             this.status = status;
             this.sequence = sequence;
             this.showEventId = showEventId;
             this.showDate = showDate;
             this.endTs = endTs;
             this.externalIds = externalIds;
+            this.layerId = layerId;
         }
 
 

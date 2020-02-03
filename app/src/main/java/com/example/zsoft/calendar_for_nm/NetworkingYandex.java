@@ -1,11 +1,13 @@
 package com.example.zsoft.calendar_for_nm;
 
 import com.example.zsoft.calendar_for_nm.json.CreateEventJson;
+import com.example.zsoft.calendar_for_nm.json.CreateLayerJson;
 import com.example.zsoft.calendar_for_nm.json.DeleteEventJson;
 import com.example.zsoft.calendar_for_nm.json.responseModel;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface NetworkingYandex  {
@@ -35,5 +37,8 @@ public interface NetworkingYandex  {
     @POST("api/models?_models=delete-event")
     Call<responseModel>deleteEvent(@Body DeleteEventJson querry);
 
+
+    @POST("api/models?_models=do-create-layer")
+    Call<responseModel>createLayer(@Body CreateLayerJson querry);
 }
 

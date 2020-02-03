@@ -95,4 +95,9 @@
     <string name="countOrd">Кол-во записей:</string>
     <string name="sizeDB">Размер базы:</string>
     <string name="conditionClear">Удалить записи старше:</string>
+
+    <string name="errCreateCld">Календарь не создан</string>
+    <string name="failCreateEvent">Ошибка отправки записи</string>
+    <string name="failDeleteEvent">Ошибка удаления записи</string>
+    <string name="failCreateLayer">Ошибка создания календаря</string>
 </resources>

@@ -3,6 +3,8 @@ package com.example.zsoft.calendar_for_nm.json;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.example.zsoft.calendar_for_nm.ExecDB;
@@ -42,8 +44,9 @@ public class Services {
      Context context;
 
 
-     public CreateEventJson.obj js(ContentValues value){
 
+     public CreateEventJson.obj js(ContentValues value){
+     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
                   String name=value.getAsString("name");
                   String description=value.getAsString("sf_num");
@@ -60,7 +63,7 @@ public class Services {
                           ,true
                           ,false
                           ,"busy"
-                          ,9443673
+                          ,sharedPreferences.getInt("layerId",-1)
                           ,start
                           ,end
                           );
@@ -112,6 +115,7 @@ public class Services {
           String querry=new HelperData()
                   .readToStream(way+name).toString();
           Log.i("querry",querry);
+
           postYandexCalendar.sendEvent(createEventJson);
 
      }
@@ -206,6 +210,7 @@ public class Services {
 
                String namecrt = "syncFile.json";
                File fileSend = new File(way + namecrt);
+               File fileDel = new File(way + nameDel);
 
                if(fileSend.exists()){
 
@@ -247,14 +252,41 @@ public class Services {
                          }
                }
 
-               deleteEventJson =gson.fromJson(new HelperData()
-                       .readToStream(way+nameDel).toString(),DeleteEventJson.class);
+               if(fileDel.exists()){
+                    deleteEventJson =gson.fromJson(new HelperData()
+                            .readToStream(way+nameDel).toString(),DeleteEventJson.class);
+               }
+
 
 
           }
 
          postYandexCalendar.deleteEvent(deleteEventJson);
 
+     }
+
+     public CreateLayerJson createLayer(String name){
+          HashMap<String,CreateLayerJson.params> params= new HashMap<>();
+          List<CreateLayerJson.Notifications> notify=new ArrayList<>();
+          notify.add(new CreateLayerJson.Notifications("email","-60m"));
+
+          CreateLayerJson.params valueparams=new CreateLayerJson.params(
+                  "user",
+                  name,
+                  "#adca2f",
+                  true,
+                  true,
+                  true,
+                  false,
+                   notify
+          );
+          CreateLayerJson.obj mod = new CreateLayerJson.obj("do-create-layer", valueparams);
+          List<CreateLayerJson.obj>modlist = new ArrayList<CreateLayerJson.obj>();
+          modlist.add(mod);
+          CreateLayerJson createLayerJson=new CreateLayerJson();
+          createLayerJson.models=modlist;
+
+     return createLayerJson;
      }
 
      public SyncFileJson writeOrdToJson(ContentValues valuse){

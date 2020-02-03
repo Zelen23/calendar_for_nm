@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.zsoft.calendar_for_nm.json.CreateEventJson;
+import com.example.zsoft.calendar_for_nm.json.CreateLayerJson;
 import com.example.zsoft.calendar_for_nm.json.DeleteEventJson;
 import com.example.zsoft.calendar_for_nm.json.Services;
 import com.example.zsoft.calendar_for_nm.json.responseModel;
@@ -29,12 +31,13 @@ public class PostYandexCalendar {
     private static Retrofit retrofit;
     Context context;
     GsonBuilder gsonBuilder = new GsonBuilder();
+
     Gson gson = gsonBuilder.create();
     public PostYandexCalendar(Context context) {
         this.context = context;
     }
 
-    public OkHttpClient.Builder client(){
+   public OkHttpClient.Builder client(){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -66,46 +69,58 @@ public class PostYandexCalendar {
     }
 
    public void sendEvent(CreateEventJson querry) {
+       SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(context);
+        if(sharedPreferences.getInt("layerId",-1)!=-1) {
 
-       /*проблема в отправляемых данных*/
-       String way = "/sdcard/sdcard/temp/";
-       String name = "syncFile.json";
 
-       final File file = new File(way + name);
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://calendar.yandex.ru/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client().build())
-                .build();
+            /*проблема в отправляемых данных*/
+            String way = "/sdcard/sdcard/temp/";
+            String name = "syncFile.json";
 
-        networkingYandex = retrofit.create(NetworkingYandex.class);
+            final File file = new File(way + name);
 
-        Call<responseModel> call = networkingYandex.createEvent(querry);
-        call.enqueue(new Callback<responseModel>() {
-            @Override
-            public void onResponse(Call<responseModel> call, Response<responseModel> response) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("https://calendar.yandex.ru/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client().build())
+                    .build();
 
-                    if(response.isSuccessful()){
+            networkingYandex = retrofit.create(NetworkingYandex.class);
+
+            Call<responseModel> call = networkingYandex.createEvent(querry);
+            call.enqueue(new Callback<responseModel>() {
+                @Override
+                public void onResponse(Call<responseModel> call, Response<responseModel> response) {
+
+                    if (response.isSuccessful()) {
                         /* в файле
                          * номер имя дата и время
                          * найти в базе client.id*/
 
-                        new Services(context).setUidtoOrder(response.body());
-                        file.delete();
+                            new Services(context).setUidtoOrder(response.body());
+                            file.delete();
 
-                    }else{
+                    } else {
                     }
 
-            }
+                }
 
-            @Override
-            public void onFailure(Call<responseModel> call, Throwable t) {
-                Log.i("onFailure " ,"failure " + t);
-            }
-        });
+                @Override
+                public void onFailure(Call<responseModel> call, Throwable t) {
+                    Log.i("onFailure ", "failure " + t);
+                }
+            });
 
-Log.i("PostYandexCalendar info","---");
+            Log.i("PostYandexCalendar info", "---");
+        }else{
+
+            Toast.makeText(
+                    context,
+                    context.getResources().getText(R.string.errCreateCld),
+                    Toast.LENGTH_LONG )
+                    .show();
+        }
     }
 
    public void deleteEvent(final DeleteEventJson querry) {
@@ -147,13 +162,12 @@ Log.i("PostYandexCalendar info","---");
                      public void onResponse(Call<responseModel> call, Response<responseModel> response) {
 
                          if(response.isSuccessful()){
-                             Log.i("deleteEvent  " , String.valueOf(response.raw()));
-                             file.delete();
 
+                                 file.delete();
+                             Log.i("deleteEvent  " , String.valueOf(response.raw()));
                          }else{
 
                          }
-
 
                      }
 
@@ -175,5 +189,50 @@ Log.i("PostYandexCalendar info","---");
        Thread thread=new Thread(runnable);
        thread.start();
 
+    }
+
+   public void createLayer(CreateLayerJson querry) {
+       final SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(context);
+
+
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://calendar.yandex.ru/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client().build())
+                .build();
+
+        networkingYandex = retrofit.create(NetworkingYandex.class);
+
+        Call<responseModel> call = networkingYandex.createLayer(querry);
+        call.enqueue(new Callback<responseModel>() {
+            @Override
+            public void onResponse(Call<responseModel> call, Response<responseModel> response) {
+
+                if(response.isSuccessful()){
+
+                    //чекать ответ ОК
+                    if(response.body().getModels().get(0).getStatus().equals("ok")){
+                        int layerID=response.body().getModels().get(0).getData().getLayerId();
+                        Log.i("createLayer resp", String.valueOf(layerID));
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt("layerId", layerID);
+                        editor.commit();
+                    } else{
+                        Toast.makeText(context,context.getResources().getText(R.string.failCreateLayer),Toast.LENGTH_LONG).show();}
+
+
+                }else{
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<responseModel> call, Throwable t) {
+                Log.i("onFailure " ,"failure " + t);
+            }
+        });
+
+        Log.i("createLayer info","---");
     }
 }
