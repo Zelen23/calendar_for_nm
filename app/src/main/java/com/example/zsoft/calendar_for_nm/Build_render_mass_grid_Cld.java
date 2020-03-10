@@ -161,8 +161,8 @@ Context context;
         list_d.add(context.getString(R.string.dw_we));
         list_d.add(context.getString(R.string.dw_th));
         list_d.add(context.getString(R.string.dw_fr));
-        list_d.add(context.getString(R.string.dw_mo));
         list_d.add(context.getString(R.string.dw_sa));
+        list_d.add(context.getString(R.string.dw_su));
 
 //из нетбина календарь
         int in = 1;

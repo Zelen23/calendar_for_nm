@@ -76,8 +76,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ya_token"
-        android:layout_marginStart="41dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="-28dp"
+        android:layout_marginTop="72dp"
         android:layout_toEndOf="@+id/Sync" />
 
 
