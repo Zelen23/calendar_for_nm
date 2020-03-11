@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/ya_ln"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/ya_ClientID"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/ya_ClientID"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/ya_ClientID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/ya_btn"
+        android:layout_below="@+id/ya_ln"
+        android:layout_marginStart="22dp"
+        android:layout_toEndOf="@+id/Client_id"
+        android:ems="10" />
+        " />
+
+    <Button
+        android:id="@+id/ya_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/ya_ClientID"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="18dp"
+        android:text="@string/set_syncButtonToken" />
+
+    <TextView
+        android:id="@+id/ya_token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/ya_ClientID"
+        android:layout_alignStart="@+id/Client_id"
+        android:layout_below="@+id/ya_btn"
+        android:layout_marginTop="13dp"
+        android:ems="10" />
+
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/Client_id"
+        android:layout_alignTop="@+id/ya_ln"
+        android:text="@string/set_syncLogin" />
+
+    <TextView
+        android:id="@+id/Client_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ya_ln"
+        android:layout_marginStart="20dp"
+        android:text="@string/set_syncClientId" />
+
+    <TextView
+        android:id="@+id/Sync"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ya_token"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="22dp"
+        android:text="@string/set_syncFlag" />
+
+    <CheckBox
+        android:id="@+id/CheckSync"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ya_token"
+        android:layout_marginStart="-28dp"
+        android:layout_marginTop="72dp"
+        android:layout_toEndOf="@+id/Sync" />
+
+
+</android.widget.RelativeLayout>

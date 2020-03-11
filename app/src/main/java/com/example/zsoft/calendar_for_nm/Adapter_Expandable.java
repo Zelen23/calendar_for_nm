@@ -140,7 +140,7 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
         ImageView expItemInfo=convertView.findViewById(R.id.expItemInfo);
 
         expItemTime.setText(search.get(child.get(groupPosition).sf_num).get(childPosition).time1);
-        expItemDate.setText(new HelperData().ConvertDateFromDB(
+        expItemDate.setText(new HelperData().ConvertDateFromDBX(
                 search.get(child.get(groupPosition).sf_num).get(childPosition).date));
 
 

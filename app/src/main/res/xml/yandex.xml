@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:defaultValue="null"
+        android:key="token"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="yandex_token"
+        android:title="yandex_token" />
+
+    <EditTextPreference
+        android:defaultValue="fc3985e6de824b35a95e56b00dd21685"
+        android:key="client_id"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="client_id"
+        android:title="client_id" />
+
+    <EditTextPreference
+        android:defaultValue="DskDrv@yandex.ru"
+        android:key="login_hint"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="login_hint"
+        android:title="login_hint" />
+
+    <Preference
+       android:title="GetToken"
+       android:key="yaGetToken"
+       android:summary="Token"/>
+
+</PreferenceScreen>

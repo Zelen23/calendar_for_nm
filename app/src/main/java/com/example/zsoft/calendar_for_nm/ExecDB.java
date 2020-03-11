@@ -3,9 +3,13 @@ package com.example.zsoft.calendar_for_nm;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.example.zsoft.calendar_for_nm.json.Services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,9 +23,10 @@ import java.util.Locale;
  * Created by azelinsky on 03.05.2018.
  */
 
- class ExecDB {
+public class ExecDB {
 
     private db mDbHelper;
+    SharedPreferences sharedPreferences;
 
     // по дате(месяц, год) создаю лист с парами(день, кол-во записей)
     List<Constructor_dayWeight> init_mass(Context context, int month, int y) {
@@ -62,7 +67,7 @@ import java.util.Locale;
 
     // получаю по дате массив
     //[397, 19:00, 20:00, лукьянчикова ирина, , true]
-    List<String> l_clients_of_day(Context ct, String ddat) {
+    public  List<String> l_clients_of_day(Context ct, String ddat) {
 //ddat="2016-4-12";
         // read db
         List<String> sqldat = new ArrayList<>();
@@ -107,7 +112,7 @@ import java.util.Locale;
             c.close();
             db1.close();
         }
-         Log.i("ExecDB_l_clients_of_day", String.valueOf(sqldat));
+         Log.i("ExecDB_l_clients_of_day", "querry: "+ddat+" data: "+String.valueOf(sqldat));
         return sqldat;
     }
 
@@ -139,6 +144,10 @@ import java.util.Locale;
                 val.put(db.TIME1_COLUMN, times);
                 val.put(db.TIME2_COLUMN, times2);
                 val.put(db.DATE_COLUMN, dats);
+
+                if(flagSync(context)){
+                    new Services(context).saveTempCreateEvent(val);
+                }
                 break;
             case "temp":
 
@@ -153,16 +162,69 @@ import java.util.Locale;
                 break;
         }
         db1.insert(table, null, val);
-        Log.i("ExecDB_write_orders", "tab " + table);
         db1.close();
+
+
+
+    }
+
+    public void writeUID(Context context, Integer clientId, Integer uid) {
+
+        mDbHelper = new db(context);
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+        ContentValues val = new ContentValues();
+
+                val.put(db.clientId_synchro, clientId);
+                val.put(db.uid_synchro, uid);
+
+
+        db1.insert("synchro", null, val);
+        db1.close();
+
+    }
+    public Integer getCalendarUid(Context context, String id) {
+        /*вывод диалогового окна с деталями по клиенту
+         * для теста номер*/
+        ArrayList<String> line = new ArrayList<>();
+// контекст из метода
+        mDbHelper = new db(context);
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+        Cursor c;
+        Integer uidval = null;
+
+      // при удалении
+                c = db1.rawQuery("SELECT * FROM synchro where clientId= " + id, null);
+                if (c.moveToFirst()) {
+
+                    int uid = c.getColumnIndex("uid");
+                    do {
+                        uidval=c.getInt(uid);
+                    }
+                    while (c.moveToNext());
+                    c.close();
+                }
+
+
+        return uidval;
     }
 
     // удаляю строку по _id
     public boolean deleterow(Context context, String table, String id) {
         mDbHelper = new db(context);
         SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
-        Log.i("ExecDB_delete_row", id);
-        return db1.delete(table, "_id = " + id, null) > 0;
+        Log.i("ExecDB_delete_row",   table+" "+id);
+
+
+
+        if(flagSync(context)&&table=="clients"){
+            //если не отсинхронен  то удаляю не создав json на удаление
+
+            new Services(context).saveTempDeleteEvent(id);
+            /*по id */
+
+        }
+        boolean result=db1.delete(table, "_id = " + id, null) > 0;
+        return result;
         //return db1.delete(table, "date like'"+date+"' "+time1, null) > 0;
 
     }
@@ -192,7 +254,12 @@ import java.util.Locale;
                     do {
                         line.add(c.getString(id));
                         line.add(c.getString(name));
-                        line.add(c.getString(family));
+                        if(c.getString(family)!=null){
+                            line.add(c.getString(family));
+                        }else{
+                            line.add("");
+                        }
+
                         line.add(c.getString(pk_num));
                         line.add(c.getString(url));
                         line.add(c.getString(last));
@@ -284,7 +351,7 @@ import java.util.Locale;
 
         db1.update(table,val,"_id = '"+id+"'",null);
 
-        Log.i("ExecDB_flag_visitOrPay",val.toString());
+        Log.i("ExecDB_flag_visitOrPay", flag+" "+ id+" "+table+" "+coloumn);
         db1.close();
     }
 
@@ -295,6 +362,7 @@ import java.util.Locale;
         * */
     ArrayList<String>   beWrite(Context context,String num,String timeShtamp) {
         //вт, 5 июня 2018 11:52:28
+        //пт, 1 мар. 2019 11:51:02
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
                 new Locale("ru"));
 
@@ -342,6 +410,37 @@ import java.util.Locale;
 
         }
         return null;
+
+    }
+
+    ArrayList<String>   beWriteX(Context context,String num,String timeShtamp) {
+
+            String dat="SELECT * FROM clients where sf_num like '%"
+                    +num+"%' and date='"+timeShtamp+"'";
+
+            ArrayList<String> queue = new ArrayList<>();
+
+            mDbHelper = new db(context);
+            mDbHelper.getWritableDatabase();
+            SQLiteDatabase db2 = mDbHelper.getWritableDatabase();
+            Cursor c = db2.rawQuery(dat, null);
+
+            if (c.moveToFirst()) {
+
+                int name = c.getColumnIndex("name");
+                int time = c.getColumnIndex("time1");
+                int time2 = c.getColumnIndex("time2");
+
+                do {
+                    queue.add(c.getString(name));
+                    queue.add(c.getString(time));
+                    queue.add(c.getString(time2));
+                }
+
+                while (c.moveToNext());
+                c.close();
+            }
+            return queue;
 
     }
 
@@ -460,7 +559,7 @@ import java.util.Locale;
         }
         return i_ct;
     }
-
+    // Эту дичь нужно описать
     public String MinOrMax(Context ct,String minORmax){
         mDbHelper = new db(ct);
         mDbHelper.getWritableDatabase();
@@ -485,9 +584,47 @@ import java.util.Locale;
 
     }
 
+    //Получаю датуи время последних изменений
+    public List database_info(Context ct){
+        List<String> list = new ArrayList<String>();
+
+        mDbHelper = new db(ct);
+        mDbHelper.getWritableDatabase();
+        SQLiteDatabase db2 = mDbHelper.getWritableDatabase();
+        String query="Select * from info";
+
+        Cursor c = db2.rawQuery(query, null);
+
+        if (c.moveToFirst()) {
+
+            int date_Last_write = c.getColumnIndex("date_Last_write");
+            int version_base = c.getColumnIndex("version");
+            int countOrders = c.getColumnIndex("countOrders");
+            do {
+                list.add(c.getString(date_Last_write));
+                list.add(c.getString(version_base));
+                list.add(c.getString(countOrders));
+
+            }
+
+            while (c.moveToNext());
+            c.close();
+        }
+
+        Log.i("ExecDB_DataBase_info",list.toString());
+
+        return list ;
+    }
 
 
 
+    private boolean flagSync(Context context){
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Boolean F_SYNC= sharedPreferences.getBoolean("syncFlag", false);
+
+        return F_SYNC;
+
+    }
 
 
 

@@ -13,10 +13,14 @@ import java.util.List;
 
 class Build_render_mass_grid_Cld {
 
-// прислан массив и дата c годом,
-// дату и год исп для получения массивов
+    public Build_render_mass_grid_Cld(Context context) {
+        this.context = context;
+    }
 
-    int[] convert_mass_for_render(Context context, List list_d, int month, int year){
+    // прислан массив и дата c годом,
+// дату и год исп для получения массивов
+Context context;
+    int[] convert_mass_for_render( List list_d, int month, int year){
         List<String> day_for_render=new ArrayList<>();
         List<Integer> weight_of_day=new ArrayList<>();
         List<Constructor_dayWeight> listDayWeight=new ExecDB().init_mass(context,month,year);
@@ -152,13 +156,13 @@ class Build_render_mass_grid_Cld {
         max = cld.getActualMaximum(Calendar.DAY_OF_MONTH);
         String[] ms = new String[50];
         final List<String> list_d = new ArrayList<>();
-        list_d.add("Пн");
-        list_d.add("Вт");
-        list_d.add("Ср");
-        list_d.add("Чт");
-        list_d.add("Пт");
-        list_d.add("Сб");
-        list_d.add("Вс");
+        list_d.add(context.getString(R.string.dw_mo));
+        list_d.add(context.getString(R.string.dw_tu));
+        list_d.add(context.getString(R.string.dw_we));
+        list_d.add(context.getString(R.string.dw_th));
+        list_d.add(context.getString(R.string.dw_fr));
+        list_d.add(context.getString(R.string.dw_sa));
+        list_d.add(context.getString(R.string.dw_su));
 
 //из нетбина календарь
         int in = 1;

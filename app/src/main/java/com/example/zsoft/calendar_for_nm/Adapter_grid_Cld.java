@@ -59,10 +59,10 @@ public class Adapter_grid_Cld extends BaseAdapter {
     }
 
     void refresh(int mns,int year){
-        List l_date=new Build_render_mass_grid_Cld().grv(mns,year);
+        List l_date=new Build_render_mass_grid_Cld(mContext).grv(mns,year);
         this.string=l_date;
-        this.image_id=new  Build_render_mass_grid_Cld()
-                .convert_mass_for_render(mContext,l_date
+        this.image_id=new  Build_render_mass_grid_Cld(mContext)
+                .convert_mass_for_render(l_date
                 ,mns,year);
         notifyDataSetChanged();
 

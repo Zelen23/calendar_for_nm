@@ -57,12 +57,13 @@ public class Fragment_search extends Fragment {
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.search,container,false);
 
+
         final Spinner spinner= view.findViewById(R.id.spinner);
         final EditText editText=view.findViewById(R.id.editText3);
         final ExpandableListView expandableListView=view.findViewById(R.id.expandData);
         Button button=view.findViewById(R.id.button);
 
-        String[]param={"Номер","Имя"};
+        String[]param={getResources().getString(R.string.serch_exp_num),getResources().getString(R.string.serch_exp_name)};
         ArrayAdapter adapter =new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,param);
 
         spinner.setAdapter(adapter);

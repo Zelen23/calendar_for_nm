@@ -23,7 +23,7 @@ public class db extends SQLiteOpenHelper implements BaseColumns {
 
     private static final String DATABASE_TABLE ="clients";
     public static final String ID_COLUMN="id";
-    static final String NAME_COLUMN="name";
+    public static final String NAME_COLUMN="name";
     public static final String TIME1_COLUMN="time1";
     public static final String TIME2_COLUMN="time2";
     public static final String CONTACT_COLUMN="sf_num";
@@ -85,8 +85,28 @@ public class db extends SQLiteOpenHelper implements BaseColumns {
     public static final String date_his_t="date";
     public static final String count_his_t="d_count";
 
+    private static final String DATABASE_TABLE9 ="settings";
+    public static final String key_settings="key";
+    public static final String value_settings="value";
+
+    private static final String DATABASE_TABLE10 ="synchro";
+    public static final String id_synchro="id";
+    public static final String clientId_synchro="clientId";
+    public static final String uid_synchro="uid";
+
+/*CREATE TABLE [synchro] (
+  [id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [clientId] INTEGER NOT NULL,
+  [uid] INTEGER);
+*/
 
     /*
+
+CREATE TABLE [settings] (
+  [_id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  [key] CHAR,
+  [value] CHAR);
+
 CREATE TABLE [queue_user] (
   [id] INT NOT NULL,
   [num] int NOT NULL,
@@ -142,7 +162,7 @@ CREATE TABLE [temp_user] (
 		+ PAY_COLUMN + " nvarchar(50), "
 		+ DATE_COLUMN + " nvarchar(50), "
         + DATE1_COLUMN + " nvarchar(50),"
-        + VISIT_COLUMN  + " VARCHAR NOT NULL ON CONFLICT REPLACE DEFAULT false );"
+        + VISIT_COLUMN  + " VARCHAR NOT NULL ON CONFLICT REPLACE DEFAULT 'false' );"
         ;
 
     private static final String DATABASE_CREATE_SCRIPT = "create table "
@@ -181,7 +201,7 @@ CREATE TABLE [temp_user] (
             +qu_comment+" VARCHAR );"
             ;
 
-    private static final String DATABASE_CREATE_SCRIPT6 = "create table "
+    private static final String DATABASE_CREATE_SCRIPT6="create table "
 		    + DATABASE_TABLE6 + " (" + BaseColumns._ID
 		    + " integer primary key autoincrement, "
 		    + NAME_TEMP + " text not null, "
@@ -199,6 +219,19 @@ CREATE TABLE [temp_user] (
             +id_his_t+ " INT ,"
             +date_his_t+ " VARCHAR ,"
             +count_his_t+ " VARCHAR );"
+            ;
+
+    private static final String DATABASE_CREATE_SCRIPT9="create table "
+            +DATABASE_TABLE9+" (" + BaseColumns._ID
+            + " integer primary key autoincrement, "
+            +key_settings+ "VARCHAR ,"
+            +value_settings+ " VARCHAR );"
+            ;
+    private static final String DATABASE_CREATE_SCRIPT10="create table "
+            +DATABASE_TABLE10+"("
+            +id_synchro+ " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
+            +clientId_synchro+ " INTEGER NOT NULL ,"
+            +uid_synchro+ " INTEGER );"
             ;
 
     /*db(View.OnClickListener onClickListener, String s, Context context, int i){
@@ -245,6 +278,9 @@ CREATE TABLE [temp_user] (
         db.execSQL(DATABASE_CREATE_SCRIPT6);
       // db.execSQL(DATABASE_CREATE_SCRIPT7);
         db.execSQL(DATABASE_CREATE_SCRIPT8);
+        db.execSQL(DATABASE_CREATE_SCRIPT9);
+        db.execSQL(DATABASE_CREATE_SCRIPT10);
+
         db.execSQL( "CREATE TRIGGER [count+]\n" +
                 "AFTER INSERT\n" +
                 "ON [clients]\n" +
@@ -301,7 +337,7 @@ CREATE TABLE [temp_user] (
                 "from history)+1, \n" +
                 "new.date,0);\n" +
                 "\n" +
-                "END;;");
+                "END;");
 
 
         db.execSQL("CREATE TRIGGER [add]\n" +
@@ -483,6 +519,14 @@ CREATE TABLE [temp_user] (
                 "From user,clients\n" +
                 "Where user.pk_num=clients.[sf_num] and date like strftime('%Y-%m-%%')\n" +
                 "order  by  number desc;");
+
+        db.execSQL("CREATE VIEW [info] AS \n" +
+                "Select \n" +
+                "(select date1 from clients where _id=(select max(_id) from clients)) as date_Last_write,\n" +
+                "count(clients.[_id]) as countOrders,\n" +
+                "(select value from settings where `key`='version') as version\n" +
+                "\n" +
+                "from clients;\n");
 
         Log.i("db", "create");
     }

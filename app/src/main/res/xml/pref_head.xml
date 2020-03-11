@@ -4,17 +4,22 @@
 
 <header
     android:fragment="com.example.zsoft.calendar_for_nm.preference$PrefFragment"
-    android:title="ViewSettings"
-    android:summary="prefs_summ_category_one"/>
+    android:title="@string/set_view"
+    android:summary="@string/set_sumview"/>
     <header/>
     <header
         android:fragment="com.example.zsoft.calendar_for_nm.preference$PrefUserSettingsFragment"
-        android:title="User Interface Settings"
-        android:summary="Interface Settings"/>
+        android:title="@string/set_user_interface"
+        android:summary="@string/set_user_suminterface"/>
     <header/>
     <header
         android:fragment="com.example.zsoft.calendar_for_nm.preference$PrefClearDB"
-        android:title="ClearDb"
-        android:summary="---"/>
+        android:title="@string/set_clearDB"
+        android:summary="@string/set_sumclearDB"/>
+    <header/>
+    <header
+        android:fragment="com.example.zsoft.calendar_for_nm.preference$Yandex_sync"
+        android:title="@string/set_sync"
+        android:summary="@string/set_sumSync"/>
     <header/>
 </preference-headers>
