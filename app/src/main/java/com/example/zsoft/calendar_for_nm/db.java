@@ -18,8 +18,8 @@ import java.io.File;
 
 public class db extends SQLiteOpenHelper implements BaseColumns {
 
-             private static final String DATABASE_NAME="st.db";
-             private static final int DATABASE_VERSION=1;
+    private static final String DATABASE_NAME="st.db";
+    private static final int DATABASE_VERSION=4;
 
     private static final String DATABASE_TABLE ="clients";
     public static final String ID_COLUMN="id";
@@ -30,6 +30,7 @@ public class db extends SQLiteOpenHelper implements BaseColumns {
     public static final String PAY_COLUMN="pay";
     public static final String DATE_COLUMN="date";
     public static final String DATE1_COLUMN="date1";
+    public static final String TIMESTAMP_COLUMN="time_stamp";
     public static final String VISIT_COLUMN="visit" ;
     public static final String FILE_DIR="/sdcard/";
 
@@ -69,6 +70,7 @@ public class db extends SQLiteOpenHelper implements BaseColumns {
     public static final String PAY_TEMP="pay";
     public static final String DATE_TEMP="date";
     public static final String DATE1_TEMP="date1";
+    public static final String TIMESTAMP_COLUMN_TEMP="time_stamp";
     public static final String VISIT_TEMP="visit" ;
 
     private static final String DATABASE_TABLE7 ="temp_user";
@@ -93,6 +95,7 @@ public class db extends SQLiteOpenHelper implements BaseColumns {
     public static final String id_synchro="id";
     public static final String clientId_synchro="clientId";
     public static final String uid_synchro="uid";
+
 
 /*CREATE TABLE [synchro] (
   [id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -161,7 +164,8 @@ CREATE TABLE [temp_user] (
 		+ CONTACT_COLUMN + " INT(20) NOT NULL CONSTRAINT [fk_num] REFERENCES [user]([pk_num]) ON DELETE NO ACTION ON UPDATE NO ACTION MATCH SIMPLE ,"
 		+ PAY_COLUMN + " nvarchar(50), "
 		+ DATE_COLUMN + " nvarchar(50), "
-        + DATE1_COLUMN + " nvarchar(50),"
+        + DATE1_COLUMN + " nvarchar(50), "
+        + TIMESTAMP_COLUMN + " INTEGER, "
         + VISIT_COLUMN  + " VARCHAR NOT NULL ON CONFLICT REPLACE DEFAULT 'false' );"
         ;
 
@@ -211,6 +215,7 @@ CREATE TABLE [temp_user] (
 		    + PAY_TEMP + " nvarchar(50), "
 		    + DATE_TEMP + " nvarchar(50), "
             + DATE1_TEMP + " nvarchar(50),"
+            + TIMESTAMP_COLUMN_TEMP + " INTEGER, "
             + VISIT_TEMP  + " VARCHAR NOT NULL ON CONFLICT REPLACE DEFAULT false );"
             ;
 
@@ -234,6 +239,8 @@ CREATE TABLE [temp_user] (
             +uid_synchro+ " INTEGER );"
             ;
 
+    private  static final String DATABASE_ADD_COLOUMN_TIMESTAMP="" +
+            "ALTER TABLE clients ADD time_stamp INTEGER; ";
     /*db(View.OnClickListener onClickListener, String s, Context context, int i){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
     }
@@ -265,8 +272,6 @@ CREATE TABLE [temp_user] (
               int version, DatabaseErrorHandler errorHandler) {
         super(context, name, factory, version, errorHandler);
     }
-
-
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -528,6 +533,7 @@ CREATE TABLE [temp_user] (
                 "\n" +
                 "from clients;\n");
 
+        db.execSQL(DATABASE_ADD_COLOUMN_TIMESTAMP);
         Log.i("db", "create");
     }
 
@@ -536,5 +542,7 @@ CREATE TABLE [temp_user] (
         //проверяете какая версия сейчас и делаете апдейт
       //  db.execSQL("DROP TABLE IF EXISTS tableName");
       //  onCreate(db);
+        db.execSQL(DATABASE_ADD_COLOUMN_TIMESTAMP);
+
     }
 }

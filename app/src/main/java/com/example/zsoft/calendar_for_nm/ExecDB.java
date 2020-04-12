@@ -138,6 +138,7 @@ public class ExecDB {
         switch (table) {
             case "clients":
                 val.put(db.DATE1_COLUMN, day);
+                val.put(db.TIMESTAMP_COLUMN, now.getTime());
                 val.put(db.CONTACT_COLUMN, conts);
                 val.put(db.NAME_COLUMN, names);
                 val.put(db.PAY_COLUMN, pays);
@@ -152,6 +153,7 @@ public class ExecDB {
             case "temp":
 
                 val.put(db.DATE1_TEMP, nowDate);
+                val.put(db.TIMESTAMP_COLUMN, now.getTime());
                 val.put(db.CONTACT_TEMP, conts);
                 val.put(db.NAME_TEMP, names);
                 val.put(db.PAY_TEMP, pays);
