@@ -100,4 +100,6 @@
     <string name="failCreateEvent">Create event is failed</string>
     <string name="failDeleteEvent">Delete event is failed</string>
     <string name="failCreateLayer">Create layer is failed</string>
+
+    <string name="locale">en</string>
 </resources>

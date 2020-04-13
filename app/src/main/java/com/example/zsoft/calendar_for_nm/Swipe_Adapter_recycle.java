@@ -63,12 +63,10 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
      Swipe_Adapter_recycle(Context context){
         this.context=context;
     }
-
      void   setAdapter_recycle(List<Object> data,String date){
         this.data=data;
         this.date=date;
    }
-
      void refresh(){
         List<String> dataDB=new ExecDB().l_clients_of_day(context,date);
           this.data= new RecycleWinActivity().set_test(dataDB,context);
@@ -201,7 +199,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             editSum.setText(String.valueOf(ful_data.sum));
             //editSum.setImeOptions(EditorInfo.TYPE_NUMBER_FLAG_SIGNED);
 
-
 /*
                     editSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                         @Override
@@ -244,12 +241,9 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
                 @Override
                 public void onClick(View v) {
-
                     InputMethodManager imm = (InputMethodManager) v.getContext()
                             .getSystemService(Context.INPUT_METHOD_SERVICE);
-
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
                     ExecDB vis = new ExecDB();
                     if (checkBox.isChecked()) {
                         vis.flag_visitOrPay(context, "true",
@@ -258,7 +252,6 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         vis.flag_visitOrPay(context, "false",
                                 ful_data.id, "clients","visit");
                     }
-
                     refresh();
                 }
             });
@@ -284,14 +277,14 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             bDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final AlertDialog.Builder adb=new AlertDialog.Builder(context);
+                    final AlertDialog.Builder adbDelete=new AlertDialog.Builder(context);
                     ArrayList data=new ExecDB().getLine_(context,"clients",ful_data.id);
-                    adb.setTitle(resources.getString(R.string.fullCard_del_title )+"\n"+data.get(0));
-                    adb.setMessage(resources.getString(R.string.fullCard_del_numb )+data.get(1)+
+                    adbDelete.setTitle(resources.getString(R.string.fullCard_del_title )+"\n"+data.get(0));
+                    adbDelete.setMessage(resources.getString(R.string.fullCard_del_numb )+data.get(1)+
                     "\n"+resources.getString(R.string.fullCard_del_start)+" "+data.get(2)+
                     "\n"+resources.getString(R.string.fullCard_del_end )+"      "+data.get(3));
 
-                    adb.setPositiveButton(resources.getString(R.string.fullCard_del_bDelete ),new DialogInterface.OnClickListener() {
+                    adbDelete.setPositiveButton(resources.getString(R.string.fullCard_del_bDelete ),new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             new ExecDB().deleterow(context,"clients",ful_data.id);
@@ -303,13 +296,13 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         }
                     });
 
-                    adb.setNegativeButton(resources.getString(R.string.fullCard_del_bCancel ), new DialogInterface.OnClickListener() {
+                    adbDelete.setNegativeButton(resources.getString(R.string.fullCard_del_bCancel ), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
-                    adb.show();
+                    adbDelete.show();
                 }
             });
 
@@ -373,22 +366,27 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     }
                 }
             });
-
+// тут таймштамп в
             bInf.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ExecDB exec= new ExecDB();
+                    //все данные по записи из клиентов
                     ArrayList<String> data=exec.getLine_(context,"clients",ful_data.id);
+                    //конкретный пользователь
                     ArrayList<String> user=exec.getLine_(context,"user",data.get(1));
 
-                    String tsh_write=new HelperData().TimeShtampTranslater(data.get(5));
+                    String tsh_writeOld=new HelperData().TimeShtampTranslater(data.get(5));
+                    String tsh_write=new HelperData().dbTimestampToLocaleDate(data.get(7));
 
-                    ArrayList<String> infoTimeShtamp=exec.beWrite(context,data.get(1),tsh_write);
+                    String timestamp = tsh_write != null ? tsh_write : tsh_writeOld;
+
+                    ArrayList<String> infoTimeShtamp=exec.beWrite(context,data.get(1),timestamp);
 
                     String mess;
                         mess = resources.getString(R.string.fullCard_del_numb)+" "+user.get(3)+
                         "\n"+resources.getString(R.string.fullCard_count)+": "+user.get(6)+
-                        "\n"+resources.getString(R.string.fullCard_lastVisit)+": \r\n"+ tsh_write+
+                        "\n"+resources.getString(R.string.fullCard_lastVisit)+": \r\n"+ timestamp+
                         "\n";
                     if(infoTimeShtamp!=null && infoTimeShtamp.size()>0){
                         mess=mess
@@ -988,7 +986,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
     public String getTimeStamp(String s){
 
         SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
-                ,new Locale("ru"));
+                ,Locale.getDefault());
         String ss = null;
         try {
             Date day=sdf.parse(s);

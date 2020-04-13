@@ -15,7 +15,7 @@ import java.util.List;
  * Created by AZelinskiy on 20.06.2018.
  */
 
-public class Fragment_Top extends Fragment {
+public class Fragment_TopList extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

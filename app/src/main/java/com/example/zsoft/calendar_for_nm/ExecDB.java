@@ -126,7 +126,6 @@ public class ExecDB {
                 ,new Locale("ru"));
         //Locale locale=new Locale("ru");
         //Locale.setDefault(locale);
-
         String day=sdf.format(now);
         String nowDate;
         nowDate = String.valueOf(now);
@@ -165,8 +164,6 @@ public class ExecDB {
         }
         db1.insert(table, null, val);
         db1.close();
-
-
 
     }
 
@@ -283,6 +280,7 @@ public class ExecDB {
                     int date = c.getColumnIndex("date");
                     int date1 = c.getColumnIndex("date1");
                     int pay = c.getColumnIndex("pay");
+                    int timestamp = c.getColumnIndex("time_stamp");
 
                     do {
                         line.add(c.getString(name));
@@ -292,6 +290,7 @@ public class ExecDB {
                         line.add(c.getString(date));
                         line.add(c.getString(date1));
                         line.add(c.getString(pay));
+                        line.add(c.getString(timestamp));
                     }
                     while (c.moveToNext());
                     c.close();
@@ -311,6 +310,7 @@ public class ExecDB {
                     int date1 = c.getColumnIndex("date1");
                     int visit = c.getColumnIndex("visit");
                     int id = c.getColumnIndex("_id");
+                    int timestamp = c.getColumnIndex("time_stamp");
 
                     do {
                         //  sqldat.add(  c.getString(id).toString() );
@@ -323,6 +323,7 @@ public class ExecDB {
                         line.add(c.getString(pay));
                         line.add(c.getString(visit));
                         line.add(c.getString(id));
+                        line.add(c.getString(timestamp));
                         // + c.getString(date).toString());
                     }
 
@@ -366,7 +367,7 @@ public class ExecDB {
         //вт, 5 июня 2018 11:52:28
         //пт, 1 мар. 2019 11:51:02
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
-                new Locale("ru"));
+               Locale.getDefault());
 
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
@@ -463,6 +464,7 @@ public class ExecDB {
             int time = c.getColumnIndex("time1");
             int date = c.getColumnIndex("date");
             int date1 = c.getColumnIndex("date1");
+            int timestamp = c.getColumnIndex("time_stamp");
             // int pay = c.getColumnIndex("pay");
 
             do {
@@ -471,6 +473,7 @@ public class ExecDB {
                 queue.add(c.getString(time));
                 queue.add(c.getString(date));
                 queue.add(c.getString(date1));
+                queue.add(c.getString(timestamp));
                 //  queue.add(c.getString(pay).toString());
             }
 

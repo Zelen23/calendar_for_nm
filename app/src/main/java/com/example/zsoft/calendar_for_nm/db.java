@@ -533,7 +533,7 @@ CREATE TABLE [temp_user] (
                 "\n" +
                 "from clients;\n");
 
-        db.execSQL(DATABASE_ADD_COLOUMN_TIMESTAMP);
+
         Log.i("db", "create");
     }
 

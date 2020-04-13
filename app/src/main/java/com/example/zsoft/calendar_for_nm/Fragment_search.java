@@ -93,7 +93,7 @@ public class Fragment_search extends Fragment {
 
             }
         });
-
+// input number and click
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,17 +118,23 @@ public class Fragment_search extends Fragment {
                         "       sf_num,  \n" +
                         "       pay,     \n" +
                         "       date,    \n" +
-                        "       date1    \n" +
+                        "       date1,    \n" +
+                        "       time_stamp    \n" +
                         "                \n" +
                         "from clients where "+coloumn+" like '%"+value+
                         "%' order by date DESC limit 400";
 
-                ExecDB search_cl=new ExecDB();
-                creatMap(creatListForMap(search_cl.search(getContext(),qu_searsh)));
-                final BaseExpandableListAdapter adapter=new Adapter_Expandable(getContext(),
-                        creatMap(creatListForMap(search_cl.search(getContext(), qu_searsh))));
+                ExecDB search_cl     = new ExecDB();
+                //rawdata
+                List<String> sqlREsp = search_cl.search(getContext(), qu_searsh);
+                //name->ordParam
+                HashMap<String, List<Constructor_search>> dataToAdapter
+                        = creatMap(creatListForMap(sqlREsp));
 
-                expandableListView.setAdapter(adapter );
+                final BaseExpandableListAdapter adapter=new Adapter_Expandable(
+                        getContext(),dataToAdapter);
+
+                expandableListView.setAdapter(adapter);
                 expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
                     @Override
                     public boolean onGroupClick(ExpandableListView parent, View v,
@@ -158,7 +164,7 @@ public class Fragment_search extends Fragment {
     List<Constructor_search> creatListForMap(List<String> search){
         List<Constructor_search> listreqestSearch=new ArrayList<>();
         for(int i=0;i<search.size();i++){
-            if(i%5==0)
+            if(i%6==0)
             listreqestSearch.add(new Constructor_search(
                    search.get(i),
                    search.get(i+1),

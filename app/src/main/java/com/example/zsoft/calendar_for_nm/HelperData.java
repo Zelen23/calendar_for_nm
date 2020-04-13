@@ -34,12 +34,6 @@ import static java.lang.String.format;
 
 public class HelperData {
 
-    public void HideKeyboeard(View v){
-        InputMethodManager imm = (InputMethodManager) v.getContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-    }
-
 
     public  String TimeShtampTranslater(String s){
       //  пт, 1 мар. 2019 11:51:02
@@ -92,30 +86,6 @@ public class HelperData {
         Log .i("HelperData_TimeShtamp",s+"  "+ss);
         return ss;
     }
-
-    @SuppressLint("DefaultLocale")
-    private String FormatToHHmm(int h, int m){
-        return format("%02d",h)+":"+ format("%02d",m)+":00";
-    }
-
-    //2018-1-21
-    public String ConvertDateFromDB(String data){
-    //2019-2-31
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat sdf2=new SimpleDateFormat("dd-MMM-yyyy",new Locale("ru"));
-        String ss;
-        try {
-            Date dat=sdf.parse(data);
-            dat.setMonth(dat.getMonth()+1);
-            ss=sdf2.format(dat);
-
-        } catch (ParseException e) {
-            ss=data;
-            e.printStackTrace();
-        }
-        return ss;
-    }
-
     public String ConvertDateFromDBX(String data){
         //2019-2-31
         /*взять эту кривую дату  к месяцу прибавить 1*/
@@ -123,7 +93,7 @@ public class HelperData {
         String[]datePM=data.split("-");
         Integer mms=Integer.parseInt(datePM[1])+1;
         String dataP=datePM[0]+"-"+mms+"-"+datePM[2];
-        SimpleDateFormat sdf2=new SimpleDateFormat("dd-MMM-yyyy",new Locale("ru"));
+        SimpleDateFormat sdf2=new SimpleDateFormat("dd-MMM-yyyy",Locale.getDefault());
         String ss;
         try {
             Date dat=sdf.parse(dataP);
@@ -135,31 +105,6 @@ public class HelperData {
         }
         return ss;
     }
-
-    public  String cutTimeShtamp(String timeShtamp){
-    SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
-            new Locale("ru"));
-
-    @SuppressLint("SimpleDateFormat")
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
-
-    try {
-        Date day = sdf.parse(timeShtamp);
-        String dateOfShtamp = format.format(day);
-        String [] am=dateOfShtamp.split("-");
-        int mns=Integer.parseInt(am[1])-1;
-        String fuckedDate=am[0]+"-"+mns+"-"+am[2];
-
-        return fuckedDate;
-
-
-    } catch (ParseException e) {
-        e.printStackTrace();
-    }
-    return null;
-    }
-
-    //сравнение дат
     public boolean comparateDate(String data, Date nowDate) {
         //приходит дата сравниваю ее с текушей, если больше текущей
         // возвпащаю true
@@ -186,38 +131,37 @@ public class HelperData {
         return status;
 
     }
+    public  String dbTimestampToLocaleDate(String unixTime){
 
-    public boolean comparateDateX(String data, Date nowDate) {
-        //приходит дата сравниваю ее с текушей, если больше текущей
-        // возвпащаю true
-        boolean status = false;
+        SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+                ,Locale.getDefault());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date date = sdf.parse(data);
-            date.setMonth(date.getMonth());
-            //nowDate = new Date();
-            if (date.compareTo(nowDate) > 0) {
-                status = true;
-            } else {
-                status = false;
-            }
-            Log.i("HelperData",date+"  "+nowDate+" status "+status);
+            String day=sdf.format(Long.parseLong(unixTime));
+            return day;
+        }catch (Exception ex){
 
-        } catch (ParseException e) {
-            Log.i("HelperData",e.getMessage());
-            e.printStackTrace();
         }
 
 
-        return status;
-
+        return null;
     }
-
-    public String ClearNumberFormat(String phonenumber){
-        return  phonenumber.toString().replaceAll("\\D+","");
+    public String dateFix(String date){
+        String[] d=date.split("-");
+        return d[0]+"-"+format("%02d",Integer.parseInt(d[1])+1)+"-"+ format("%02d",Integer.parseInt(d[2]));
     }
+    public String fromSyncDateToDateDB(String date){
+        //"2020-01-09T18:10:00
 
+        String[] d=date.split("T");
+        String[] dateOrd=d[0].split("-");
+        String timeStart=d[1];
+
+        String fakeDateTime=dateOrd[0]+"-"+(Integer.parseInt(dateOrd[1])-1)+"-"+ (Integer.parseInt(dateOrd[2])
+                +"T"+timeStart);
+        Log.i("fromSyncDateToDateDB",fakeDateTime);
+        return fakeDateTime;
+    }
     //возвращаю количество дней между датами
     public int Intrval_to_seekBar(String t1,String t2){
         int i1 = 0;
@@ -244,14 +188,13 @@ public class HelperData {
         дата последней записи
         */
     }
-
     //к начальной дате прибавляю дни, получаю новую дату
     public String fromIntToDateString(String startDate,int i){
 
         String s;
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdf2 = new SimpleDateFormat("d MMM yyyy",
-                new Locale("ru"));
+                Locale.getDefault());
         try {
             Date date=sdf.parse(startDate);
             DateTime dt1 = new DateTime(date);
@@ -269,13 +212,46 @@ public class HelperData {
 
         return s;
     }
+    // Data now
+    public  String nowDate(){
 
+        Date now = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
+                ,Locale.getDefault());
+        //Locale locale=new Locale("ru");
+        //Locale.setDefault(locale);
+
+        String day=sdf.format(now);
+
+        return day;
+    }
+    // temp convert 'ср, 26 дек. 2018 19:55:14' to date
+    public Long tempDate (String sdateTime){
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
+                Locale.getDefault());
+        Date day=new Date();
+        try {
+            day = sdf.parse(sdateTime);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return day.getTime();
+    }
+
+    public String ClearNumberFormat(String phonenumber){
+        return  phonenumber.toString().replaceAll("\\D+","");
+    }
+    public void HideKeyboeard(View v){
+        InputMethodManager imm = (InputMethodManager) v.getContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
     //читать из json. получать версию и дату
     /*{
     'date_Last_write':'Mon Dec 05 00:17:16 EET 2016',
      'version_base':1
     }*/
-
     //прочитать json
     public ArrayList readjson(String jsonData){
         ArrayList info=new ArrayList<String>();
@@ -323,7 +299,6 @@ public class HelperData {
         }
 
     }
-
     public void return_copy(File fromFile,File toPath){
         /*копируем в папку sdcard
         * удаляем st.db
@@ -362,8 +337,7 @@ public class HelperData {
             e.printStackTrace();
         }
     }
-
-    public void  saveFile(String pathName,String filename, String dataToSave){
+    public void saveFile(String pathName,String filename, String dataToSave){
         InputStream in=null;
         OutputStream out=null;
 
@@ -399,40 +373,81 @@ public class HelperData {
     }
 
 
-    // Data now
-    public  String nowDate(){
 
-        Date now = Calendar.getInstance().getTime();
-        SimpleDateFormat sdf=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
-                ,new Locale("ru"));
-        //Locale locale=new Locale("ru");
-        //Locale.setDefault(locale);
-
-        String day=sdf.format(now);
-
-        return day;
+    @SuppressLint("DefaultLocale")
+    private String FormatToHHmm(int h, int m){
+        return format("%02d",h)+":"+ format("%02d",m)+":00";
     }
-
-    // temp convert 'ср, 26 дек. 2018 19:55:14' to date
-    public Long tempDate (String sdateTime){
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
-                new Locale("ru"));
-        Date day=new Date();
+    //2018-1-21
+    public String ConvertDateFromDB(String data){
+        //2019-2-31
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf2=new SimpleDateFormat("dd-MMM-yyyy",Locale.getDefault());
+        String ss;
         try {
-            day = sdf.parse(sdateTime);
+            Date dat=sdf.parse(data);
+            dat.setMonth(dat.getMonth()+1);
+            ss=sdf2.format(dat);
+
+        } catch (ParseException e) {
+            ss=data;
+            e.printStackTrace();
+        }
+        return ss;
+    }
+    public  String cutTimeShtamp(String timeShtamp){
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
+                Locale.getDefault());
+
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
+
+        try {
+            Date day = sdf.parse(timeShtamp);
+            String dateOfShtamp = format.format(day);
+            String [] am=dateOfShtamp.split("-");
+            int mns=Integer.parseInt(am[1])-1;
+            String fuckedDate=am[0]+"-"+mns+"-"+am[2];
+
+            return fuckedDate;
+
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
-       return day.getTime();
+        return null;
     }
+    public boolean comparateDateX(String data, Date nowDate) {
+        //приходит дата сравниваю ее с текушей, если больше текущей
+        // возвпащаю true
+        boolean status = false;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = sdf.parse(data);
+            date.setMonth(date.getMonth());
+            //nowDate = new Date();
+            if (date.compareTo(nowDate) > 0) {
+                status = true;
+            } else {
+                status = false;
+            }
+            Log.i("HelperData",date+"  "+nowDate+" status "+status);
+
+        } catch (ParseException e) {
+            Log.i("HelperData",e.getMessage());
+            e.printStackTrace();
+        }
 
 
+        return status;
+
+    }
     public void forBiwrite(String  timeShtamp){
         //вт, 5 июня 2018 11:52:28
         //пт, 1 мар. 2019 11:51:02
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
-                new Locale("ru"));
+                Locale.getDefault());
 
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
@@ -449,22 +464,6 @@ public class HelperData {
         int mns=Integer.parseInt(am[1])-1;
         String fuckedDate=am[0]+"-"+mns+"-"+am[2];
 
-    }
-    public String dateFix(String date){
-        String[] d=date.split("-");
-        return d[0]+"-"+format("%02d",Integer.parseInt(d[1])+1)+"-"+ format("%02d",Integer.parseInt(d[2]));
-    }
-    public String fromSyncDateToDateDB(String date){
-        //"2020-01-09T18:10:00
-
-        String[] d=date.split("T");
-        String[] dateOrd=d[0].split("-");
-        String timeStart=d[1];
-
-        String fakeDateTime=dateOrd[0]+"-"+(Integer.parseInt(dateOrd[1])-1)+"-"+ (Integer.parseInt(dateOrd[2])
-                +"T"+timeStart);
-        Log.i("fromSyncDateToDateDB",fakeDateTime);
-        return fakeDateTime;
     }
 }
 

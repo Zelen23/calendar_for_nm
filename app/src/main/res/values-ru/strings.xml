@@ -100,4 +100,6 @@
     <string name="failCreateEvent">Ошибка отправки записи</string>
     <string name="failDeleteEvent">Ошибка удаления записи</string>
     <string name="failCreateLayer">Ошибка создания календаря</string>
+
+    <string name="locale">ru</string>
 </resources>

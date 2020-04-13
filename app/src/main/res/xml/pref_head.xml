@@ -12,14 +12,14 @@
         android:title="@string/set_user_interface"
         android:summary="@string/set_user_suminterface"/>
     <header/>
-    <header
+    <!--<header
         android:fragment="com.example.zsoft.calendar_for_nm.preference$PrefClearDB"
         android:title="@string/set_clearDB"
-        android:summary="@string/set_sumclearDB"/>
+        android:summary="@string/set_sumclearDB" />
     <header/>
     <header
         android:fragment="com.example.zsoft.calendar_for_nm.preference$Yandex_sync"
         android:title="@string/set_sync"
         android:summary="@string/set_sumSync"/>
-    <header/>
+    <header/>-->
 </preference-headers>

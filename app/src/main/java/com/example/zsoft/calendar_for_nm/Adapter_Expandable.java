@@ -39,9 +39,6 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
     HashMap<String,List<Constructor_search>> search;
     List<String> groupName=new ArrayList<>();
     List<Constructor_search> child=new ArrayList<>();
-    ExecDB execDB=new ExecDB();
-    HelperData helperData=new HelperData();
-
 
 
     public Adapter_Expandable(Context mContext, HashMap<String, List<Constructor_search>> search) {
