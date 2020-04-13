@@ -1,15 +1,20 @@
 package com.example.zsoft.calendar_for_nm;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -45,39 +50,42 @@ import static java.lang.String.format;
  * Created by adolf on 14.04.2018.
  */
 
-public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Object> data;
     private String date;
+    String callNumber;
 
 
-    private EditText eName,eNum,eSum;
-    private NumberPicker h1,h2,m1,m2;
+    private EditText eName, eNum, eSum;
+    private NumberPicker h1, h2, m1, m2;
 
-    private final static int TYPE_FULL=1,TYPE_EMPTY=2;
+    private final static int TYPE_FULL = 1, TYPE_EMPTY = 2;
 
     private Context context;
-    boolean flagpaste=false;
+    boolean flagpaste = false;
     private final ViewBinderHelper binderHelper = new ViewBinderHelper();
 
 
-     Swipe_Adapter_recycle(Context context){
-        this.context=context;
+    Swipe_Adapter_recycle(Context context) {
+        this.context = context;
     }
-     void   setAdapter_recycle(List<Object> data,String date){
-        this.data=data;
-        this.date=date;
-   }
-     void refresh(){
-        List<String> dataDB=new ExecDB().l_clients_of_day(context,date);
-          this.data= new RecycleWinActivity().set_test(dataDB,context);
+
+    void setAdapter_recycle(List<Object> data, String date) {
+        this.data = data;
+        this.date = date;
+    }
+
+    void refresh() {
+        List<String> dataDB = new ExecDB().l_clients_of_day(context, date);
+        this.data = new RecycleWinActivity().set_test(dataDB, context);
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(data.get(position)instanceof Constructor_data){
+        if (data.get(position) instanceof Constructor_data) {
             return TYPE_FULL;
-        }else if(data.get(position)instanceof Constructor_data.Constructor_free_data){
+        } else if (data.get(position) instanceof Constructor_data.Constructor_free_data) {
             return TYPE_EMPTY;
         }
         return -1;
@@ -87,15 +95,15 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        switch (viewType){
+        switch (viewType) {
             case TYPE_FULL:
-                view=LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.swipe_card,parent,false);
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.swipe_card, parent, false);
                 return new FullHolder(view);
 
-            case  TYPE_EMPTY:
-                view=LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.swipe_card_empty,parent,false);
+            case TYPE_EMPTY:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.swipe_card_empty, parent, false);
                 return new EmptyHolder(view);
         }
 
@@ -103,19 +111,19 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     @Override
-    public void onBindViewHolder(@NonNull  final RecyclerView.ViewHolder holder, int position) {
-        int viewType=holder.getItemViewType();
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
+        int viewType = holder.getItemViewType();
         switch (viewType) {
             case TYPE_FULL:
                 Constructor_data ful_data = (Constructor_data)
                         data.get(position);
-                ((FullHolder)holder).show_data(ful_data);
+                ((FullHolder) holder).show_data(ful_data);
                 break;
 
             case TYPE_EMPTY:
                 Constructor_data.Constructor_free_data empty_data = (Constructor_data.Constructor_free_data)
                         data.get(position);
-                ((EmptyHolder)holder).show_data(empty_data);
+                ((EmptyHolder) holder).show_data(empty_data);
 
                 break;
         }
@@ -126,6 +134,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
     public int getItemCount() {
         return data.size();
     }
+
     /**
      * Only if you need to restore open/close state when the orientation is changed.
      * Call this method in {@link android.app.Activity#onSaveInstanceState(Bundle)}
@@ -147,8 +156,8 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         TextView textView;
         EditText editSum;
         CheckBox checkBox;
-        TextView h,m,h2,m2;
-        ImageButton bInf,bCut,bCopy,bDelete;
+        TextView h, m, h2, m2;
+        ImageButton bInf, bCut, bCopy, bDelete;
 
         View firstFrame;
         View secondFrame;
@@ -156,28 +165,28 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
 
         FullHolder(View itemView) {
             super(itemView);
-            cardView=itemView.findViewById(R.id.card);
-            textView=itemView.findViewById(R.id.textView12);
-            editSum =itemView.findViewById(R.id.editSum);
-            checkBox= itemView.findViewById(R.id.checkBox2);
-            h=itemView.findViewById(R.id.h);
-            m=itemView.findViewById(R.id.m);
-            h2=itemView.findViewById(R.id.h2);
-            m2=itemView.findViewById(R.id.m2);
+            cardView = itemView.findViewById(R.id.card);
+            textView = itemView.findViewById(R.id.textView12);
+            editSum = itemView.findViewById(R.id.editSum);
+            checkBox = itemView.findViewById(R.id.checkBox2);
+            h = itemView.findViewById(R.id.h);
+            m = itemView.findViewById(R.id.m);
+            h2 = itemView.findViewById(R.id.h2);
+            m2 = itemView.findViewById(R.id.m2);
 
-            swipe=itemView.findViewById(R.id.swipe_layout);
-            firstFrame=itemView.findViewById(R.id.firstFrame);
+            swipe = itemView.findViewById(R.id.swipe_layout);
+            firstFrame = itemView.findViewById(R.id.firstFrame);
 
-            secondFrame=itemView.findViewById(R.id.secondFrame);
-            bInf=itemView.findViewById(R.id.bInfo);
-            bCut=itemView.findViewById(R.id.bCut);
-            bCopy=itemView.findViewById(R.id.bCopy);
-            bDelete=itemView.findViewById(R.id.bDelete);
+            secondFrame = itemView.findViewById(R.id.secondFrame);
+            bInf = itemView.findViewById(R.id.bInfo);
+            bCut = itemView.findViewById(R.id.bCut);
+            bCopy = itemView.findViewById(R.id.bCopy);
+            bDelete = itemView.findViewById(R.id.bDelete);
 
-            SharedPreferences sharedPreferences= PreferenceManager
+            SharedPreferences sharedPreferences = PreferenceManager
                     .getDefaultSharedPreferences(context);
-            Boolean flgHideSum= sharedPreferences.getBoolean("hideSum",false);
-            if(!flgHideSum){
+            Boolean flgHideSum = sharedPreferences.getBoolean("hideSum", false);
+            if (!flgHideSum) {
                 editSum.setInputType(InputType.TYPE_CLASS_NUMBER);
             }
 
@@ -187,15 +196,15 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         */
         }
 
-        void show_data(final Constructor_data ful_data){
+        void show_data(final Constructor_data ful_data) {
 
-            binderHelper.bind(swipe,ful_data.id );
+            binderHelper.bind(swipe, ful_data.id);
             binderHelper.setOpenOnlyOne(true);
 
             textView.setText(ful_data.name);
             textView.setMaxLines(1);
 
-            final Resources resources=context.getResources();
+            final Resources resources = context.getResources();
             editSum.setText(String.valueOf(ful_data.sum));
             //editSum.setImeOptions(EditorInfo.TYPE_NUMBER_FLAG_SIGNED);
 
@@ -213,26 +222,25 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     });
 
    */             // editSum.setOnEditorActionListener(new DoneOnEditorActionListener());
-                   editSum.setOnKeyListener(new View.OnKeyListener() {
-                       @Override
-                       public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    Log.i("key",""+keyCode);
-                           if(keyCode==66&&
-                                   !ful_data.sum.toString().equals(editSum.getText().toString())){
+            editSum.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    Log.i("key", "" + keyCode);
+                    if (keyCode == 66 &&
+                            !ful_data.sum.toString().equals(editSum.getText().toString())) {
 
-                               new ExecDB().flag_visitOrPay(context,editSum.getText().toString(),
-                                       ful_data.id,"clients","pay");
+                        new ExecDB().flag_visitOrPay(context, editSum.getText().toString(),
+                                ful_data.id, "clients", "pay");
 
-                               InputMethodManager imm = (InputMethodManager) v.getContext()
-                                      .getSystemService(Context.INPUT_METHOD_SERVICE);
-                               imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                               refresh();
-                           }
+                        InputMethodManager imm = (InputMethodManager) v.getContext()
+                                .getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        refresh();
+                    }
 
-                           return false;
-                       }
-                   });
-
+                    return false;
+                }
+            });
 
 
             checkBox.setChecked(ful_data.flag);
@@ -247,10 +255,10 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                     ExecDB vis = new ExecDB();
                     if (checkBox.isChecked()) {
                         vis.flag_visitOrPay(context, "true",
-                                ful_data.id, "clients","visit");
+                                ful_data.id, "clients", "visit");
                     } else {
                         vis.flag_visitOrPay(context, "false",
-                                ful_data.id, "clients","visit");
+                                ful_data.id, "clients", "visit");
                     }
                     refresh();
                 }
@@ -262,7 +270,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             m2.setText(ful_data.m2);
 
 
-            swipe.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
+            swipe.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener() {
                 @Override
                 public void onOpened(SwipeRevealLayout view) {
                     super.onOpened(view);
@@ -277,17 +285,17 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             bDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final AlertDialog.Builder adbDelete=new AlertDialog.Builder(context);
-                    ArrayList data=new ExecDB().getLine_(context,"clients",ful_data.id);
-                    adbDelete.setTitle(resources.getString(R.string.fullCard_del_title )+"\n"+data.get(0));
-                    adbDelete.setMessage(resources.getString(R.string.fullCard_del_numb )+data.get(1)+
-                    "\n"+resources.getString(R.string.fullCard_del_start)+" "+data.get(2)+
-                    "\n"+resources.getString(R.string.fullCard_del_end )+"      "+data.get(3));
+                    final AlertDialog.Builder adbDelete = new AlertDialog.Builder(context);
+                    ArrayList data = new ExecDB().getLine_(context, "clients", ful_data.id);
+                    adbDelete.setTitle(resources.getString(R.string.fullCard_del_title) + "\n" + data.get(0));
+                    adbDelete.setMessage(resources.getString(R.string.fullCard_del_numb) + data.get(1) +
+                            "\n" + resources.getString(R.string.fullCard_del_start) + " " + data.get(2) +
+                            "\n" + resources.getString(R.string.fullCard_del_end) + "      " + data.get(3));
 
-                    adbDelete.setPositiveButton(resources.getString(R.string.fullCard_del_bDelete ),new DialogInterface.OnClickListener() {
+                    adbDelete.setPositiveButton(resources.getString(R.string.fullCard_del_bDelete), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            new ExecDB().deleterow(context,"clients",ful_data.id);
+                            new ExecDB().deleterow(context, "clients", ful_data.id);
                             //data.remove(getAdapterPosition());
                             //notifyItemRemoved(getAdapterPosition());
                             new MainActivity().updGridCld();
@@ -296,7 +304,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                         }
                     });
 
-                    adbDelete.setNegativeButton(resources.getString(R.string.fullCard_del_bCancel ), new DialogInterface.OnClickListener() {
+                    adbDelete.setNegativeButton(resources.getString(R.string.fullCard_del_bCancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -309,24 +317,24 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             bCopy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-    //  проверка на наличие вырезанной записи
-                    ExecDB exec= new ExecDB();
-                    ArrayList<String> data=exec.getLine_(context,"clients",ful_data.id);
-                     final ArrayList<String> temp=exec.getLine_(context,"temp"
-                           ,"'' or _id>0");
-                    if(temp.size()>0&&Boolean.parseBoolean(temp.get(7))==true){
+                    //  проверка на наличие вырезанной записи
+                    ExecDB exec = new ExecDB();
+                    ArrayList<String> data = exec.getLine_(context, "clients", ful_data.id);
+                    final ArrayList<String> temp = exec.getLine_(context, "temp"
+                            , "'' or _id>0");
+                    if (temp.size() > 0 && Boolean.parseBoolean(temp.get(7)) == true) {
                         //возвращаю из темп в клиенты
-                        exec.write_orders(context,temp.get(4),temp.get(2),temp.get(3)
-                                ,temp.get(6),temp.get(0),temp.get(1),"clients",temp.get(8));
+                        exec.write_orders(context, temp.get(4), temp.get(2), temp.get(3)
+                                , temp.get(6), temp.get(0), temp.get(1), "clients", temp.get(8));
 
                         // чищу темп
-                        exec.deleterow(context,"temp","'' or _id>0");
+                        exec.deleterow(context, "temp", "'' or _id>0");
 
                         //пишу в темп  новую запись
-                        exec.write_orders(context,data.get(4),data.get(2),data.get(3)
-                                ,data.get(6),data.get(0),data.get(1),"temp",ful_data.id);
+                        exec.write_orders(context, data.get(4), data.get(2), data.get(3)
+                                , data.get(6), data.get(0), data.get(1), "temp", ful_data.id);
                         refresh();
-                    }else{
+                    } else {
                         // если темп пустой
                         exec.deleterow(context, "temp", "'' or _id>0");
                         exec.write_orders(context, data.get(4), data.get(2), data.get(3), data.get(6)
@@ -340,26 +348,26 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             bCut.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ExecDB exec= new ExecDB();
-                    ArrayList<String> data=exec.getLine_(context,"clients",ful_data.id);
-                    ArrayList<String> temp=exec.getLine_(context,"temp"
-                          ,"'' or _id>0");
-                    if(temp.size()>0&&Boolean.parseBoolean(temp.get(7))==true){
+                    ExecDB exec = new ExecDB();
+                    ArrayList<String> data = exec.getLine_(context, "clients", ful_data.id);
+                    ArrayList<String> temp = exec.getLine_(context, "temp"
+                            , "'' or _id>0");
+                    if (temp.size() > 0 && Boolean.parseBoolean(temp.get(7)) == true) {
 
-                        alertTemp(data,temp,ful_data.id);
+                        alertTemp(data, temp, ful_data.id);
 
-                    }else{
+                    } else {
                         // чищу темп
-                        exec.deleterow(context,"temp","'' or _id>0");
+                        exec.deleterow(context, "temp", "'' or _id>0");
 
                         //пишу в темп  новую запись
-                        exec.write_orders(context,data.get(4),data.get(2),data.get(3)
-                                ,data.get(6),data.get(0),data.get(1),"temp",ful_data.id);
+                        exec.write_orders(context, data.get(4), data.get(2), data.get(3)
+                                , data.get(6), data.get(0), data.get(1), "temp", ful_data.id);
                         // ставлю влаг
                         exec.flag_visitOrPay(context, "true",
-                                ful_data.id, "temp","visit");
+                                ful_data.id, "temp", "visit");
                         // удаляю в клиентах
-                        exec.deleterow(context,"clients",ful_data.id);
+                        exec.deleterow(context, "clients", ful_data.id);
 
                         new MainActivity().updGridCld();
                         refresh();
@@ -370,45 +378,59 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             bInf.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ExecDB exec= new ExecDB();
+                    ExecDB exec = new ExecDB();
                     //все данные по записи из клиентов
-                    ArrayList<String> data=exec.getLine_(context,"clients",ful_data.id);
+                    ArrayList<String> data = exec.getLine_(context, "clients", ful_data.id);
                     //конкретный пользователь
-                    ArrayList<String> user=exec.getLine_(context,"user",data.get(1));
+                    final ArrayList<String> user = exec.getLine_(context, "user", data.get(1));
 
-                    String tsh_writeOld=new HelperData().TimeShtampTranslater(data.get(5));
-                    String tsh_write=new HelperData().dbTimestampToLocaleDate(data.get(7));
+                    String tsh_writeOld = new HelperData().TimeShtampTranslater(data.get(5));
+                    String tsh_write = new HelperData().dbTimestampToLocaleDate(data.get(7));
 
                     String timestamp = tsh_write != null ? tsh_write : tsh_writeOld;
 
-                    ArrayList<String> infoTimeShtamp=exec.beWrite(context,data.get(1),timestamp);
-
+                    ArrayList<String> infoTimeShtamp = exec.beWrite(context, data.get(1), timestamp);
+                    callNumber = user.get(3);
                     String mess;
-                        mess = resources.getString(R.string.fullCard_del_numb)+" "+user.get(3)+
-                        "\n"+resources.getString(R.string.fullCard_count)+": "+user.get(6)+
-                        "\n"+resources.getString(R.string.fullCard_lastVisit)+": \r\n"+ timestamp+
-                        "\n";
-                    if(infoTimeShtamp!=null && infoTimeShtamp.size()>0){
-                        mess=mess
-                                +"\n"+resources.getString(R.string.fullCard_recurring)
-                                +" "+resources.getString(R.string.YES)
-                                +"\n"+resources.getString(R.string.fullCard_del_start)+" "+infoTimeShtamp.get(1)
-                                +"\n"+resources.getString(R.string.fullCard_del_end)+" "+infoTimeShtamp.get(2);
-                    }else{
-                        mess=mess
-                                +"\n"+resources.getString(R.string.fullCard_recurring)
-                                +" "+resources.getString(R.string.NO);
+                    mess = resources.getString(R.string.fullCard_del_numb) + " " + user.get(3) +
+                            "\n" + resources.getString(R.string.fullCard_count) + ": " + user.get(6) +
+                            "\n" + resources.getString(R.string.fullCard_lastVisit) + ": \r\n" + timestamp +
+                            "\n";
+                    if (infoTimeShtamp != null && infoTimeShtamp.size() > 0) {
+                        mess = mess
+                                + "\n" + resources.getString(R.string.fullCard_recurring)
+                                + " " + resources.getString(R.string.YES)
+                                + "\n" + resources.getString(R.string.fullCard_del_start) + " " + infoTimeShtamp.get(1)
+                                + "\n" + resources.getString(R.string.fullCard_del_end) + " " + infoTimeShtamp.get(2);
+                    } else {
+                        mess = mess
+                                + "\n" + resources.getString(R.string.fullCard_recurring)
+                                + " " + resources.getString(R.string.NO);
                     }
-                    AlertDialog.Builder adb=new AlertDialog.Builder(context);
-                    adb.setTitle(user.get(1)+" "+user.get(2));
-                    adb.setMessage(mess);
-                    adb.setNeutralButton("OK",new  DialogInterface.OnClickListener(){
+                    AlertDialog.Builder adbInformer = new AlertDialog.Builder(context);
+                    adbInformer.setTitle(user.get(1) + " " + user.get(2));
+                    adbInformer.setMessage(mess);
+                    adbInformer.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
-                    adb.show();
+                    adbInformer.setNeutralButton(context.getString(R.string.call), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel",callNumber,null));
+                            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+
+                                return;
+                            }
+                            context.startActivity(intent);
+
+                      }
+                  });
+
+                    adbInformer.show();
                 }
             });
         }

@@ -102,4 +102,5 @@
     <string name="failCreateLayer">Create layer is failed</string>
 
     <string name="locale">en</string>
+    <string name="call">Call</string>
 </resources>
