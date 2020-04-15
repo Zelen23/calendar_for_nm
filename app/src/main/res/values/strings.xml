@@ -2,6 +2,8 @@
     <string name="app_name">Calendar_for_NM</string>
     <string name="Number">Number</string>
     <string name="Name">Name</string>
+    <string name="LastName">Last Name</string>
+    <string name="Comment">About</string>
     <string name="Pay">Pay</string>
 
     <string name="Top40">ClentsTOP40</string>
@@ -103,4 +105,5 @@
 
     <string name="locale">en</string>
     <string name="call">Call</string>
+    <string name="ok">OK</string>
 </resources>

@@ -2,6 +2,8 @@
     <string name="app_name">Calendar_for_NM</string>
     <string name="Number">Номер</string>
     <string name="Name">Имя</string>
+    <string name="LastName">Фамилия</string>
+    <string name="Comment">Инфо</string>
     <string name="Pay">Сумма</string>
 
     <string name="Top40">Топ Клиентов</string>
@@ -103,4 +105,5 @@
 
     <string name="locale">ru</string>
     <string name="call">Позвонить</string>
+    <string name="ok">OK</string>
 </resources>
