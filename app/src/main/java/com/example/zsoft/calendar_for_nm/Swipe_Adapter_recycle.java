@@ -10,11 +10,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -416,19 +418,21 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
                             dialog.dismiss();
                         }
                     });
-                    adbInformer.setNeutralButton(context.getString(R.string.call), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel",callNumber,null));
-                            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
 
-                                return;
+                        adbInformer.setNeutralButton(context.getString(R.string.call), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+
+                                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel",callNumber,null));
+                                context.startActivity(intent);
+
                             }
-                            context.startActivity(intent);
+                        });
+                    }
 
-                      }
-                  });
 
                     adbInformer.show();
                 }

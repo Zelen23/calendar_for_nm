@@ -142,6 +142,12 @@ public class MainActivity extends AppCompatActivity {
             });
             setDataOrdersInDay(year + "-" + mns + "-" + today);
         }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CALL_PHONE}
+                    , 1);
+            return;
+        }
     }
 
 //  делать адаптер
