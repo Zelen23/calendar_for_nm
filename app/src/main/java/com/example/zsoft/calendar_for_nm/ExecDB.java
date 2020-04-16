@@ -357,6 +357,24 @@ public class ExecDB {
         Log.i("ExecDB_flag_visitOrPay", flag+" "+ id+" "+table+" "+coloumn);
         db1.close();
     }
+    public  void updateUser(Context ct, String pk_num,String new_pk_num, String name, String LastName,String url){
+
+
+        ContentValues val = new ContentValues();
+        mDbHelper = new db(ct);
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+
+                val.put(db.name_us,name);
+                val.put(db.family_us,LastName);
+                val.put(db.url_us,url);
+                val.put(db.pk_num_us,new_pk_num);
+
+
+        db1.update("user",val,"pk_num = '"+pk_num+"'",null);
+
+        Log.i("ExecDB_updateUser", name+" "+ LastName+" "+url+" "+pk_num);
+        db1.close();
+    }
 
         /*из таймштампа получаю дату
         * делаю по ней селект с датой и номером

@@ -40,6 +40,13 @@ public class UserEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+            ExecDB execDB=new ExecDB();
+            execDB.updateUser(UserEditActivity.this,
+                    pk_num,
+                    eNun.getText().toString(),
+                    eName.getText().toString(),
+                    eLastName.getText().toString(),
+                    eAbout.getText().toString());
               finish();
             }
         });
