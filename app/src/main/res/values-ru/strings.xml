@@ -12,7 +12,7 @@
     <string name="serch_button">Поиск клиента</string>
     <string name="serch_exp_num">Номер</string>
     <string name="serch_exp_name">Имя</string>
-
+    <string name="edit_user_exist_num">"Клиент с этим номером есть в системе"</string>
 
     <string name="set_view">Настройки отображения</string>
     <string name="set_sumview">внешний вид формы</string>

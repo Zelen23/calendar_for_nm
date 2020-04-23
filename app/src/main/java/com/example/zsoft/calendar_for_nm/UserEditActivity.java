@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -41,13 +42,24 @@ public class UserEditActivity extends AppCompatActivity {
             public void onClick(View view) {
 
             ExecDB execDB=new ExecDB();
-            execDB.updateUser(UserEditActivity.this,
-                    pk_num,
-                    eNun.getText().toString(),
-                    eName.getText().toString(),
-                    eLastName.getText().toString(),
-                    eAbout.getText().toString());
-              finish();
+            //if pk_num exist
+                ArrayList<String> checkNum = execDB.getLine_(UserEditActivity.this, "user", eNun.getText().toString());
+
+                if(pk_num.contains(eNun.getText().toString())||checkNum.size()==0){
+                execDB.updateUser(UserEditActivity.this,
+                        pk_num,
+                        eNun.getText().toString(),
+                        eName.getText().toString(),
+                        eLastName.getText().toString(),
+                        eAbout.getText().toString());
+                finish();
+            }else{
+
+                Toast.makeText(UserEditActivity.this,
+                        R.string.edit_user_exist_num,Toast.LENGTH_LONG).show();
+
+            }
+
             }
         });
     }

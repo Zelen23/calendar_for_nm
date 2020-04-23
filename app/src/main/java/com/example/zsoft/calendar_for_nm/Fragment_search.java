@@ -52,6 +52,10 @@ group by sf_num having count(sf_num)>10*/
 public class Fragment_search extends Fragment {
 
     String value;
+    String coloumn;
+    int attr;
+    ExpandableListView expandableListView;
+    EditText editText;
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,8 +63,8 @@ public class Fragment_search extends Fragment {
 
 
         final Spinner spinner= view.findViewById(R.id.spinner);
-        final EditText editText=view.findViewById(R.id.editText3);
-        final ExpandableListView expandableListView=view.findViewById(R.id.expandData);
+         editText=view.findViewById(R.id.editText3);
+       expandableListView=view.findViewById(R.id.expandData);
         Button button=view.findViewById(R.id.button);
 
         String[]param={getResources().getString(R.string.serch_exp_num),getResources().getString(R.string.serch_exp_name)};
@@ -97,8 +101,8 @@ public class Fragment_search extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int attr= (int) spinner.getSelectedItemId();
-                String coloumn = null;
+                 attr= (int) spinner.getSelectedItemId();
+                 coloumn = null;
 
                 switch (attr) {
                     case 0:
@@ -112,53 +116,76 @@ public class Fragment_search extends Fragment {
                         value=editText.getText().toString();
                         break;
                 }
-                String qu_searsh="select \n" +
-                        "       name,    \n" +
-                        "       time1,   \n" +
-                        "       sf_num,  \n" +
-                        "       pay,     \n" +
-                        "       date,    \n" +
-                        "       date1,    \n" +
-                        "       time_stamp    \n" +
-                        "                \n" +
-                        "from clients where "+coloumn+" like '%"+value+
-                        "%' order by date DESC limit 400";
-
-                ExecDB search_cl     = new ExecDB();
-                //rawdata
-                List<String> sqlREsp = search_cl.search(getContext(), qu_searsh);
-                //name->ordParam
-                HashMap<String, List<Constructor_search>> dataToAdapter
-                        = creatMap(creatListForMap(sqlREsp));
-
-                final BaseExpandableListAdapter adapter=new Adapter_Expandable(
-                        getContext(),dataToAdapter);
-
-                expandableListView.setAdapter(adapter);
-                expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-                    @Override
-                    public boolean onGroupClick(ExpandableListView parent, View v,
-                                                int groupPosition, long id) {
-                        new HelperData().HideKeyboeard(v);
-                        editText.setText(adapter.getGroup(groupPosition).toString());
-                        return false;
-                    }
-                });
-
-                expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-                    int previousGroup = -1;
-
-                    @Override
-                    public void onGroupExpand(int groupPosition) {
-                        if(groupPosition != previousGroup)
-                            expandableListView.collapseGroup(previousGroup);
-                        previousGroup = groupPosition;
-
-                    }
-                });
+                setList();
             }
         });
     return view;
+    }
+
+    public  void setList(){
+        String qu_searsh="select \n" +
+                "       name,    \n" +
+                "       time1,   \n" +
+                "       sf_num,  \n" +
+                "       pay,     \n" +
+                "       date,    \n" +
+                "       date1,    \n" +
+                "       time_stamp    \n" +
+                "                \n" +
+                "from clients where "+coloumn+" like '%"+value+
+                "%' order by date DESC limit 400";
+
+        ExecDB search_cl     = new ExecDB();
+        //rawdata
+        List<String> sqlREsp = search_cl.search(getContext(), qu_searsh);
+        //name->ordParam
+        HashMap<String, List<Constructor_search>> dataToAdapter
+                = creatMap(creatListForMap(sqlREsp));
+
+        final BaseExpandableListAdapter adapter=new Adapter_Expandable(
+                getContext(),dataToAdapter);
+
+        expandableListView.setAdapter(adapter);
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v,
+                                        int groupPosition, long id) {
+                new HelperData().HideKeyboeard(v);
+                editText.setText(adapter.getGroup(groupPosition).toString());
+                return false;
+            }
+        });
+
+        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            int previousGroup = -1;
+
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if(groupPosition != previousGroup)
+                    expandableListView.collapseGroup(previousGroup);
+                previousGroup = groupPosition;
+
+            }
+        });
+        Log.i("setList","dadada");
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setList();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+
     }
 
     List<Constructor_search> creatListForMap(List<String> search){

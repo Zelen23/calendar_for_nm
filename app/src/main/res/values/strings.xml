@@ -12,7 +12,7 @@
     <string name="serch_button">Search Client</string>
     <string name="serch_exp_num">Num</string>
     <string name="serch_exp_name">Name</string>
-
+    <string name="edit_user_exist_num">This selphone number is present</string>
 
     <string name="set_view">View Settings</string>
     <string name="set_sumview">appearance settings</string>
@@ -59,7 +59,7 @@
     <string name="dw_mo">Mo</string>
     <string name="dw_tu">Tu</string>
     <string name="dw_we">We</string>
-    <string name="dw_th">Hh</string>
+    <string name="dw_th">Th</string>
     <string name="dw_fr">Fr</string>
     <string name="dw_sa">Sa</string>
     <string name="dw_su">Su</string>
