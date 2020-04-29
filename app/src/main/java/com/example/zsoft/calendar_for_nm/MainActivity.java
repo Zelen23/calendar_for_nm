@@ -32,15 +32,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    //
     // https://material.io/tools/icons/?icon=settings&style=sharp
-    // переписать на фрагменты
-    /*при пролистывании месяца остается открытым денл на котором поледний раз кликнули
-    * нужно блочить возм клика по recycleView при скроле и давать при клике*/
     GridView grView_cld;
     TextView l_date, l_year;
     ImageButton b_set,b_menu;
     boolean flagperm;
+    private  static String TAG="zsoft";
 
     ConstraintLayout layout;
     RecyclerView recyclerViewMain;
@@ -162,10 +159,6 @@ public class MainActivity extends AppCompatActivity {
         adapterGridCld=new Adapter_grid_Cld(this);
         adapterGridCld.setAdapter_grid_Cld(list_date,mass_pict);
 
-
-
-       // return new Adapter_grid_Cld(context, list_date
-             //   ,mass_pict);
         return adapterGridCld;
 
     }
@@ -259,8 +252,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent=new Intent(context,MainActivity.class);
         finish();
         startActivity(intent);
-        Log.i("Main_","refresh");
-
     }
 
 // размерность грида
@@ -281,13 +272,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void updGridCld(){
-//for 4/4
-
 
         MainActivity.adapterGridCld.refresh(mns,year);
         MainActivity.adapterGridCld.notifyDataSetChanged();
 
-        Log.i("Main","refrash");
     }
 
 //permission
@@ -322,18 +310,13 @@ public class MainActivity extends AppCompatActivity {
             setDataOrdersInDay(year + "-" + mns + "-" + today);
         }
         layout.setBackgroundResource(background_pref(this));
-        Log.i("Main","resume");
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i("Main","Pause");
-
-
     }
-
 
     // слушатель жестов
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
@@ -352,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
                 today=iday;
             }
             catch(NumberFormatException ex){
-                Log.i("Main_number_format",ex.getMessage());
+                Log.i(TAG,ex.getMessage());
                 idate=new int[1];
             }
 
@@ -373,39 +356,15 @@ public class MainActivity extends AppCompatActivity {
 
                        setDataOrdersInDay(s_date);
                        recyclerViewMain.setClickable(true);
-                       Log.i("Main_date", s_date);
+                       Log.i(TAG, s_date);
                    }
                 }
             });
 
             return super.onSingleTapUp(e);
 
-
-        }
-/*
-        @Override
-        public void onLongPress(MotionEvent e) {
-            grView_cld.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> adapterView,
-                                               View view, int i, long l) {
-                    //Log.i("long_clck",String.valueOf(""));
-                    int date_db[] = dat_of_pos(i);
-
-                    if(date_db.length>1){
-                        Intent intent = new Intent(MainActivity.this,
-                                RecycleWinActivity.class);
-                        intent.putExtra("date_for_db", date_db);
-                        startActivity(intent);
-                    }
-                    return false;
-                }
-            });
-
-            super.onLongPress(e);
         }
 
-*/
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             //если в момент скролла то не слшушаю долгий клик или прицепить другой клик(двойной)

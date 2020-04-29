@@ -32,6 +32,7 @@ import static java.lang.String.format;
 public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<Object> data;
     private String date;
+    private  static String TAG="zsoft.recycle";
 
     private EditText eName,eNum,eSum;
     private NumberPicker h1,h2,m1,m2;
@@ -265,7 +266,7 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final int tm1=dt1.getMinutes();
         final int tm2=dt2.getMinutes();
 
-        Log.i("Alert_time_to_spinner",String.valueOf(th1)+"   "+String.valueOf(th2));
+        Log.i(TAG,String.valueOf(th1)+"   "+String.valueOf(th2));
         //  long minutes = dt2.getTime() - dt1.getTime();
         //   int deltaminutes = (int) (minutes / (60 * 1000));
         //   final String s1,s2;
@@ -300,8 +301,6 @@ public class Adapter_recycle extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 //
                 h2.setMinValue(newVal);
                 h2.setMaxValue(th2);
-
-
 
                 if(newVal>oldVal&&newVal>th1){
                     h2.setValue(newVal+1);

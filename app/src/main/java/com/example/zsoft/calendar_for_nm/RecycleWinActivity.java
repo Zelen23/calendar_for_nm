@@ -25,23 +25,9 @@ import java.util.List;
  * Created by adolf on 14.04.2018.
  */
 
-/*ПЕредаю дату в метод, сдесь получаю молный массив на день
-* этот массив рендерю
-* и отправляю в адаптер
-*
-1
-Оля Медведева
-13:00:00.000
-14:00:00.000
-89513115412
-2017-0-6
-Mon Dec 05 00:16:40 EET 2016
-false
-*/
-
 
 public class RecycleWinActivity extends AppCompatActivity {
-
+    private  static String TAG="zsoft.RecycleWinActivity";
     RecyclerView rv;
     TextView rv_date;
     LinearLayout layout;
@@ -65,7 +51,7 @@ public class RecycleWinActivity extends AppCompatActivity {
         layout=findViewById(R.id.layout_rec_win_id);
         layout.setBackgroundResource(new MainActivity().background_pref(this));
         rv_date=findViewById(R.id.recWin_date);
-        rv_date.setText(get_day_orders());
+        rv_date.setText(new HelperData().ConvertDateFromDBX(get_day_orders()));
 
         rv= findViewById(R.id.recycleView);
         LinearLayoutManager li=new LinearLayoutManager(this);
@@ -82,11 +68,10 @@ public class RecycleWinActivity extends AppCompatActivity {
     }
 
     // создаю лайнер(для  бейсадаптера конвертирую строку с данныим)
-    // без ..ы, но работящая
     public List<Object> set_test(List<String> dataDB,Context context) {
 
         settingsTime(context);
-        Log.i("RecycleWin_DataDB",dataDB.toString());
+        Log.i(TAG,dataDB.toString());
 
         data =new ArrayList<>();
       //  ArrayList <Constructor_data> liner=new ArrayList<>();
@@ -177,7 +162,7 @@ public class RecycleWinActivity extends AppCompatActivity {
                         secondTime));
         }
 
-        Log.i("RecycleWin_DATA",""+data.size());
+        Log.i(TAG,""+data.size());
 
 return data;
     }
@@ -187,7 +172,7 @@ return data;
         Intent intent=getIntent();
 
         int idat[]=intent.getIntArrayExtra("date_for_db");
-        Log.i("RecycleWin_data",idat[0]+"-"+idat[1]+"-"+idat[2]);
+        Log.i(TAG,idat[0]+"-"+idat[1]+"-"+idat[2]);
         return idat[0]+"-"+idat[1]+"-"+idat[2];
 
     }
@@ -236,11 +221,11 @@ return data;
             @SuppressLint("DefaultLocale")
             String m=String.format("%02d",sDate.getMinutes());
             stime=h+":"+m;
-            Log.i("this_time,",h+":"+m);
+            Log.i(TAG+" this_time,",h+":"+m);
         } catch (ParseException e) {
             e.printStackTrace();
             stime=t;
-            Log.i("this_noTime","fuck");
+            Log.i(TAG+" this_noTime","fuck");
         }
     return stime;
     }
@@ -249,7 +234,7 @@ return data;
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i("RecycleWin","Destroy");
+        Log.i(TAG,"Destroy");
 
     }
 

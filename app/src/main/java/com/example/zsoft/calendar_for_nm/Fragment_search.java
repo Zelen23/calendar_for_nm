@@ -167,7 +167,7 @@ public class Fragment_search extends Fragment {
 
             }
         });
-        Log.i("setList","dadada");
+
     }
     @Override
     public void onResume() {

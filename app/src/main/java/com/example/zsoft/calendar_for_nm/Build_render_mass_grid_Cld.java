@@ -34,7 +34,6 @@ Context context;
 
         for(int i=0;i<day_for_render.size();i++){
 
-          //  Log.i("Build_conv_mass_pos",String.valueOf(list_d.indexOf(day_for_render.get(i))));
 
             switch (weight_of_day.get(i)){
                 case 1:
@@ -196,8 +195,6 @@ Context context;
         //если год и месяц в массива соответствуют текущим то
         if(2018==MainActivity.year && 2==MainActivity.mns);
         flags=true;
-        Log.i("Build_flag", String.valueOf(flags));
-
 
     }
 

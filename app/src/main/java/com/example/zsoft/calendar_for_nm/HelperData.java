@@ -34,7 +34,7 @@ import static java.lang.String.format;
 
 public class HelperData {
 
-
+    private  static String TAG="zsoft.Helper";
     public  String TimeShtampTranslater(String s){
       //  пт, 1 мар. 2019 11:51:02
       //  сб, 9 февр. 2019 22:11:11
@@ -44,7 +44,7 @@ public class HelperData {
         try {
             Date day=sdf.parse(s);
             ss=sdf.format(day);
-            Log.i("1eeeSwipeAd_s",ss+"loc "+Locale.getDefault());
+            Log.i(TAG,ss+"loc "+Locale.getDefault());
 
         } catch (ParseException e) {
                 /* в гетлайне Thu May 10 10:05:00 EAT 2018-  в таком формате приходит
@@ -58,7 +58,7 @@ public class HelperData {
             try {
                 day = sdf3.parse(s);
                 ss=sdf.format(day);
-                Log.i("3eeeSwipeAd_s",ss+" loc "+Locale.getDefault());
+                Log.i(TAG,ss+" loc "+Locale.getDefault());
             } catch (ParseException e1) {
 
                 SimpleDateFormat sdf2=new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy"
@@ -120,10 +120,10 @@ public class HelperData {
             } else {
                 status = false;
             }
-            Log.i("HelperData",date+"  "+nowDate+" status "+status);
+            Log.i(TAG,date+"  "+nowDate+" status "+status);
 
         } catch (ParseException e) {
-            Log.i("HelperData",e.getMessage());
+            Log.i(TAG,e.getMessage());
             e.printStackTrace();
         }
 
@@ -159,7 +159,7 @@ public class HelperData {
 
         String fakeDateTime=dateOrd[0]+"-"+(Integer.parseInt(dateOrd[1])-1)+"-"+ (Integer.parseInt(dateOrd[2])
                 +"T"+timeStart);
-        Log.i("fromSyncDateToDateDB",fakeDateTime);
+        Log.i(TAG,fakeDateTime);
         return fakeDateTime;
     }
     //возвращаю количество дней между датами
@@ -432,10 +432,10 @@ public class HelperData {
             } else {
                 status = false;
             }
-            Log.i("HelperData",date+"  "+nowDate+" status "+status);
+            Log.i(TAG,date+"  "+nowDate+" status "+status);
 
         } catch (ParseException e) {
-            Log.i("HelperData",e.getMessage());
+            Log.i(TAG,e.getMessage());
             e.printStackTrace();
         }
 

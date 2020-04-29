@@ -19,7 +19,7 @@ import java.io.File;
 public class db extends SQLiteOpenHelper implements BaseColumns {
 
     private static final String DATABASE_NAME="st.db";
-    private static final int DATABASE_VERSION=4;
+    private static final int DATABASE_VERSION=5;
 
     private static final String DATABASE_TABLE ="clients";
     public static final String ID_COLUMN="id";
@@ -241,6 +241,8 @@ CREATE TABLE [temp_user] (
 
     private  static final String DATABASE_ADD_COLOUMN_TIMESTAMP="" +
             "ALTER TABLE clients ADD time_stamp INTEGER; ";
+    private  static final String DATABASE_ADD_COLOUMN_TIMESTAMP_TO_TEMP="" +
+            "ALTER TABLE temp ADD time_stamp INTEGER; ";
     /*db(View.OnClickListener onClickListener, String s, Context context, int i){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
     }
@@ -543,6 +545,7 @@ CREATE TABLE [temp_user] (
       //  db.execSQL("DROP TABLE IF EXISTS tableName");
       //  onCreate(db);
         db.execSQL(DATABASE_ADD_COLOUMN_TIMESTAMP);
+        db.execSQL(DATABASE_ADD_COLOUMN_TIMESTAMP_TO_TEMP);
 
     }
 }

@@ -54,7 +54,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
     private List<Object> data;
     private String date;
     String callNumber;
-
+    private  static String TAG="zsoft.SwipeAdapter";
 
     private EditText eName, eNum, eSum;
     private NumberPicker h1, h2, m1, m2;
@@ -225,7 +225,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
             editSum.setOnKeyListener(new View.OnKeyListener() {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    Log.i("key", "" + keyCode);
+                    Log.i(TAG, "" + keyCode);
                     if (keyCode == 66 &&
                             !ful_data.sum.toString().equals(editSum.getText().toString())) {
 
@@ -442,7 +442,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         // если в базе есть вырезанная запись
         void alertTemp(final ArrayList<String> data, final ArrayList<String> temp, final String id){
             String flagcut=temp.get(7);
-            Log.i("flagcut",flagcut);
+            Log.i(TAG,flagcut);
 
                 AlertDialog.Builder adb= new AlertDialog.Builder(context);
                 adb.setTitle("В буфере уже есть вырезанная запись");
@@ -670,8 +670,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
            @Override
            public synchronized void afterTextChanged(Editable s) {
                super.afterTextChanged(s);
-              // String format=PhoneNumberUtils.formatNumber(eNum.getText().toString());
-              // Log.i("Wath_after",format);
+
            }
        });
 
@@ -806,7 +805,7 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         final int tm1=dt1.getMinutes();
         final int tm2=dt2.getMinutes();
 
-        Log.i("Alert_time_to_spinner",String.valueOf(th1)+"   "+String.valueOf(th2));
+        Log.i(TAG,String.valueOf(th1)+"   "+String.valueOf(th2));
         //  long minutes = dt2.getTime() - dt1.getTime();
         //   int deltaminutes = (int) (minutes / (60 * 1000));
         //   final String s1,s2;
@@ -1015,21 +1014,17 @@ public class Swipe_Adapter_recycle extends RecyclerView.Adapter<RecyclerView.Vie
         try {
             Date day=sdf.parse(s);
             ss=sdf.format(day);
-            Log.i("1eeeSwipeAd_s",ss+"loc "+Locale.getDefault());
+            Log.i(TAG,ss+"loc "+Locale.getDefault());
 
         } catch (ParseException e) {
-                /* в гетлайне Thu May 10 10:05:00 EAT 2018-  в таком формате приходит
-                * //Thu May 10 10:05:00 EAT 2018 loc en_US
-                 //Thu May 10 11:05:00 GMT+04:00 2018 loc en_US
-                * */
-                /*4.4 -z хавает EAT */
+
             SimpleDateFormat sdf3=new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"
                     ,new Locale("en"));
             Date day;
             try {
                 day = sdf3.parse(s);
                 ss=sdf.format(day);
-                Log.i("3eeeSwipeAd_s",ss+" loc "+Locale.getDefault());
+                Log.i(TAG,ss+" loc "+Locale.getDefault());
             } catch (ParseException e1) {
 
                 SimpleDateFormat sdf2=new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy"

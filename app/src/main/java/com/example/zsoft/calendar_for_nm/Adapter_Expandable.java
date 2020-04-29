@@ -109,8 +109,6 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
 
         }
 
-        //Log.i("",""+groupPosition);
-
 
         TextView nameClient=(TextView)convertView.findViewById(R.id.nameClient);
         ImageView imageClient=(ImageView) convertView.findViewById(R.id.imageView);
