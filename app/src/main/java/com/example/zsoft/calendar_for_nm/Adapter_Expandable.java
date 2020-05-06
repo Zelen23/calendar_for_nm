@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,9 +41,6 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
     HashMap<String,List<Constructor_search>> search;
     List<String> groupName=new ArrayList<>();
     List<Constructor_search> child=new ArrayList<>();
-    ExecDB execDB=new ExecDB();
-    HelperData helperData=new HelperData();
-
 
 
     public Adapter_Expandable(Context mContext, HashMap<String, List<Constructor_search>> search) {
@@ -99,7 +98,7 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded,
+    public View getGroupView(final int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
 
         if(convertView==null) {
@@ -110,13 +109,20 @@ public class Adapter_Expandable extends BaseExpandableListAdapter {
 
         }
 
-        //Log.i("",""+groupPosition);
-
 
         TextView nameClient=(TextView)convertView.findViewById(R.id.nameClient);
         ImageView imageClient=(ImageView) convertView.findViewById(R.id.imageView);
 
         nameClient.setText(child.get(groupPosition).name);
+        final String pk_num=child.get(groupPosition).sf_num;
+        imageClient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(mContext,UserEditActivity.class);
+                intent.putExtra("pk_num", pk_num);
+                mContext.startActivity(intent);
+            }
+        });
 
         return convertView;
     }

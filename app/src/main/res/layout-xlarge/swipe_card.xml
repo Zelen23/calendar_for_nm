@@ -90,13 +90,12 @@
         android:focusable="true"
         android:focusableInTouchMode="true">
 
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <android.support.v7.widget.CardView
             android:id="@+id/card"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             app:cardBackgroundColor="@color/cardview_shadow_start_color"
-            app:cardCornerRadius="5dp">
+            app:cardCornerRadius="0dp">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -177,8 +176,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/h2"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginRight="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
                     android:scaleX="1.5"
                     android:scaleY="1.5"
                     android:textColorLink="@color/daysLabelColor"

@@ -1,7 +1,6 @@
 package com.example.zsoft.calendar_for_nm;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,7 +27,7 @@ public class Adapter_FragmentPage extends FragmentStatePagerAdapter {
                 return new Fragment_search();
 
             case 1:
-                return new Fragment_Top();
+                return new Fragment_TopList();
         }
 
         return new Fragment_search();

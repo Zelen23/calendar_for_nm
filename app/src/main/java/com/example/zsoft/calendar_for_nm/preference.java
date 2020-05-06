@@ -108,8 +108,6 @@ public class preference extends PreferenceActivity {
         @Override
         public void onPause() {
             super.onPause();
-            Log.i("pref__psuse", "" +
-                    "Pause");
 
         }
     }
@@ -125,8 +123,7 @@ public class preference extends PreferenceActivity {
         @Override
         public void onPause() {
             super.onPause();
-            Log.i("prefusr__psuse", "" +
-                    "Pause");
+
 
         }
 

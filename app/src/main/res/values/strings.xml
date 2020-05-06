@@ -2,6 +2,8 @@
     <string name="app_name">Calendar_for_NM</string>
     <string name="Number">Number</string>
     <string name="Name">Name</string>
+    <string name="LastName">Last Name</string>
+    <string name="Comment">About</string>
     <string name="Pay">Pay</string>
 
     <string name="Top40">ClentsTOP40</string>
@@ -10,7 +12,7 @@
     <string name="serch_button">Search Client</string>
     <string name="serch_exp_num">Num</string>
     <string name="serch_exp_name">Name</string>
-
+    <string name="edit_user_exist_num">This selphone number is present</string>
 
     <string name="set_view">View Settings</string>
     <string name="set_sumview">appearance settings</string>
@@ -57,7 +59,7 @@
     <string name="dw_mo">Mo</string>
     <string name="dw_tu">Tu</string>
     <string name="dw_we">We</string>
-    <string name="dw_th">Hh</string>
+    <string name="dw_th">Th</string>
     <string name="dw_fr">Fr</string>
     <string name="dw_sa">Sa</string>
     <string name="dw_su">Su</string>
@@ -100,4 +102,8 @@
     <string name="failCreateEvent">Create event is failed</string>
     <string name="failDeleteEvent">Delete event is failed</string>
     <string name="failCreateLayer">Create layer is failed</string>
+
+    <string name="locale">en</string>
+    <string name="call">Call</string>
+    <string name="ok">OK</string>
 </resources>

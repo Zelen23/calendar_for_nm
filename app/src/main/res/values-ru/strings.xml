@@ -2,6 +2,8 @@
     <string name="app_name">Calendar_for_NM</string>
     <string name="Number">Номер</string>
     <string name="Name">Имя</string>
+    <string name="LastName">Фамилия</string>
+    <string name="Comment">Инфо</string>
     <string name="Pay">Сумма</string>
 
     <string name="Top40">Топ Клиентов</string>
@@ -10,7 +12,7 @@
     <string name="serch_button">Поиск клиента</string>
     <string name="serch_exp_num">Номер</string>
     <string name="serch_exp_name">Имя</string>
-
+    <string name="edit_user_exist_num">"Клиент с этим номером есть в системе"</string>
 
     <string name="set_view">Настройки отображения</string>
     <string name="set_sumview">внешний вид формы</string>
@@ -100,4 +102,8 @@
     <string name="failCreateEvent">Ошибка отправки записи</string>
     <string name="failDeleteEvent">Ошибка удаления записи</string>
     <string name="failCreateLayer">Ошибка создания календаря</string>
+
+    <string name="locale">ru</string>
+    <string name="call">Позвонить</string>
+    <string name="ok">OK</string>
 </resources>

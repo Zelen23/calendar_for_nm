@@ -27,6 +27,7 @@ public class ExecDB {
 
     private db mDbHelper;
     SharedPreferences sharedPreferences;
+    private  static String TAG="zsoft.ExecDB";
 
     // по дате(месяц, год) создаю лист с парами(день, кол-во записей)
     List<Constructor_dayWeight> init_mass(Context context, int month, int y) {
@@ -66,10 +67,7 @@ public class ExecDB {
     }
 
     // получаю по дате массив
-    //[397, 19:00, 20:00, лукьянчикова ирина, , true]
     public  List<String> l_clients_of_day(Context ct, String ddat) {
-//ddat="2016-4-12";
-        // read db
         List<String> sqldat = new ArrayList<>();
         mDbHelper = new db(ct);
         mDbHelper.getWritableDatabase();
@@ -112,7 +110,7 @@ public class ExecDB {
             c.close();
             db1.close();
         }
-         Log.i("ExecDB_l_clients_of_day", "querry: "+ddat+" data: "+String.valueOf(sqldat));
+         Log.i(TAG, "querry: "+ddat+" data: "+String.valueOf(sqldat));
         return sqldat;
     }
 
@@ -126,7 +124,6 @@ public class ExecDB {
                 ,new Locale("ru"));
         //Locale locale=new Locale("ru");
         //Locale.setDefault(locale);
-
         String day=sdf.format(now);
         String nowDate;
         nowDate = String.valueOf(now);
@@ -138,6 +135,7 @@ public class ExecDB {
         switch (table) {
             case "clients":
                 val.put(db.DATE1_COLUMN, day);
+                val.put(db.TIMESTAMP_COLUMN, now.getTime());
                 val.put(db.CONTACT_COLUMN, conts);
                 val.put(db.NAME_COLUMN, names);
                 val.put(db.PAY_COLUMN, pays);
@@ -152,6 +150,7 @@ public class ExecDB {
             case "temp":
 
                 val.put(db.DATE1_TEMP, nowDate);
+                val.put(db.TIMESTAMP_COLUMN_TEMP, now.getTime());
                 val.put(db.CONTACT_TEMP, conts);
                 val.put(db.NAME_TEMP, names);
                 val.put(db.PAY_TEMP, pays);
@@ -163,8 +162,6 @@ public class ExecDB {
         }
         db1.insert(table, null, val);
         db1.close();
-
-
 
     }
 
@@ -212,7 +209,7 @@ public class ExecDB {
     public boolean deleterow(Context context, String table, String id) {
         mDbHelper = new db(context);
         SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
-        Log.i("ExecDB_delete_row",   table+" "+id);
+        Log.i(TAG,   table+" "+id);
 
 
 
@@ -231,10 +228,8 @@ public class ExecDB {
 
     //получаю по id инфо
     public ArrayList<String> getLine_(Context context, String table, String ids) {
-       /*вывод диалогового окна с деталями по клиенту
-       * для теста номер*/
+
         ArrayList<String> line = new ArrayList<>();
-// контекст из метода
         mDbHelper = new db(context);
         SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
         Cursor c;
@@ -281,6 +276,7 @@ public class ExecDB {
                     int date = c.getColumnIndex("date");
                     int date1 = c.getColumnIndex("date1");
                     int pay = c.getColumnIndex("pay");
+                    int timestamp = c.getColumnIndex("time_stamp");
 
                     do {
                         line.add(c.getString(name));
@@ -290,6 +286,7 @@ public class ExecDB {
                         line.add(c.getString(date));
                         line.add(c.getString(date1));
                         line.add(c.getString(pay));
+                        line.add(c.getString(timestamp));
                     }
                     while (c.moveToNext());
                     c.close();
@@ -309,6 +306,7 @@ public class ExecDB {
                     int date1 = c.getColumnIndex("date1");
                     int visit = c.getColumnIndex("visit");
                     int id = c.getColumnIndex("_id");
+                    int timestamp = c.getColumnIndex("time_stamp");
 
                     do {
                         //  sqldat.add(  c.getString(id).toString() );
@@ -321,6 +319,7 @@ public class ExecDB {
                         line.add(c.getString(pay));
                         line.add(c.getString(visit));
                         line.add(c.getString(id));
+                        line.add(c.getString(timestamp));
                         // + c.getString(date).toString());
                     }
 
@@ -329,7 +328,7 @@ public class ExecDB {
                     break;
                 }
         }
-        Log.i("ExecDB__getLine", line.toString());
+        Log.i(TAG, line.toString());
         return line;
     }
 
@@ -351,20 +350,32 @@ public class ExecDB {
 
         db1.update(table,val,"_id = '"+id+"'",null);
 
-        Log.i("ExecDB_flag_visitOrPay", flag+" "+ id+" "+table+" "+coloumn);
+        Log.i(TAG, flag+" "+ id+" "+table+" "+coloumn);
+        db1.close();
+    }
+    public  void updateUser(Context ct, String pk_num,String new_pk_num, String name, String LastName,String url){
+
+
+        ContentValues val = new ContentValues();
+        mDbHelper = new db(ct);
+        SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
+
+                val.put(db.name_us,name);
+                val.put(db.family_us,LastName);
+                val.put(db.url_us,url);
+                val.put(db.pk_num_us,new_pk_num);
+
+
+        db1.update("user",val,"pk_num = '"+pk_num+"'",null);
+
+        Log.i(TAG, name+" "+ LastName+" "+url+" "+pk_num);
         db1.close();
     }
 
-        /*из таймштампа получаю дату
-        * делаю по ней селект с датой и номером
-        * если есть возвращаю время записи если нет null
-        *
-        * */
     ArrayList<String>   beWrite(Context context,String num,String timeShtamp) {
-        //вт, 5 июня 2018 11:52:28
-        //пт, 1 мар. 2019 11:51:02
+
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss",
-                new Locale("ru"));
+               Locale.getDefault());
 
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
@@ -381,7 +392,7 @@ public class ExecDB {
            String dat="SELECT * FROM clients where sf_num like '%"
                     +num+"%' and date='"+fuckedDate+"'";
 
-            Log.i("ExecDB_beWrite", "in "+timeShtamp+" out "+dateOfShtamp+" qq "+dat);
+            Log.i(TAG, "in "+timeShtamp+" out "+dateOfShtamp+" qq "+dat);
             ArrayList<String> queue = new ArrayList<>();
 
             mDbHelper = new db(context);
@@ -461,6 +472,7 @@ public class ExecDB {
             int time = c.getColumnIndex("time1");
             int date = c.getColumnIndex("date");
             int date1 = c.getColumnIndex("date1");
+            int timestamp = c.getColumnIndex("time_stamp");
             // int pay = c.getColumnIndex("pay");
 
             do {
@@ -469,14 +481,14 @@ public class ExecDB {
                 queue.add(c.getString(time));
                 queue.add(c.getString(date));
                 queue.add(c.getString(date1));
+                queue.add(c.getString(timestamp));
                 //  queue.add(c.getString(pay).toString());
             }
 
             while (c.moveToNext());
             c.close();
         }
-        Log.i("4_",dat);
-        Log.i("4_",String.valueOf(queue));
+        Log.i(TAG,String.valueOf(queue));
         return queue;
     }
 
@@ -531,7 +543,7 @@ public class ExecDB {
 
         mDbHelper = new db(context);
         SQLiteDatabase db1 = mDbHelper.getWritableDatabase();
-        Log.i("ExecDB_delete_row", dateClean);
+        Log.i(TAG, dateClean);
 
         String query="(CAST(substr((date),0,5) as INTEGER)||" +
          "'-'||printf('%02d',CAST(substr(substr((date),6),0,instr(substr((date),6),'-')) as INTEGER)+1)||" +
@@ -611,7 +623,7 @@ public class ExecDB {
             c.close();
         }
 
-        Log.i("ExecDB_DataBase_info",list.toString());
+        Log.i(TAG,list.toString());
 
         return list ;
     }

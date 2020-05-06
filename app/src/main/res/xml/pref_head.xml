@@ -15,7 +15,7 @@
     <header
         android:fragment="com.example.zsoft.calendar_for_nm.preference$PrefClearDB"
         android:title="@string/set_clearDB"
-        android:summary="@string/set_sumclearDB"/>
+        android:summary="@string/set_sumclearDB" />
     <header/>
     <header
         android:fragment="com.example.zsoft.calendar_for_nm.preference$Yandex_sync"
