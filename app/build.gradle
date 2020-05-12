@@ -1,14 +1,6 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        release {
-            storeFile file('/home/azelinsky/Android/zSoft.jks')
-            storePassword '2vyy3-ckgx6'
-            keyPassword '2vyy3-ckgx6'
-            keyAlias = 'zsoft'
-        }
-    }
     compileSdkVersion 27
     flavorDimensions "default"
     defaultConfig {
