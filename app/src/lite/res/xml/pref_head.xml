@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<header
+    android:fragment="com.example.zsoft.calendar_for_nm.preference$PrefFragment"
+    android:title="@string/set_view"
+    android:summary="@string/set_sumview"/>
+    <header/>
+    <header
+        android:fragment="com.example.zsoft.calendar_for_nm.preference$PrefUserSettingsFragment"
+        android:title="@string/set_user_interface"
+        android:summary="@string/set_user_suminterface"/>
+    <header/>
+
+</preference-headers>
