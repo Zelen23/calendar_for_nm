@@ -4,9 +4,8 @@ android {
     signingConfigs {
         release {
             storeFile file('/home/azelinsky/Android/zSoft.jks')
-            storePassword key
-            storePassword key
-            keyPassword key
+            storePassword '2vyy3-ckgx6'
+            keyPassword '2vyy3-ckgx6'
             keyAlias = 'zsoft'
         }
     }
