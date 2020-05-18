@@ -5,7 +5,7 @@
     android:layout_height="40dp"
     >
 
-    <android.support.v7.widget.ContentFrameLayout
+    <androidx.appcompat.widget.ContentFrameLayout
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:id="@+id/contentFrameLayout">
@@ -26,7 +26,7 @@
         android:layout_alignParentTop="true"
         android:autoText="false"
         android:gravity="center_vertical|center_horizontal" />
-    </android.support.v7.widget.ContentFrameLayout>
+    </androidx.appcompat.widget.ContentFrameLayout>
 
 
 </RelativeLayout>

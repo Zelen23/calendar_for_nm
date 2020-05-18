@@ -7,7 +7,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
-import android.support.v7.widget.ContentFrameLayout;
+import androidx.appcompat.widget.ContentFrameLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
