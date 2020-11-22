@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-    private AdView mAdView;
+    //private AdView mAdView;
 
 
     @Override
@@ -64,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 /*--------*/
-       mAdView = findViewById(R.id.adView);
-       AdRequest adRequest = new AdRequest.Builder().addTestDevice("c9f1beeb32453b4e245c80").build();
-       mAdView.loadAd(adRequest);
+      // mAdView = findViewById(R.id.adView);
+      // AdRequest adRequest = new AdRequest.Builder().addTestDevice("c9f1beeb32453b4e245c80").build();
+      // mAdView.loadAd(adRequest);
 /*--------*/
 
         layout= findViewById(R.id.layout_id);
